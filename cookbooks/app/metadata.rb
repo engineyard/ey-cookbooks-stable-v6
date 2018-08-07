@@ -2,6 +2,8 @@ name 'app'
 maintainer 'Engine Yard'
 
 depends 'deploy-keys'
+depends 'app-logs'
+
 =begin
 depends 'ey-lib'
 depends 'deploy'

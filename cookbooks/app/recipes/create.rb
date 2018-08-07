@@ -52,7 +52,7 @@ end
         :dbuser => app.database_username,
         :dbpass => app.database_password,
         :dbname => app.database_name,
-        :dbhost => node.dna['db_host'],
+        :dbhost => node['dna']['db_host'],
         :dbtype => dbtype,
         :slaves => node.engineyard.environment.instances.select{|i| i["role"] =="db_slave"},
         :pool => node.engineyard.environment.jruby? ? node.dna['jruby_pool_size'] : nil,
@@ -69,7 +69,5 @@ end
 =end
 end
 
-=begin
-include_recipe "env_vars::cloud"
-include_recipe "cdn_distribution::default"
-=end
+#TODOv6 include_recipe "env_vars::cloud"
+#TODOv6 include_recipe "cdn_distribution::default"

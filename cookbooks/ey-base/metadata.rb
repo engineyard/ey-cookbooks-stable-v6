@@ -9,6 +9,7 @@ depends 'ec2'
 depends 'ephemeraldisk'
 depends 'ey-dynamic'
 depends 'ruby'
+depends 'app'
 
 =begin
 depends 'ey-bin'

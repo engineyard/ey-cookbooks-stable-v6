@@ -20,6 +20,6 @@ end
 
 include_recipe 'app::remove'
 include_recipe 'app::create'
-#include_recipe "app-logs"
+include_recipe "app-logs"
 #include_recipe "deploy"
 # include_recipe "lb" # this is handled in ey-lib/libraries/ey-instance.rb

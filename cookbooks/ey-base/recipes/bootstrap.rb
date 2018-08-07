@@ -152,14 +152,14 @@ end
 =begin
 # all roles get these recipes
 #TODOv6 include_recipe 'ey-cron'
-include_recipe "ey-env"
-include_recipe "ey-bin"
-include_recipe "ey-backup::setup"
-include_recipe "framework_env"
-include_recipe "chef-custom"
-include_recipe "sudo"
-include_recipe "ssh_keys"
-include_recipe "efs"
+#TODOv6 include_recipe "ey-env"
+#TODOv6 include_recipe "ey-bin"
+#TODOv6 include_recipe "ey-backup::setup"
+#TODOv6 include_recipe "framework_env"
+#TODOv6 include_recipe "chef-custom"
+#TODOv6 include_recipe "sudo"
+#TODOv6 include_recipe "ssh_keys"
+#TODOv6 include_recipe "efs"
 =end
 # do not run the ruby recipes when we install Node.js and other languages.
 include_recipe "ruby" if node.engineyard.environment.ruby?
@@ -181,5 +181,5 @@ if node.engineyard.instance.component?(:exim)
   end
 end
 
-include_recipe 'ey-cron'
+#TODOv6 include_recipe 'ey-cron' #duplicate?
 =end
