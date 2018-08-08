@@ -10,6 +10,7 @@ depends 'ephemeraldisk'
 depends 'ey-dynamic'
 depends 'ruby'
 depends 'app'
+depends 'nginx'
 
 =begin
 depends 'ey-bin'

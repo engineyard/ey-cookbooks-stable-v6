@@ -62,11 +62,12 @@ end
     end
   end
 
-=begin
+=begin TODOv6
   app.recipes.each do |recipe|
     include_recipe recipe
   end
 =end
+  include_recipe "nginx"
 end
 
 #TODOv6 include_recipe "env_vars::cloud"
