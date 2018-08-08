@@ -48,7 +48,7 @@ bash "install ruby" do
   code <<-EOH
     source /usr/local/share/chruby/chruby.sh
     chruby #{ruby_version}
-    if [ "$(ruby -v)" ]
+    if [ "$(ruby -v | grep #{ruby_version})" ]
     then
       echo "Ruby #{ruby_version} is already installed. Skipping Ruby installation"
     else
@@ -62,7 +62,3 @@ ruby_block "add ruby path during chef run" do
   block { ENV['PATH'] = "/opt/rubies/ruby-#{ruby_version}/bin:#{ENV['PATH']}" }
 end
 
-execute "test ruby" do
-  command "echo ruby is installed"
-  only_if "ruby -v"
-end
