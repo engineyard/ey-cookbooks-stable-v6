@@ -80,15 +80,11 @@ directory "/data/nginx/ssl" do
   mode 0775
 end
 
-=begin
 managed_template "/data/nginx/common/proxy.conf" do
   owner node['owner_name']
   group node['owner_name']
   mode 0644
   source "common.proxy.conf.erb"
-  variables({
-    :use_msec => use_msec
-  })
   notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
 end
 
@@ -100,14 +96,6 @@ managed_template "/data/nginx/common/servers.conf" do
   notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
 end
 
-managed_template "/data/nginx/common/fcgi.conf" do
-  owner node['owner_name']
-  group node['owner_name']
-  mode 0644
-  source "common.fcgi.conf.erb"
-  notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
-end
-
 file "/data/nginx/servers/default.conf" do
   owner node['owner_name']
   group node['owner_name']
@@ -115,7 +103,7 @@ file "/data/nginx/servers/default.conf" do
   notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
 end
 
-(node.dna[:removed_applications]||[]).each do |app|
+(node['dna']['removed_applications']||[]).each do |app|
   execute "remove-old-vhosts-for-#{app}" do
     command "rm -rf /data/nginx/servers/#{app}*"
     notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
@@ -151,12 +139,6 @@ node.engineyard.apps.each_with_index do |app, index|
     mode 0775
   end
 
-  directory "/var/lib/nginx/tmp" do
-    owner node['owner_name']
-    group 'nginx'
-    mode 0755
-  end
-
   file "/data/nginx/servers/#{app.name}/custom.conf" do
     action :create_if_missing
     owner node.engineyard.environment.ssh_username
@@ -175,6 +157,7 @@ node.engineyard.apps.each_with_index do |app, index|
     notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
   end
 
+=begin TODOv6
   mongrel_service = find_app_service(app, "mongrel")
   fcgi_service = find_app_service(app, "fcgi")
   mongrel_base_port =  (mongrel_service[:mongrel_base_port].to_i + (index * 200))
@@ -187,8 +170,9 @@ node.engineyard.apps.each_with_index do |app, index|
 
   meta = node.engineyard.apps.detect {|a| a.metadata?(:nginx_http_port) }
   nginx_http_port = ( meta and meta.metadata?(:nginx_http_port) ) || 8081
+=end
+  nginx_http_port = 8081
 
-php_webroot = node.engineyard.environment.apps.first['components'].find {|component| component['key'] == 'app_metadata'}['php_webroot']
 
   managed_template "/etc/nginx/listen_http.port" do
     owner node['owner_name']
@@ -205,7 +189,7 @@ php_webroot = node.engineyard.environment.apps.first['components'].find {|compon
   # name with different ifs, so since this can be determined during compile
   # time values, we can use just a regular if statement
 
-  if stack.match(mongrel_unicorn)
+  #if stack.match(mongrel_unicorn)
     managed_template "/data/nginx/servers/#{app.name}.conf" do
       owner node['owner_name']
       group node['owner_name']
@@ -215,64 +199,17 @@ php_webroot = node.engineyard.environment.apps.first['components'].find {|compon
         lazy {
           {
             :application => app,
-            :unicorn   => unicorn,
             :app_name   => app.name,
-            :app_type => app.app_type,
-            :mongrel_base_port => mongrel_base_port,
-            :mongrel_instance_count => [1, recipe.get_pool_size / node.dna[:applications].size].max,
             :http_bind_port => nginx_http_port,
             :server_names => app.vhosts.first.domain_name.empty? ? [] : [app.vhosts.first.domain_name],
-            :fcgi_pass_port => fcgi_service[:fcgi_pass_port],
-            :fcgi_mem_limit => fcgi_service[:fcgi_mem_limit],
-            :fcgi_instance_count => fcgi_service[:fcgi_instance_count],
-            :use_msec => use_msec,
-			:http2 => node['nginx']['http2']
+			      :http2 => node['nginx']['http2']
           }
         }
       )
       notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
     end
-  end
-
-  if stack.match(php_fpm)
-
-    managed_template "/data/nginx/servers/#{app.name}.conf" do
-      owner node['owner_name']
-      group node['owner_name']
-      mode 0644
-      source "fpm-server.conf.erb"
-      variables({
-        :application => app,
-        :app_name => app.name,
-        :http_bind_port => nginx_http_port,
-        :server_names => app.vhosts.first.domain_name.empty? ? [] : [app.vhosts.first.domain_name],
-        :webroot => php_webroot,
-        :env_name => node.engineyard.environment[:name],
-		:http2 => node['nginx']['http2']
-      })
-      notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
-    end
-
-    managed_template "/etc/nginx/servers/#{app.name}/additional_server_blocks.customer" do
-      owner node['owner_name']
-      group node['owner_name']
-      mode 0644
-      variables({
-        :app_name   => app.name,
-        :server_name => (app.vhosts.first.domain_name.empty? or app.vhosts.first.domain_name == "_") ? "www.domain.com" : app.vhosts.first.domain_name,
-      })
-      source "additional_server_blocks.customer.erb"
-      not_if { File.exists?("/etc/nginx/servers/#{app.name}/additional_server_blocks.customer") }
-    end
-    managed_template "/etc/nginx/servers/#{app.name}/additional_location_blocks.customer" do
-      owner node['owner_name']
-      group node['owner_name']
-      mode 0644
-      source "additional_location_blocks.customer.erb"
-      not_if { File.exists?("/etc/nginx/servers/#{app.name}/additional_location_blocks.customer") }
-    end
-  end
-
+  #end
+=begin
   # if there is an ssl vhost
   if app.https?
 
@@ -499,8 +436,10 @@ php_webroot = node.engineyard.environment.apps.first['components'].find {|compon
       }
     end
   end
+=end
 end
 
+=begin TODOv6
 service "nginx" do
   supports :status => true, :restart => true, :reload => true
   action [ :start, :enable ]
