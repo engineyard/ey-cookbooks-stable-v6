@@ -11,6 +11,7 @@ depends 'ey-dynamic'
 depends 'ruby'
 depends 'app'
 depends 'nginx'
+depends 'sudo'
 
 =begin
 depends 'ey-bin'

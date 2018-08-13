@@ -157,7 +157,9 @@ end
 #TODOv6 include_recipe "ey-backup::setup"
 #TODOv6 include_recipe "framework_env"
 #TODOv6 include_recipe "chef-custom"
-#TODOv6 include_recipe "sudo"
+=end
+include_recipe "sudo"
+=begin
 #TODOv6 include_recipe "ssh_keys"
 #TODOv6 include_recipe "efs"
 =end
