@@ -1,4 +1,4 @@
-include_recipe 'db-ssl::setup'
+#TODOv6 include_recipe 'db-ssl::setup'
 
 cookbook_file "/engineyard/bin/mysql_start" do
   source "mysql_start"
@@ -22,5 +22,6 @@ execute "start-mysql" do
 end
 
 service "mysql" do
+  provider Chef::Provider::Service::Systemd
   action :enable
 end
