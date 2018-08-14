@@ -12,6 +12,7 @@ depends 'ruby'
 depends 'app'
 depends 'nginx'
 depends 'sudo'
+depends 'db_master'
 
 =begin
 depends 'ey-bin'
