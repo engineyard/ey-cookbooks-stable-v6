@@ -2,8 +2,7 @@ ey_cloud_report "mysql" do
   message "processing mysql"
 end
 
-#TODOv6 include_recipe "mysql::install"
-package "percona-server-server-#{node['mysql']['short_version']}"
+include_recipe "mysql::install"
 
 directory "/db/mysql" do
   owner "mysql"
@@ -27,10 +26,8 @@ execute "set-root-mysql-pass" do
   }
 end
 
-=begin
-include_recipe "mysql::cleanup" if node['mysql']['short_version'] == '5.6' # MySQL 5.7 doesn't include extra users/databases by default
+#TODOv6 include_recipe "mysql::cleanup" if node['mysql']['short_version'] == '5.6' # MySQL 5.7 doesn't include extra users/databases by default
 
 include_recipe "mysql::setup_app_users_dbs"
 
-include_recipe "ey-backup::mysql"
-=end
+#TODOv6 include_recipe "ey-backup::mysql"

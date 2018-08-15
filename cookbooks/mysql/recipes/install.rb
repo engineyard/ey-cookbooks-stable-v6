@@ -1,3 +1,4 @@
+=begin TODOv6 lock_db
 lock_db_version = node.engineyard.environment.components.find_all {|e| e['key'] == 'lock_db_version'}.first['value'] if node.engineyard.environment.lock_db_version?
 
 lock_version_file = '/db/.lock_db_version'
@@ -80,3 +81,20 @@ if node.dna['instance_role'][/^db/]    # ~FC023
     variables 'vm.swappiness' => '15'
   end
 end
+=end
+
+lsb_codename = node['lsb']['codename']
+execute "fetch percona packages" do
+  command "wget https://repo.percona.com/apt/percona-release_0.1-6.$(lsb_release -sc)_all.deb"
+  cwd "/tmp/src"
+  not_if { File.exists?("/tmp/src/percona-release_0.1-6.#{lsb_codename}_all.deb") }
+end
+
+execute "add percona repositories" do
+  command "dpkg -i /tmp/src/percona-release_0.1-6.#{lsb_codename}_all.deb"
+  not_if { File.exists?("/etc/apt/sources.list.d/percona-release.list") }
+end
+
+apt_update 'update'
+
+package "percona-server-server-#{node['mysql']['short_version']}"
