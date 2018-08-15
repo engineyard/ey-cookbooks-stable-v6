@@ -4,7 +4,7 @@ when /postgres/
   #TODOv6 include_recipe "postgresql::default"
 when /mysql/
   include_recipe "mysql"
-  #TODOv6 include_recipe "mysql::user_my.cnf"
+  include_recipe "mysql::user_my.cnf"
   include_recipe "mysql::master"
 =begin TODOv6
   is_solo = ['solo'].include?(node.dna['instance_role'])

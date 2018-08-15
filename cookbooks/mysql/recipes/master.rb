@@ -26,7 +26,7 @@ execute "set-root-mysql-pass" do
   }
 end
 
-#TODOv6 include_recipe "mysql::cleanup" if node['mysql']['short_version'] == '5.6' # MySQL 5.7 doesn't include extra users/databases by default
+include_recipe "mysql::cleanup" if node['mysql']['short_version'] == '5.6' # MySQL 5.7 doesn't include extra users/databases by default
 
 include_recipe "mysql::setup_app_users_dbs"
 
