@@ -12,7 +12,8 @@ ey_cloud_report "deploy keys" do
   message 'processing deploy keys'
 end
 
-directory "/home/#{node["owner_name"]}/.ssh" do
+directory "user .ssh directory" do
+  path "/home/#{node["owner_name"]}/.ssh"
   owner node["owner_name"]
   group node["owner_name"]
   mode 0700

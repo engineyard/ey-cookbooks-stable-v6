@@ -69,7 +69,7 @@ cookbook_file '/etc/security/limits.conf' do
   source 'limits.conf'
 end
 
-=begin
+=begin TODOv6
 
 cookbook_file '/etc/env.d/99manpager' do
   owner 'root'
@@ -159,14 +159,13 @@ end
 #TODOv6 include_recipe "chef-custom"
 =end
 include_recipe "sudo"
-=begin
-#TODOv6 include_recipe "ssh_keys"
+include_recipe "ssh_keys"
 #TODOv6 include_recipe "efs"
-=end
+
 # do not run the ruby recipes when we install Node.js and other languages.
 include_recipe "ruby" if node.engineyard.environment.ruby?
 
-=begin
+=begin TODOv6
 include_recipe "motd" # educational message on login
 
 if node.engineyard.instance.component?(:ssmtp)
