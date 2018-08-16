@@ -1,2 +1,2 @@
-name 'node'
+name 'nodejs'
 maintainer 'Engine Yard'
