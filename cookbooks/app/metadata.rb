@@ -3,6 +3,7 @@ maintainer 'Engine Yard'
 
 depends 'deploy-keys'
 depends 'app-logs'
+depends 'unicorn'
 
 =begin
 depends 'ey-lib'
