@@ -1,4 +1,5 @@
 if [ -n "$BASH_VERSION" ] || [ -n "$ZSH_VERSION" ]; then
   source /usr/local/share/chruby/chruby.sh
-  chruby <%= @ruby_version %>
+  export PATH=/opt/rubies/ruby-<%= @ruby_version %>/bin:$PATH
 fi
+
