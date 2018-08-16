@@ -1,10 +1,8 @@
 include_recipe "deploy-keys"
 #TODOv6 include_recipe "ey-cron"
 
-#TODOv6
-=begin
 #TODO: Remove this chunk to the db_master recipe
-is_solo = ['solo'].include?(node.dna['instance_role'])
+is_solo = ['solo'].include?(node['dna']['instance_role'])
 unless is_solo   # for solo leave the db stuff to the db cookbook
   case node.engineyard.environment['db_stack_name']
   when /postgres/
@@ -16,7 +14,6 @@ unless is_solo   # for solo leave the db stuff to the db cookbook
     #no-op
   end
 end
-=end
 
 include_recipe 'app::remove'
 include_recipe 'app::create'

@@ -97,4 +97,5 @@ end
 
 apt_update 'update'
 
+package "libmysqlclient-dev"
 package "percona-server-server-#{node['mysql']['short_version']}"
