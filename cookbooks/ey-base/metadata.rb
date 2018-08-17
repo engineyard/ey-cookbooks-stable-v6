@@ -15,6 +15,7 @@ depends 'sudo'
 depends 'db_master'
 depends 'ssh_keys'
 depends 'nodejs'
+depends 'lb'
 
 =begin
 depends 'ey-bin'
