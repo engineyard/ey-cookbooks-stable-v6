@@ -5,6 +5,7 @@ depends 'deploy-keys'
 depends 'app-logs'
 depends 'unicorn'
 depends 'passenger5'
+depends 'puma'
 
 =begin
 depends 'ey-lib'

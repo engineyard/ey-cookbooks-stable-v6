@@ -69,7 +69,8 @@ end
 =end
   include_recipe "nginx"
   #include_recipe "unicorn"
-  include_recipe "passenger5"
+  #include_recipe "passenger5"
+  include_recipe "puma"
 end
 
 #TODOv6 include_recipe "env_vars::cloud"
