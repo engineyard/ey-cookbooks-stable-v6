@@ -6,6 +6,7 @@ depends 'app-logs'
 depends 'unicorn'
 depends 'passenger5'
 depends 'puma'
+depends 'monit'
 
 =begin
 depends 'ey-lib'

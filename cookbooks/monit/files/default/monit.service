@@ -1,0 +1,11 @@
+[Unit]
+Description=Monit
+After=getty.target
+
+[Service]
+ExecStart=/usr/local/bin/monit -Ic /etc/monitrc
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+

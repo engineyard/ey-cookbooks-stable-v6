@@ -67,6 +67,7 @@ end
     include_recipe recipe
   end
 =end
+  include_recipe "monit"
   include_recipe "nginx"
   #include_recipe "unicorn"
   #include_recipe "passenger5"
