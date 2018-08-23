@@ -10,4 +10,4 @@ include_recipe "lb::prep"
 include_recipe "db_master::build"
 include_recipe "app::build"
 include_recipe "lb::build"
-include_recipe "nodejs::common" # move to post_bootstrap
+include_recipe "ey-base::post_bootstrap"
