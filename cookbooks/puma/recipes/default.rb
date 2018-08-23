@@ -26,25 +26,9 @@ node.engineyard.apps.each_with_index do |app,index|
   log_file      = "#{app_path}/shared/log/puma.log"
   ssh_username  = node.engineyard.environment.ssh_username
   framework_env = node['dna']['environment']['framework_env']
-  restart_resource = "restart-puma-#{app.name}"
   solo = node['dna']['instance_role'] == 'solo'
 
-  execute restart_resource do
-    command "monit restart #{app.name}"
-    action :nothing
-  end
-
   ports = (app_base_port...(app_base_port+workers)).to_a
-
-=begin TODOv6 replace vhost definition
-  app.vhosts.each do |vhost|
-    vhost app.name do
-      dna_vhost vhost
-      cookbook 'puma'
-      upstream_ports ports
-    end
-  end
-=end
 
   directory "#{app.name} nginx app directory for puma" do
     path "/data/nginx/servers/#{app.name}"
@@ -152,11 +136,6 @@ node.engineyard.apps.each_with_index do |app,index|
               :app_memory_limit => memory_limit,
               :username => ssh_username,
               :ports => ports)
-  end
-
-  execute restart_resource do
-    command "monit restart #{app.name}"
-    action :nothing
   end
 
 end
