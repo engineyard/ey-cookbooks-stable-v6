@@ -1,7 +1,6 @@
-=begin
 #TODOv6 include_recipe 'prechef'  # always
 #TODOv6 include_recipe 'sysctl::tune'
-#TODOv6 include_recipe "ey-core::swap"
+include_recipe "ey-core::swap"
 
 #TODOv6 include_recipe 'emerge'
 #TODOv6 include_recipe 'security_updates'
@@ -14,7 +13,6 @@
 #TODOv6 include_recipe 'sysklogd'
 #TODOv6 include_recipe 'timezones'
 #nuke?: include_recipe 'atd'
-=end
 include_recipe 'logrotate'
 include_recipe 'run-one'
 
