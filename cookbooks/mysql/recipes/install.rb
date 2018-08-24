@@ -90,12 +90,16 @@ execute "fetch percona packages" do
   not_if { File.exists?("/tmp/src/percona-release_0.1-6.#{lsb_codename}_all.deb") }
 end
 
+execute "apt-get update for percona" do
+  command "apt-get update"
+  action :nothing
+end
+
 execute "add percona repositories" do
   command "dpkg -i /tmp/src/percona-release_0.1-6.#{lsb_codename}_all.deb"
   not_if { File.exists?("/etc/apt/sources.list.d/percona-release.list") }
+  notifies :run, "execute[apt-get update for percona]", :immediately
 end
-
-apt_update 'update'
 
 package "libmysqlclient-dev"
 package "percona-server-server-#{node['mysql']['short_version']}"
