@@ -1,5 +1,4 @@
 name 'ey-init'
 
+depends 'ey-core'
 depends 'ey-base'
-depends 'logrotate'
-depends 'run-one'
