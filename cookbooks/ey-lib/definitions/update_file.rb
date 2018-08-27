@@ -5,7 +5,7 @@ define :update_file, :action => :append do
   filepath = params[:path] || params[:name]
   index = $update_file_path_change_index[filepath] += 1
 
-  file filepath do
+  file params[:name] do
     action :create_if_missing
     backup params[:backup] if params[:backup]
     group params[:group] if params[:group]
