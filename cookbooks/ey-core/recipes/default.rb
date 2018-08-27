@@ -1,5 +1,5 @@
 #TODOv6 include_recipe 'prechef'  # always
-#TODOv6 include_recipe 'sysctl::tune'
+include_recipe 'sysctl::tune'
 include_recipe "ey-core::swap"
 
 #TODOv6 include_recipe 'emerge'
