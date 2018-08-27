@@ -4,6 +4,7 @@ maintainer 'Engine Yard'
 depends 'logrotate'
 depends 'run-one'
 depends 'sysctl'
+depends 'ey-instance-api'
 
 =begin
 depends 'ey-lib'

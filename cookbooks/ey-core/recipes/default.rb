@@ -8,7 +8,7 @@ include_recipe "ey-core::swap"
 #TODOv6 include_recipe 'ntp'
 #TODOv6 include_recipe 'openssl'
 
-#TODOv6 include_recipe 'ey-instance-api' # potentially move/absorb into other recipe
+include_recipe 'ey-instance-api' # potentially move/absorb into other recipe
 
 #TODOv6 include_recipe 'sysklogd'
 #TODOv6 include_recipe 'timezones'
