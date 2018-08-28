@@ -6,6 +6,7 @@ depends 'run-one'
 depends 'sysctl'
 depends 'ey-instance-api'
 depends 'ntp'
+depends 'openssl'
 
 =begin
 depends 'ey-lib'
