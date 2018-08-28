@@ -149,15 +149,13 @@ end
 
 =end
 
-=begin
 # all roles get these recipes
 #TODOv6 include_recipe 'ey-cron'
-#TODOv6 include_recipe "ey-env"
+include_recipe "ey-env"
 #TODOv6 include_recipe "ey-bin"
 #TODOv6 include_recipe "ey-backup::setup"
 #TODOv6 include_recipe "framework_env"
 #TODOv6 include_recipe "chef-custom"
-=end
 include_recipe "sudo"
 include_recipe "ssh_keys"
 #TODOv6 include_recipe "efs"

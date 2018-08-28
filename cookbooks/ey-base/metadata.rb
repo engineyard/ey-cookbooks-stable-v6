@@ -16,6 +16,7 @@ depends 'db_master'
 depends 'ssh_keys'
 depends 'nodejs'
 depends 'lb'
+depends 'ey-env'
 
 =begin
 depends 'ey-bin'
