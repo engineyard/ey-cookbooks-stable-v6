@@ -5,6 +5,7 @@ depends 'logrotate'
 depends 'run-one'
 depends 'sysctl'
 depends 'ey-instance-api'
+depends 'ntp'
 
 =begin
 depends 'ey-lib'

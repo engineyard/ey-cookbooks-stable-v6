@@ -1,0 +1,6 @@
+# /etc/default/ntp
+
+# Options to pass to the ntpd process
+# This file is managed by EY Cloud; changes will be overwritten
+# /usr/lib/ntp/ntp-systemd-wrapper already passes -u
+NTPD_OPTS="-l /var/log/ntp.log"

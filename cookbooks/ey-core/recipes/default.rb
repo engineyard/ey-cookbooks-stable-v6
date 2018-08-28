@@ -5,7 +5,7 @@ include_recipe "ey-core::swap"
 #TODOv6 include_recipe 'emerge'
 #TODOv6 include_recipe 'security_updates'
 
-#TODOv6 include_recipe 'ntp'
+include_recipe 'ntp'
 #TODOv6 include_recipe 'openssl'
 
 include_recipe 'ey-instance-api' # potentially move/absorb into other recipe

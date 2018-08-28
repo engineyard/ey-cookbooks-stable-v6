@@ -1,0 +1,18 @@
+#!/bin/bash
+
+restart_ntp() {
+    logger -t 'ntp_check' "EY: ntpd ${1}; restarting ntpd"
+    /etc/init.d/ntp restart
+    [[ $? -ne 0 ]] && logger -t 'ntp_check' "EY: /etc/init.d/ntp restart exited non-zero!"
+}
+
+# field 5 is the time since we last spoke to a peer
+# the first two lines of ntpq are a header with labels for the various fields
+# skipping the first two lines gives us just peers, independent of how many there are
+if ntpq -pn | tail -n+3 | awk '{print $5}' | grep -q '\([2-9][0-9]h\|[0-9]\+d\)' ; then
+    restart_ntp "stale NTP peers detected"
+fi
+
+if ! /etc/init.d/ntp status ; then
+    restart_ntp "status check failed"
+fi
