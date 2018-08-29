@@ -76,7 +76,7 @@ cookbook_file "/etc/systemd/system/monit.service" do
   mode 0700
   source "monit.service"
   notifies :enable, "service[monit]", :immediately
-  notifies :start, "service[monit]", :immediately
+  notifies :restart, "service[monit]", :immediately
 end
 
 =begin
