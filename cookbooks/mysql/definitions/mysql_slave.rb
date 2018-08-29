@@ -1,6 +1,5 @@
 require 'tempfile'
 require 'open-uri'
-require 'right_aws'
 
 mysql_slave_default_params = {
   :password => nil,
