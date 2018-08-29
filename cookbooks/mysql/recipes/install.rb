@@ -102,4 +102,9 @@ execute "add percona repositories" do
 end
 
 package "libmysqlclient-dev"
-package "percona-server-server-#{node['mysql']['short_version']}"
+
+if node['dna']['instance_role'][/db|solo/]
+  package "percona-server-server-#{node['mysql']['short_version']}"
+else
+  package "percona-server-client-#{node['mysql']['short_version']}"
+end
