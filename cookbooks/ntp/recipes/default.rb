@@ -51,6 +51,14 @@ end
 # Script to check stale ntp endpoints -- cron for this is in ntp::cronjobs,
 # which gets loaded after cron recipe clears all existing cron jobs
 
+directory "/engineyard/bin for ntp" do
+  path "/engineyard/bin"
+  owner "root"
+  group "root"
+  mode "0755"
+  recursive true
+end
+
 template "/engineyard/bin/ey-ntp-check" do
   owner 'root'
   group 'root'
