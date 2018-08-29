@@ -11,6 +11,17 @@ ey_cloud_report "users" do
   message "processing users"
 end
 
+# Remove ubuntu user and group if they exist
+execute "remove ubuntu user" do
+  command "userdel ubuntu"
+  only_if "getent passwd ubuntu"
+end
+
+execute "remove ubuntu group" do
+  command "groupdel ubuntu"
+  only_if "getent group ubuntu"
+end
+
 ## EY role account should come first in the node.dna[:users] array
 node['dna']['users'].each do |user_obj|
   execute "create-group" do
