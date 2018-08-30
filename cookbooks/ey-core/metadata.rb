@@ -8,6 +8,7 @@ depends 'ey-instance-api'
 depends 'ntp'
 depends 'openssl'
 depends 'security_updates'
+depends 'ey-hosts'
 
 =begin
 depends 'ey-lib'

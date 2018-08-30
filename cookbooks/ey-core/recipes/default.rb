@@ -16,4 +16,4 @@ include_recipe 'ey-instance-api' # potentially move/absorb into other recipe
 include_recipe 'logrotate'
 include_recipe 'run-one'
 
-#TODOv6 include_recipe 'ey-hosts'
+include_recipe 'ey-hosts'
