@@ -54,6 +54,12 @@ directory "/var/cache/engineyard" do
   mode '0755'
 end
 
+directory "/tmp/src" do
+  owner node["owner_name"]
+  group node["owner_name"]
+  mode '0755'
+end
+
 %w{/engineyard /engineyard/bin}.each do |dir|
   directory dir do
     owner "root"
