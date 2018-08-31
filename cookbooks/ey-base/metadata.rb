@@ -18,6 +18,7 @@ depends 'ssh_keys'
 depends 'nodejs'
 depends 'lb'
 depends 'ey-env'
+depends 'framework_env'
 
 =begin
 depends 'ey-bin'

@@ -160,7 +160,7 @@ end
 include_recipe "ey-env"
 #TODOv6 include_recipe "ey-bin"
 #TODOv6 include_recipe "ey-backup::setup"
-#TODOv6 include_recipe "framework_env"
+include_recipe "framework_env"
 #TODOv6 include_recipe "chef-custom"
 include_recipe "sudo"
 include_recipe "ssh_keys"
