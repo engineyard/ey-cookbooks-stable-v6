@@ -1,9 +1,3 @@
-directory "/tmp/src" do
-  owner "root"
-  group "root"
-  mode '0755'
-end
-
 execute "extract-chruby" do
   command "tar xzf /tmp/src/chruby-0.3.9.tar.gz && cd chruby-0.3.9 && make install"
   cwd "/tmp/src"
