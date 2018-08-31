@@ -75,23 +75,17 @@ cookbook_file '/etc/security/limits.conf' do
   source 'limits.conf'
 end
 
+template "/etc/environment" do
+  owner 'root'
+  group 'root'
+  mode '0644'
+  source 'environment.erb'
+  variables(
+    :framework_env => node.engineyard.environment['framework_env']
+  )
+end
+
 =begin TODOv6
-
-cookbook_file '/etc/env.d/99manpager' do
-  owner 'root'
-  group 'root'
-  mode '0644'
-  source '99manpager'
-  backup 0
-end
-
-cookbook_file '/etc/env.d/25editor' do
-  owner 'root'
-  group 'root'
-  mode '0644'
-  source '25editor'
-  backup 0
-end
 
 cookbook_file '/etc/env.d/02locale' do
   owner 'root'
@@ -108,34 +102,6 @@ cookbook_file '/etc/profile.d/history-helper.sh' do
   source 'history-helper.sh'
   backup 0
 end
-
-cookbook_file '/etc/env.d/26history' do
-  source "26history"
-  backup 0
-  mode '0644'
-  owner 'root'
-  group 'root'
-end
-
-
-template '/etc/env.d/05framework_env' do
-  owner 'root'
-  group 'root'
-  mode '0644'
-  source '05framework_env.erb'
-  backup 0
-  variables(
-    #:framework_env => node.dna['environment']['framework_env']
-    :framework_env => node.engineyard.environment['framework_env']
-  )
-end
-
-execute "remove framework_env from /etc/profile" do
-  command %Q{
-    sed -e '/RACK_ENV/d' -e '/MERB_ENV/d' -e '/RAILS_ENV/d' -i /etc/profile
-   }
-end
-
 
 # TODO: move to security-updates or its own recipe
 # Upgrade ca-certificates to the newest bundle.
