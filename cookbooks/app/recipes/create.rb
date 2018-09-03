@@ -74,5 +74,5 @@ end
   include_recipe "puma"
 end
 
-#TODOv6 include_recipe "env_vars::cloud"
+include_recipe "env_vars::cloud"
 #TODOv6 include_recipe "cdn_distribution::default"

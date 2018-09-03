@@ -7,6 +7,7 @@ depends 'unicorn'
 depends 'passenger5'
 depends 'puma'
 depends 'monit'
+depends 'env_vars'
 
 =begin
 depends 'ey-lib'
