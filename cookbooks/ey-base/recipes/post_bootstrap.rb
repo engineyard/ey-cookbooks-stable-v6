@@ -2,7 +2,7 @@ include_recipe "monit"
 #TODOv6 include_recipe "collectd"
 #TODOv6 include_recipe "newrelic"
 include_recipe "nodejs::common"
-#TODOv6 include_recipe "reboot"
+include_recipe "reboot"
 
 file "/etc/engineyard/recipe-revision.txt" do
   action :touch

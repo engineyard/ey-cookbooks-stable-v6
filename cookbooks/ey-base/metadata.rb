@@ -20,6 +20,7 @@ depends 'lb'
 depends 'ey-env'
 depends 'framework_env'
 depends 'motd'
+depends 'reboot'
 
 =begin
 depends 'ey-bin'

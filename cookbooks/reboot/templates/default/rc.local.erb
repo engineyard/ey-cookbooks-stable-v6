@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Run cookbooks on reboot to ensure all startup is done
+# If no_chef_run_on_reboot is found on the snapshots (/data or /db) skip run
+
+if [[ -e /data/no_chef_run_on_reboot || -e /db/no_chef_run_on_reboot ]]
+then
+  echo Skipping Chef Run on reboot
+else
+  if [ -f /etc/chef/recipes/cookbooks/ey-init/recipes/main.rb ]
+  then
+    LOG_TIME=`date +'%Y-%m-%dT%H-%M-%S'`
+    sed -e "s/chef.*log\"/chef.main.$LOG_TIME.log\"/" -i /etc/chef/solo.rb
+    sed -e 's/"quick": true/"full_run": true/' -i /etc/chef/dna.json
+    /opt/chef/bin/chef-solo -j /etc/chef/dna.json -c /etc/chef/solo.rb 
+  fi
+fi
