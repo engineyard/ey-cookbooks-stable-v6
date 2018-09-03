@@ -19,6 +19,7 @@ depends 'nodejs'
 depends 'lb'
 depends 'ey-env'
 depends 'framework_env'
+depends 'motd'
 
 =begin
 depends 'ey-bin'

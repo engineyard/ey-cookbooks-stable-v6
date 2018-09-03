@@ -135,9 +135,9 @@ include_recipe "ssh_keys"
 # do not run the ruby recipes when we install Node.js and other languages.
 include_recipe "ruby" if node.engineyard.environment.ruby?
 
-=begin TODOv6
 include_recipe "motd" # educational message on login
 
+=begin TODOv6
 if node.engineyard.instance.component?(:ssmtp)
   include_recipe "ssmtp"
 end
