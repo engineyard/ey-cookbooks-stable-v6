@@ -20,6 +20,7 @@ end
 
 Chef::Log.info "instance role: #{node['dna']['instance_role']}"
 service "nginx" do
+  provider Chef::Provider::Service::Systemd
   action :nothing
   supports :restart => true, :status => true, :reload => true
   only_if { ['solo','app', 'app_master'].include?(node['dna']['instance_role']) }
@@ -381,9 +382,9 @@ node.engineyard.apps.each_with_index do |app, index|
 =end
 end
 
-=begin TODOv6
-service "nginx" do
+service "start nginx" do
+  service_name "nginx"
+  provider Chef::Provider::Service::Systemd
   supports :status => true, :restart => true, :reload => true
-  action [ :start, :enable ]
+  action [:start, :enable]
 end
-=end
