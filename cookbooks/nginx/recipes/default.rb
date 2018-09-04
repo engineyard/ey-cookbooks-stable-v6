@@ -27,25 +27,12 @@ end
 
 
 =begin TODOv6
-# This should become a service resource, once we have it for gentoo
-runlevel 'nginx' do
-  action :add
-end
-
-
 managed_template "/etc/conf.d/nginx" do
   source "conf.d/nginx.erb"
   variables({
     :nofile => 16384
   })
   notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
-end
-
-file "/data/nginx/stack.conf" do
-  action :create_if_missing
-  owner node['owner_name']
-  group node['owner_name']
-  mode 0644
 end
 =end
 
@@ -158,21 +145,14 @@ node.engineyard.apps.each_with_index do |app, index|
   end
 
 =begin TODOv6
-  mongrel_service = find_app_service(app, "mongrel")
-  fcgi_service = find_app_service(app, "fcgi")
-  mongrel_base_port =  (mongrel_service[:mongrel_base_port].to_i + (index * 200))
   unicorn = app.recipes.include?('unicorn')
-  php = app.recipes.include?('php')
+=end
 
-#
-# HAX for SD-4650
-# Remove it when awsm stops using dnapi to generate the dna and allows configure ports
-
+  # HAX for SD-4650
+  # Remove it when awsm stops using dnapi to generate the dna and allows configure ports
   meta = node.engineyard.apps.detect {|a| a.metadata?(:nginx_http_port) }
   nginx_http_port = ( meta and meta.metadata?(:nginx_http_port) ) || 8081
-=end
-  nginx_http_port = 8081
-
+  #nginx_http_port = 8081
 
   managed_template "/etc/nginx/listen_http.port" do
     owner node['owner_name']
@@ -329,44 +309,6 @@ node.engineyard.apps.each_with_index do |app, index|
       variables(
         :app_name => app.name
       )
-    end
-
-    # PHP SSL template
-    if stack.match(php_fpm)
-      managed_template "/data/nginx/servers/#{app.name}.ssl.conf" do
-        owner node['owner_name']
-        group node['owner_name']
-        mode 0644
-        source "fpm-ssl.conf.erb"
-        variables({
-          :application => app,
-          :app_name   => app.name,
-          :http_bind_port => nginx_http_port,
-          :server_names =>  app[:vhosts][1][:name].empty? ? [] : [app[:vhosts][1][:name]],
-          :webroot => php_webroot,
-          :env_name => node.engineyard.environment[:name]
-        })
-        notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
-      end
-
-      managed_template "/etc/nginx/servers/#{app.name}/additional_server_blocks.ssl.customer" do
-        owner node['owner_name']
-        group node['owner_name']
-        mode 0644
-        variables({
-          :app_name   => app.name,
-          :server_name => (app.vhosts.first.domain_name.empty? or app.vhosts.first.domain_name == "_") ? "www.domain.com" : app.vhosts.first.domain_name,
-        })
-        source "additional_server_blocks.ssl.customer.erb"
-        not_if { File.exists?("/etc/nginx/servers/#{app.name}/additional_server_blocks.ssl.customer") }
-      end
-      managed_template "/etc/nginx/servers/#{app.name}/additional_location_blocks.ssl.customer" do
-        owner node['owner_name']
-        group node['owner_name']
-        mode 0644
-        source "additional_location_blocks.ssl.customer.erb"
-        not_if { File.exists?("/etc/nginx/servers/#{app.name}/additional_location_blocks.ssl.customer") }
-      end
     end
 
     template "/data/nginx/ssl/#{app.name}.pem" do
