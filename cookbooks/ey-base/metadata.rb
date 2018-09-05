@@ -22,6 +22,7 @@ depends 'framework_env'
 depends 'motd'
 depends 'reboot'
 depends 'ey-cron'
+depends 'ey-backup'
 
 =begin
 depends 'ey-bin'
