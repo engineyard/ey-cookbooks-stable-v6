@@ -30,4 +30,4 @@ include_recipe "mysql::cleanup" if node['mysql']['short_version'] == '5.6' # MyS
 
 include_recipe "mysql::setup_app_users_dbs"
 
-#TODOv6 include_recipe "ey-backup::mysql"
+include_recipe "ey-backup::mysql"
