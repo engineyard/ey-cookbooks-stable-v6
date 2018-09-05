@@ -122,7 +122,7 @@ end
 =end
 
 # all roles get these recipes
-#TODOv6 include_recipe 'ey-cron'
+include_recipe 'ey-cron'
 include_recipe "ey-env"
 #TODOv6 include_recipe "ey-bin"
 #TODOv6 include_recipe "ey-backup::setup"
