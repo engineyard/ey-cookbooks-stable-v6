@@ -10,6 +10,7 @@ depends 'openssl'
 depends 'security_updates'
 depends 'ey-hosts'
 depends 'timezones'
+depends 'syslog-ng'
 
 =begin
 depends 'ey-lib'

@@ -10,7 +10,7 @@ include_recipe 'openssl'
 
 include_recipe 'ey-instance-api' # potentially move/absorb into other recipe
 
-#TODOv6 include_recipe 'sysklogd'
+include_recipe 'syslog-ng'
 include_recipe 'timezones'
 #nuke?: include_recipe 'atd'
 include_recipe 'logrotate'

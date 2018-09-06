@@ -8,12 +8,11 @@ if not File.exists?(File.join(zonepath, zone)) and zone != '' and not zone.nil?
 end
 
 service "cron"
-#TODOv6 service "sysklogd"
 
 link '/etc/localtime' do
   to "#{File.join(zonepath, zone)}"
   notifies :restart, 'service[cron]', :delayed
-  #TODOv6 notifies :restart, 'service[sysklogd]', :delayed
+  notifies :restart, 'service[syslog-ng]', :delayed
   if has_nginx
     notifies :restart, 'service[nginx]', :delayed
   end
