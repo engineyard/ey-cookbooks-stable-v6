@@ -9,6 +9,7 @@ depends 'ntp'
 depends 'openssl'
 depends 'security_updates'
 depends 'ey-hosts'
+depends 'timezones'
 
 =begin
 depends 'ey-lib'

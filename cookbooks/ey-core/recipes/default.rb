@@ -11,7 +11,7 @@ include_recipe 'openssl'
 include_recipe 'ey-instance-api' # potentially move/absorb into other recipe
 
 #TODOv6 include_recipe 'sysklogd'
-#TODOv6 include_recipe 'timezones'
+include_recipe 'timezones'
 #nuke?: include_recipe 'atd'
 include_recipe 'logrotate'
 include_recipe 'run-one'
