@@ -9,9 +9,7 @@ when /mysql/
   is_solo = ['solo'].include?(node['dna']['instance_role'])
   include_recipe "mysql::replication" unless is_solo
   include_recipe "mysql::monitoring"
-=begin TODOv6
   include_recipe "mysql::extras"
-=end
 when "no_db"
   #no-op
 end
