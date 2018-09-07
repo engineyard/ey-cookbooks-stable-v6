@@ -75,4 +75,4 @@ end
 end
 
 include_recipe "env_vars::cloud"
-#TODOv6 include_recipe "cdn_distribution::default"
+include_recipe "cdn_distribution::default"

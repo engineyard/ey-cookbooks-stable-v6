@@ -8,6 +8,7 @@ depends 'passenger5'
 depends 'puma'
 depends 'monit'
 depends 'env_vars'
+depends 'cdn_distribution'
 
 =begin
 depends 'ey-lib'
