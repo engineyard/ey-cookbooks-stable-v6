@@ -23,6 +23,7 @@ depends 'motd'
 depends 'reboot'
 depends 'ey-cron'
 depends 'ey-backup'
+depends 'collectd'
 
 =begin
 depends 'ey-bin'

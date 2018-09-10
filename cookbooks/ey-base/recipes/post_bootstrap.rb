@@ -1,5 +1,5 @@
 include_recipe "monit"
-#TODOv6 include_recipe "collectd"
+include_recipe "collectd"
 #TODOv6 include_recipe "newrelic"
 include_recipe "nodejs::common"
 include_recipe "reboot"
