@@ -29,7 +29,7 @@ directory resin_path do
   action :create
 end
 
-["gem", "engineyard-serverside"].each do |executable|
+["ruby", "gem", "engineyard-serverside"].each do |executable|
   link "#{resin_path}/#{executable}" do
     to "#{gem_bin_path}/#{executable}"
   end
