@@ -19,3 +19,8 @@ include_recipe 'app::remove'
 include_recipe 'app::create'
 include_recipe "app-logs"
 # include_recipe "lb" # this is handled in ey-lib/libraries/ey-instance.rb
+
+# TODOv6 packages for database gems
+package "postgresql-server-dev-10"
+package "libmysqlclient-dev"
+package "libsqlite3-dev"
