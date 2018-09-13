@@ -152,6 +152,20 @@ cookbook_file "/etc/engineyard/fs_type_check_ignore" do
   not_if { File.exist?('/etc/engineyard/fs_type_check_ignore')}
 end
 
+directory "/etc/systemd/system/collectd.service.d" do
+  owner "root"
+  group "root"
+  mode 0755
+  recursive true
+end
+
+cookbook_file "/etc/systemd/system/collectd.service.d/override.conf" do
+  source "check_health_for"
+  owner "root"
+  group "root"
+  mode 0755
+end
+
 =begin
 # This is the graphs app that awsm proxies
 execute "install-graphs-app" do
