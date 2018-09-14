@@ -35,6 +35,11 @@ package 'collectd' do
  version node['collectd']['version']
 end
 
+service 'collectd' do
+  provider Chef::Provider::Service::Systemd
+  action :nothing
+end
+
 cookbook_file "/engineyard/bin/collectd_nanny" do
   owner 'root'
   group 'root'
@@ -160,10 +165,11 @@ directory "/etc/systemd/system/collectd.service.d" do
 end
 
 cookbook_file "/etc/systemd/system/collectd.service.d/override.conf" do
-  source "check_health_for"
+  source "collectd_override.conf"
   owner "root"
   group "root"
   mode 0755
+  notifies :restart, "service[collectd]"
 end
 
 =begin
