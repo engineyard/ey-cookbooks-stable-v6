@@ -165,7 +165,7 @@ directory "/etc/systemd/system/collectd.service.d" do
 end
 
 cookbook_file "/etc/systemd/system/collectd.service.d/override.conf" do
-  source "collectd_override.conf"
+  source "override.conf"
   owner "root"
   group "root"
   mode 0755
