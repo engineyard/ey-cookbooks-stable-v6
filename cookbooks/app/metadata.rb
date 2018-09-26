@@ -9,6 +9,7 @@ depends 'puma'
 depends 'monit'
 depends 'env_vars'
 depends 'cdn_distribution'
+depends 'db_admin_tools'
 
 =begin
 depends 'ey-lib'
