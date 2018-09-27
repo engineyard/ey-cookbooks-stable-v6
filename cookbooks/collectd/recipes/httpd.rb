@@ -5,7 +5,8 @@ include_recipe "nginx::install"
 #
 # TODO: Split the nginx recipe up so we can include only what we
 #       need in this recipe
-unless %w(app_master app solo).include?(node.dna['instance_role'])
+# TODOv6
+unless %w(app_master app solo).include?(node['dna']['instance_role'])
   service "nginx" do
     action :stop
     only_if "/etc/init.d/nginx status"
@@ -45,6 +46,7 @@ end
 #  version '1.6.3-r1'
 #end
 
+=begin TODOv6
 cookbook_file "/etc/monit.d/collectd-fcgi.monitrc" do
   source 'collectd-fcgi.monitrc'
   owner 'root'
@@ -52,22 +54,24 @@ cookbook_file "/etc/monit.d/collectd-fcgi.monitrc" do
   mode 0644
   backup 0
 end
+=end
 
-cookbook_file "/etc/monit.d/collectd-httpd.monitrc" do
-  source 'collectd-httpd.monitrc'
-  owner 'root'
-  group 'root'
-  mode 0644
-  backup 0
+service "collectd-httpd" do
+  provider Chef::Provider::Service::Systemd
+  action :nothing
 end
 
-cookbook_file "/etc/init.d/collectd-httpd" do
-  source 'collectd-httpd.sh'
+cookbook_file "/etc/systemd/system/collectd-httpd.service" do
+  source 'collectd-httpd.service'
   owner 'root'
   group 'root'
   mode 0755
-  backup 0
+  notifies :run, "execute[reload-systemd]", :immediately
+  notifies :enable, "service[collectd-httpd]", :immediately
+  notifies :start, "service[collectd-httpd]", :immediately
 end
+
+package "apache2-utils"
 
 # Setup HTTP auth so AWSM can get at the graphs
 execute "install-http-auth" do
@@ -75,7 +79,6 @@ execute "install-http-auth" do
     htpasswd -cb /etc/collectd-httpd/collectd-httpd.users  engineyard #{node.engineyard.environment['stats_password']}
   }
 end
-
 
 execute "monit reload" do
   action :run

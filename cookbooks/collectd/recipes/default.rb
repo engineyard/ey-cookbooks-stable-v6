@@ -11,15 +11,15 @@ ey_cloud_report "collectd" do
   message 'processing performance monitoring'
 end
 
-=begin
+=begin TODOv6
 # Update rrdtool-binding to latest available
 # - updates net-analyzer/rrdtool as well
 package 'dev-ruby/rrdtool-bindings' do
   action :upgrade
 end
 
-include_recipe 'collectd::httpd'
 =end
+include_recipe 'collectd::httpd'
 
 template "/engineyard/bin/ey-alert.rb" do
   owner 'root'
@@ -69,7 +69,7 @@ end
 
 has_db = ['solo','db_master','db_slave'].include?(node['dna']['instance_role'])
 
-=begin
+=begin TODOv6
 case node.engineyard.environment['db_stack_name']
 when /mysql/
   cookbook_file "/usr/lib/collectd/mysql.so" do
