@@ -136,6 +136,7 @@ node.engineyard.apps.each_with_index do |app,index|
               :app_memory_limit => memory_limit,
               :username => ssh_username,
               :ports => ports)
+    notifies :run, "execute[reload-monit]"
   end
 
 end

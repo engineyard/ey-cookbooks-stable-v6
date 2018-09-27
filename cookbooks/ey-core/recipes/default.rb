@@ -5,6 +5,11 @@ execute "reload-systemd" do
   action :nothing
 end
 
+execute "reload-monit" do
+  command "monit reload"
+  action :nothing
+end
+
 include_recipe 'sysctl::tune'
 include_recipe "ey-core::swap"
 
