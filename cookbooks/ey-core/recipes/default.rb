@@ -1,4 +1,10 @@
 #TODOv6 include_recipe 'prechef'  # always
+
+execute "reload-systemd" do
+  command "systemctl daemon-reload"
+  action :nothing
+end
+
 include_recipe 'sysctl::tune'
 include_recipe "ey-core::swap"
 
