@@ -38,6 +38,10 @@ template "/etc/profile.d/chruby.sh" do
   action :create
 end
 
+package "libssl1.0-dev" do
+  action :install
+end
+
 bash "install ruby" do
   code <<-EOH
     source /usr/local/share/chruby/chruby.sh
@@ -47,7 +51,9 @@ bash "install ruby" do
       echo "Ruby #{ruby_version} is already installed. Skipping Ruby installation"
     else
       echo "Installing Ruby #{ruby_version}"
-      ruby-install ruby #{ruby_version}
+      mkdir -p /opt/rubies
+      chown #{node['owner_name']}:#{node['owner_name']} /opt/rubies
+      sudo -u #{node['owner_name']} ruby-install --no-install-deps -r /opt/rubies ruby #{ruby_version}
     fi
   EOH
 end
