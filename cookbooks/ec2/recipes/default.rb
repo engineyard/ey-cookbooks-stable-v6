@@ -50,7 +50,3 @@ if data_mounted.stdout == ""
   end
 end
 
-apt_package "nginx" do
-  version "1.14.0-0ubuntu1"
-  action :install
-end
