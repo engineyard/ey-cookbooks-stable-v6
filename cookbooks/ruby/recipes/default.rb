@@ -58,6 +58,10 @@ bash "install ruby" do
   EOH
 end
 
+execute "chown /opt/rubies" do
+  command "chown #{node['owner_name']}:#{node['owner_name']} /opt/rubies -R"
+end
+
 ruby_block "add ruby path during chef run" do
   block { ENV['PATH'] = "/opt/rubies/ruby-#{ruby_version}/bin:#{ENV['PATH']}" }
 end
