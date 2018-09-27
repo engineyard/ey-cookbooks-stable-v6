@@ -1,1 +1,1 @@
-default[:ruby][:version] = "2.4.4"
+default[:ruby][:version] = node.engineyard.environment.ruby[:version]
