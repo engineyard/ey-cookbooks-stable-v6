@@ -83,12 +83,8 @@ package "apache2-utils"
 # Setup HTTP auth so AWSM can get at the graphs
 execute "install-http-auth" do
   command %Q{
-    htpasswd -cb /etc/collectd-httpd/collectd-httpd.users  engineyard #{node.engineyard.environment['stats_password']}
+    htpasswd -cb /etc/collectd-httpd/collectd-httpd.users engineyard #{node.engineyard.environment['stats_password']}
   }
-end
-
-execute "monit reload" do
-  action :run
 end
 
 execute "ensure-newest-nginx" do
