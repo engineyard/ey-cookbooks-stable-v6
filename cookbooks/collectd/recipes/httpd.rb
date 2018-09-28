@@ -93,9 +93,10 @@ end
 
 execute "ensure-newest-nginx" do
   command %Q{
-    /etc/init.d/collectd-httpd upgrade
+    systemctl restart collectd-httpd
   }
   only_if %Q{
     [[ -f /var/run/collectd-httpd.pid && "$(readlink -m /proc/$(cat /var/run/collectd-httpd.pid)/exe)" =~ '/usr/sbin/nginx' ]]
   }
+  guard_interpreter :bash
 end
