@@ -47,7 +47,6 @@ cookbook_file "/engineyard/bin/collectd_nanny" do
   source 'collectd_nanny'
 end
 
-=begin
 cron 'hourly collectd check' do
   minute '5'
   hour '0-2,4-23'
@@ -65,7 +64,6 @@ cron 'daily collectd check' do
   weekday '*'
   command '/engineyard/bin/collectd_nanny daily'
 end
-=end
 
 has_db = ['solo','db_master','db_slave'].include?(node['dna']['instance_role'])
 
