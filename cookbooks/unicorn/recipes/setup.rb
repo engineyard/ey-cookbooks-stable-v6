@@ -2,7 +2,6 @@ ey_cloud_report "unicorn" do
   message "processing unicorn"
 end
 
-=begin
 directory "/var/log/engineyard/unicorn" do
   owner node.engineyard.environment.ssh_username
   group node.engineyard.environment.ssh_username
@@ -26,4 +25,3 @@ node.engineyard.apps.each do |app|
   end
 
 end
-=end
