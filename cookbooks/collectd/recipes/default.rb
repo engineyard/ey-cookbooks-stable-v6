@@ -145,10 +145,10 @@ directory "/etc/systemd/system/collectd.service.d" do
 end
 
 cookbook_file "/etc/systemd/system/collectd.service.d/override.conf" do
-  source "override.conf"
+  source "collectd_override.conf"
   owner "root"
   group "root"
-  mode 0755
+  mode 0644
   notifies :restart, "service[collectd]"
 end
 
