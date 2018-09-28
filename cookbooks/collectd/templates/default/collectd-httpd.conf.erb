@@ -41,17 +41,12 @@ http {
 
   server_tokens off;
 
-  # Allow custom settings to be added to the http block
-#  include /etc/nginx/http-custom.conf;
-#  include /etc/nginx/stack.conf;
-#  include /etc/nginx/servers/*.conf;
-
   server {
     listen 8989 default;
     server_name _;
-    
+
     root /var/www/localhost/htdocs;
-        
+
     access_log /var/log/nginx/collectd-httpd.access.log main;
     error_log /var/log/nginx/collectd-httpd.error.log notice;
 
@@ -61,7 +56,7 @@ http {
     location / {
       root /var/www/localhost/htdocs;
     }
-    
+
     location ~ \.cgi$ {
       root /var/www/localhost/htdocs;
 
