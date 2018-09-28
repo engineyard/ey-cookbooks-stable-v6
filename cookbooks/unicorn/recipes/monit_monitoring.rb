@@ -82,7 +82,7 @@ node.engineyard.apps.each do |app|
 
   #TODOv6 remove /etc/monit.d?
   directory "/etc/monit.d"
-  
+
   managed_template "/etc/monit.d/unicorn_#{app.name}.monitrc" do
     owner node.engineyard.environment.ssh_username
     group node.engineyard.environment.ssh_username
@@ -104,7 +104,7 @@ node.engineyard.apps.each do |app|
     )
     backup 0
 
-    #TODOv6 notifies :run, 'execute[restart-monit]', :immediately
+    notifies :run, 'execute[reload-monit]', :delayed
   end
 
   # cleanup extra unicorn workers
