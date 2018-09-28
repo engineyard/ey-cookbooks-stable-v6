@@ -87,27 +87,7 @@ when "no_db"
 end
 =end
 
-=begin
-#This is required by the current (v3) of the graphs tarball.
-package 'dev-perl/Config-General' do
-  version '2.600.0'
-end
-
-#This is required by the current (v3) of the graphs tarball.
-package 'dev-perl/JSON' do
-  version '2.900.0'
-end
-
-#This is required by the current (v3) of the graphs tarball.
-package 'dev-perl/regexp-common' do
-  version '2013031301.0.0'
-end
-
-#This is required by the current (v3) of the graphs tarball.
-package 'dev-perl/HTML-Parser' do
-  version '3.710.0-r1'
-end
-=end
+include_recipe "collectd::perl"
 
 memcached = node['memcached'] && node['memcached']['perform_install']
 managed_template "/etc/engineyard/collectd.conf" do
@@ -172,7 +152,6 @@ cookbook_file "/etc/systemd/system/collectd.service.d/override.conf" do
   notifies :restart, "service[collectd]"
 end
 
-=begin
 # This is the graphs app that awsm proxies
 execute "install-graphs-app" do
   command %Q{
@@ -189,6 +168,7 @@ execute "install-graphs-app" do
   }
 end
 
+=begin TODOv6
 # Copy any rrd files that exist now from the original install
 # to the new location so the data is preserved then remove the original collectd
 execute "cleanup_original_collectd" do

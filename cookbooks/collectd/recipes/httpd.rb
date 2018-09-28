@@ -37,24 +37,22 @@ template "/etc/collectd-httpd/collectd-httpd.conf" do
   source "collectd-httpd.conf.erb"
 end
 
-# Preinstalled on 2012.11.009 AMI
-#package 'www-misc/fcgiwrap' do
-#  version '1.0.3-r1'
-#end
-#
-#package 'www-servers/spawn-fcgi' do
-#  version '1.6.3-r1'
-#end
+package 'fcgiwrap' do
+  version '1.1.0-10'
+end
 
-=begin TODOv6
+package 'spawn-fcgi' do
+  version '1.6.4-2'
+end
+
 cookbook_file "/etc/monit.d/collectd-fcgi.monitrc" do
   source 'collectd-fcgi.monitrc'
   owner 'root'
   group 'root'
   mode 0644
   backup 0
+  notifies :run, "execute[reload-monit]"
 end
-=end
 
 service "collectd-httpd" do
   provider Chef::Provider::Service::Systemd
