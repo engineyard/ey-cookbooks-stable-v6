@@ -9,7 +9,8 @@ node.engineyard.apps.each do |app|
       :user => node.engineyard.environment.ssh_username,
       :type => app.app_type,
       :app_type => app.app_type,
-      :framework_env => node['dna']['environment']['framework_env']
+      :framework_env => node['dna']['environment']['framework_env'],
+      :ruby_bin_path => "/opt/rubies/ruby-#{node[:ruby][:version]}/bin"
     })
     source "env.erb"
   end
