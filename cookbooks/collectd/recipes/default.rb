@@ -109,6 +109,7 @@ managed_template "/etc/engineyard/collectd.conf" do
     :short_version => 'TODOv6', #short_version,
     :disk_thresholds => DiskThresholds.new
   })
+  notifies :restart, "service[collectd]", :delayed
 end
 
 cookbook_file "/engineyard/bin/check_readonly.sh" do
@@ -147,7 +148,9 @@ cookbook_file "/etc/systemd/system/collectd.service.d/override.conf" do
   owner "root"
   group "root"
   mode 0644
-  notifies :restart, "service[collectd]"
+  notifies :run, "execute[reload-systemd]", :delayed
+  notifies :enable, "service[collectd]", :delayed
+  notifies :restart, "service[collectd]", :delayed
 end
 
 # This is the graphs app that awsm proxies
