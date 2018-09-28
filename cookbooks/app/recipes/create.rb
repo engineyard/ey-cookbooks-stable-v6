@@ -62,16 +62,12 @@ end
     end
   end
 
-=begin TODOv6
+  # the recipes are monit, nginx, and depending on the stack passenger5, puma, or unicorn
   app.recipes.each do |recipe|
+    next if recipe == "memcached"
     include_recipe recipe
   end
-=end
-  include_recipe "monit"
-  include_recipe "nginx"
-  #include_recipe "unicorn"
-  #include_recipe "passenger5"
-  include_recipe "puma"
+
 end
 
 include_recipe "env_vars::cloud"
