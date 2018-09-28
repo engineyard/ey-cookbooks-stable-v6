@@ -38,8 +38,14 @@ template "/etc/profile.d/chruby.sh" do
   action :create
 end
 
-package "libssl1.0-dev" do
-  action :install
+if ruby_version =~ /^2\.3/
+  package "libssl1.0-dev" do
+    action :install
+  end
+else # ruby 2.4
+  package "libssl-dev" do
+    action :install
+  end
 end
 
 bash "install ruby" do
