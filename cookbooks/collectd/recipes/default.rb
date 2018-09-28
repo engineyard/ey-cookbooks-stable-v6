@@ -169,33 +169,11 @@ execute "install-graphs-app" do
   }
 end
 
-=begin TODOv6
-# Copy any rrd files that exist now from the original install
-# to the new location so the data is preserved then remove the original collectd
-execute "cleanup_original_collectd" do
-  command %Q{
-    /usr/bin/rsync -a /opt/collectd/var/lib/collectd/rrd/ /var/lib/collectd/rrd/ &&
-    rm -rf /opt/collectd
-  }
-  only_if { File.directory?('/opt/collectd/var/lib/collectd/rrd') }
-end
-
 # The real one is /etc/engineyard/collectd.conf
 # leaving the default one in place is confusing
 execute "cleanup_original_collectd_conf" do
   command %Q{
-    rm /etc/collectd.conf
+    rm /etc/collectd/collectd.conf
   }
-  only_if { File.exist?('/etc/collectd.conf') }
+  only_if { File.exist?('/etc/collectd/collectd.conf') }
 end
-
-# We run collectd from initab using this command
-inittab "cd" do
-  command "/usr/sbin/collectd -C /etc/engineyard/collectd.conf -f"
-end
-
-# Kill collectd (violently) to ensure that it has a fresh config
-execute "ensure-collectd-has-fresh-config" do
-  command 'pkill -9 collectd;true'
-end
-=end
