@@ -79,7 +79,7 @@ http {
       fastcgi_param  REMOTE_USER        $remote_user;
 
       fastcgi_param  SCRIPT_FILENAME  /var/www/localhost/htdocs$fastcgi_script_name;
-      fastcgi_pass localhost:8988;
+      fastcgi_pass   unix:/run/fcgiwrap.socket;
     }
   }
 }

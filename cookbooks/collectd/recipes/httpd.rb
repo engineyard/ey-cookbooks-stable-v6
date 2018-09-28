@@ -37,21 +37,30 @@ template "/etc/collectd-httpd/collectd-httpd.conf" do
   source "collectd-httpd.conf.erb"
 end
 
+service 'fcgiwrap' do
+  provider Chef::Provider::Service::Systemd
+  action :nothing
+end
+
 package 'fcgiwrap' do
   version '1.1.0-10'
 end
 
-package 'spawn-fcgi' do
-  version '1.6.4-2'
+directory "/etc/systemd/system/fcgiwrap.service.d" do
+  owner "root"
+  group "root"
+  mode 0755
+  recursive true
 end
 
-cookbook_file "/etc/monit.d/collectd-fcgi.monitrc" do
-  source 'collectd-fcgi.monitrc'
-  owner 'root'
-  group 'root'
+cookbook_file "/etc/systemd/system/fcgiwrap.service.d/override.conf" do
+  source "fcgiwrap_override.conf"
+  owner "root"
+  group "root"
   mode 0644
-  backup 0
-  notifies :run, "execute[reload-monit]"
+  notifies :run, "execute[reload-systemd]", :delayed
+  notifies :enable, "service[fcgiwrap]", :delayed
+  notifies :restart, "service[fcgiwrap]", :delayed
 end
 
 service "collectd-httpd" do
