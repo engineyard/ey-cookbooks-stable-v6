@@ -13,6 +13,10 @@ package "ntp" do
   action :install
 end
 
+package "ntpdate" do
+  action :install
+end
+
 # We're using the default for now, but copy over
 # the existing one in case we ever want to change
 # anything.
