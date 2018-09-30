@@ -85,15 +85,14 @@ template "/etc/environment" do
   )
 end
 
-=begin TODOv6
-
-cookbook_file '/etc/env.d/02locale' do
+cookbook_file '/etc/default/locale' do
   owner 'root'
   group 'root'
   mode '0644'
-  source '02locale'
-  backup 0
+  source 'locale'
 end
+
+=begin TODOv6
 
 cookbook_file '/etc/profile.d/history-helper.sh' do
   owner 'root'
