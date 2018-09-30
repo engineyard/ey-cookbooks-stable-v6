@@ -1,0 +1,21 @@
+# Created by Engine Yard chef run
+[Unit]
+Description=Statistics collection and monitoring daemon
+After=local-fs.target network.target
+Requires=local-fs.target network.target
+ConditionPathExists=/etc/engineyard/collectd.conf
+Documentation=man:collectd(1)
+Documentation=man:collectd.conf(5)
+Documentation=https://collectd.org
+
+[Service]
+Type=notify
+NotifyAccess=main
+EnvironmentFile=-/etc/default/collectd
+ExecStartPre=/usr/sbin/collectd -t -C /etc/engineyard/collectd.conf
+ExecStart=/usr/sbin/collectd -C /etc/engineyard/collectd.conf
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

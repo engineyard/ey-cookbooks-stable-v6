@@ -143,8 +143,8 @@ directory "/etc/systemd/system/collectd.service.d" do
   recursive true
 end
 
-cookbook_file "/etc/systemd/system/collectd.service.d/override.conf" do
-  source "collectd_override.conf"
+cookbook_file "/etc/systemd/system/collectd.service" do
+  source "collectd.service"
   owner "root"
   group "root"
   mode 0644
