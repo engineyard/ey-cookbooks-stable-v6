@@ -92,38 +92,9 @@ cookbook_file '/etc/default/locale' do
   source 'locale'
 end
 
-=begin TODOv6
-
-cookbook_file '/etc/profile.d/history-helper.sh' do
-  owner 'root'
-  group 'root'
-  mode '0755'
-  source 'history-helper.sh'
-  backup 0
-end
-
-# TODO: move to security-updates or its own recipe
-# Upgrade ca-certificates to the newest bundle.
-enable_package "app-misc/ca-certificates" do
-  version "20140325-r1 ~amd64"
-end
-
-package "app-misc/ca-certificates" do
-  version "20140325-r1"
-  action :upgrade
-end
-
-execute "update-ca-certificates --fresh" do
- action :nothing
- subscribes :run, 'package[app-misc/ca-certificates]', :delayed
-end
-
-=end
-
 # all roles get these recipes
 include_recipe 'ey-cron'
 include_recipe "ey-env"
-#TODOv6 include_recipe "ey-bin"
 include_recipe "ey-backup::setup"
 include_recipe "framework_env"
 include_recipe "sudo"
