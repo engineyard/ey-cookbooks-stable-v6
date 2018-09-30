@@ -7,3 +7,5 @@ LANG="en_US.UTF-8"
 # for the system and not supported by Engine Yard.
 # Reference: YT-GD-834
 LC_COLLATE="POSIX"
+
+LC_CTYPE="en_US.UTF-8"
