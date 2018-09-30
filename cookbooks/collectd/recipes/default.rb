@@ -141,9 +141,9 @@ cookbook_file "/etc/systemd/system/collectd.service" do
   owner "root"
   group "root"
   mode 0644
-  notifies :run, "execute[reload-systemd]", :delayed
-  notifies :enable, "service[collectd]", :delayed
-  notifies :restart, "service[collectd]", :delayed
+  notifies :run, "execute[reload-systemd]", :immediately
+  notifies :enable, "service[collectd]", :immediately
+  notifies :restart, "service[collectd]", :immediately
 end
 
 # This is the graphs app that awsm proxies
