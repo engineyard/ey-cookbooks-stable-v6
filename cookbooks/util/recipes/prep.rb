@@ -15,3 +15,8 @@ include_recipe 'app::remove'
 include_recipe 'app::create'
 include_recipe "app-logs"
 include_recipe "db_admin_tools"
+
+# TODOv6 packages for database gems
+package "postgresql-server-dev-10"
+package "libmysqlclient-dev"
+package "libsqlite3-dev"
