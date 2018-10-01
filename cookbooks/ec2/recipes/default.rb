@@ -20,7 +20,8 @@ if data_mounted.stdout == ""
 
   while 1
     if node['data_volume'].found?
-      directory "/data" do
+      directory "create /data before mounting" do
+        path '/data/'
         owner 'root'
         group 'root'
         mode 0755
@@ -34,11 +35,7 @@ if data_mounted.stdout == ""
       mount "/data" do
         fstype node['data_filesystem']
         device node['data_volume'].device
-        action :mount
-      end
-
-      mount "/data" do
-        action :enable
+        action [:mount, :enable]
       end
 
       bash "grow-data-ebs" do
