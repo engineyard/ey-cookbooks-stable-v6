@@ -1,0 +1,11 @@
+name 'util'
+maintainer 'Engine Yard'
+
+depends 'ey-lib'
+depends 'app'
+depends 'db_admin_tools'
+depends 'deploy-keys'
+depends 'ey-cron'
+#TODOv6 depends 'postgresql'
+depends 'mysql'
+depends 'app-logs'
