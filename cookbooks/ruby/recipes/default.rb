@@ -64,3 +64,4 @@ ruby_block "add ruby path during chef run" do
   block { ENV['PATH'] = "/opt/rubies/ruby-#{ruby_version}/bin:#{ENV['PATH']}" }
 end
 
+include_recipe "ruby::rubygems"
