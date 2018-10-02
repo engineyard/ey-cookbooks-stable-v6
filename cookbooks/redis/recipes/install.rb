@@ -77,21 +77,5 @@ if node['redis']['is_redis_instance']
   else
     bin_path = '/usr/sbin'
   end
-  template "/data/monit.d/redis.monitrc" do
-    owner 'root'
-    group 'root'
-    mode 0644
-    source "redis.monitrc.erb"
-    variables({
-      'configfile' => '/etc/redis.conf',
-      'pidfile' => node['redis']['pidfile'],
-      'logfile' => node['redis']['basename'],
-      'port' => node['redis']['port'],
-      'bin_path' => bin_path
-    })
-  end
 
-  execute "monit reload" do
-    action :run
-  end
 end
