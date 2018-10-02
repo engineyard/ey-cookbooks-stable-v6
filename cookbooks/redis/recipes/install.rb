@@ -10,7 +10,8 @@
 #
 
 redis_version = node['redis']['version']
-redis_config_file_version = redis_version[0..2]
+# we call split(':') because Ubuntu versions include an epoch number e.g. 5:4.0.9-1
+redis_config_file_version = redis_version.split(':').last[0..2]
 redis_download_url = node['redis']['download_url']
 redis_base_directory = node['redis']['basedir']
 
