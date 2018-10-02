@@ -10,6 +10,9 @@ depends 'monit'
 depends 'env_vars'
 depends 'cdn_distribution'
 depends 'db_admin_tools'
+depends 'mysql'
+depends 'nginx'
+depends 'ruby'
 
 =begin
 depends 'ey-lib'
