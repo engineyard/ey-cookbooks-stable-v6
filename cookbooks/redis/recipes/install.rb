@@ -93,7 +93,7 @@ if node['redis']['is_redis_instance']
     redis_bin_path = '/usr/bin/redis-server'
   end
 
-  service "redis" do
+  service "redis-server" do
     provider Chef::Provider::Service::Systemd
     action :nothing
   end
@@ -109,7 +109,7 @@ if node['redis']['is_redis_instance']
       basedir: node['redis']['basedir'],
     })
     notifies :run, "execute[reload-systemd]", :immediately
-    notifies :enable, "service[redis]", :immediately
-    notifies :restart, "service[redis]", :immediately
+    notifies :enable, "service[redis-server]", :immediately
+    notifies :restart, "service[redis-server]", :immediately
   end
 end
