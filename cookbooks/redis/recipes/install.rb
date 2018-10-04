@@ -31,20 +31,19 @@ if node['redis']['is_redis_instance']
     end
   end
 
-  directory redis_base_directory do
-    owner 'redis'
-    group 'redis'
-    mode 0755
-    recursive true
-    action :create
+  execute "create redis user" do
+    command "adduser --system --home /var/lib/redis --group redis"
+    not_if "getent passwd redis"
   end
 
-  directory "/var/run/redis" do
-    owner 'redis'
-    group 'redis'
-    mode 0755
-    recursive true
-    action :create
+  [redis_base_directory, "/var/run/redis", "/var/lib/redis", "/etc/redis"].each do |dir|
+    directory dir do
+      owner 'redis'
+      group 'redis'
+      mode 0755
+      recursive true
+      action :create
+    end
   end
 
   redis_config_variables = {
