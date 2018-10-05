@@ -23,6 +23,10 @@ if node['redis']['is_redis_instance']
     variables 'vm.overcommit_memory' => 1
   end
 
+  execute "reload sysctl before starting redis" do
+    command "sysctl -p"
+  end
+
   thp_filename = '/sys/kernel/mm/transparent_hugepage/enabled'
   if ::File.exists?(thp_filename)
     execute 'disable transparent huge pages when present' do
@@ -37,10 +41,6 @@ if node['redis']['is_redis_instance']
   end
 
   if run_installer
-    execute "set vm.overcommit_memory before installing" do
-      command "sysctl vm.overcommit_memory=1"
-    end
-
     if node['redis']['install_from_source']
       include_recipe 'redis::install_from_source'
     else
