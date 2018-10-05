@@ -23,7 +23,24 @@ if node['redis']['is_redis_instance']
     variables 'vm.overcommit_memory' => 1
   end
 
+  thp_filename = '/sys/kernel/mm/transparent_hugepage/enabled'
+  if ::File.exists?(thp_filename)
+    execute 'disable transparent huge pages when present' do
+      command "echo never > #{thp_filename}"
+    end
+
+    transparent_hugepage_command = "echo never > /sys/kernel/mm/transparent_hugepage/enabled"
+    execute "set /sys/kernel/mm/transparent_hugepage/enabled on boot" do
+      command "sed -i '1a #{transparent_hugepage_command}' /etc/rc.local"
+      not_if "grep -e '#{transparent_hugepage_command}' /etc/rc.local"
+    end
+  end
+
   if run_installer
+    execute "set vm.overcommit_memory before installing" do
+      command "sysctl vm.overcommit_memory=1"
+    end
+
     if node['redis']['install_from_source']
       include_recipe 'redis::install_from_source'
     else
