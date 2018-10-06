@@ -12,33 +12,28 @@ ey_cloud_report "cron" do
   only_if node['dna']['crons'].empty?
 end
 
-execute "clearing old crons" do
-  command "crontab -r; crontab -r -u #{node['owner_name']}; true"
-end
+cron_header = <<-CRON
+# begin-ey-cron-header This is a delimeter. DO NOT DELETE
 
-update_file "/tmp/cron_update_header" do
-  action :rewrite
+# The cron jobs from the Engine Yard UI can be found on /etc/cron.d/ey-cron-jobs
 
-  body <<-CRON
 PATH=/opt/rubies/ruby-#{node['ruby']['version']}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 RAILS_ENV="#{node.engineyard.environment['framework_env']}"
 RACK_ENV="#{node.engineyard.environment['framework_env']}"
-PHP_ENV="#{node.engineyard.environment['framework_env']}"
+# end-ey-cron-header This is a delimeter. DO NOT DELETE
 CRON
+
+file "/tmp/cron_header" do
+  content cron_header
 end
 
 execute "add environment variables to cron" do
-  command "crontab /tmp/cron_update_header"
+  command "sed -i '/begin-ey-cron-header/, /'end-ey-cron-header'/d' /var/spool/cron/crontabs/root && sed -i '3r /tmp/cron_header' /var/spool/cron/crontabs/root"
 end
 
 # Make same changes to user's cron
 execute "add environment variables to user's cron" do
-  command "crontab -u #{node['owner_name']} /tmp/cron_update_header"
-end
-
-file "remote /tmp/cron_update_header" do
-  path "/tmp/cron_update_header"
-  action :delete
+  command "sed -i '/begin-ey-cron-header/, /'end-ey-cron-header'/d' /var/spool/cron/crontabs/#{node['owner_name']} && sed -i '3r /tmp/cron_header' /var/spool/cron/crontabs/#{node['owner_name']}"
 end
 
 unless 'app' == node['dna']['instance_role']
@@ -58,16 +53,24 @@ directory "/var/spool/cron" do
 end
 
 if crontab_instance?(node)
+  cron_text = []
+  cron_text << <<-CRON
+# These are the cron jobs from the Engine Yard UI
+
+PATH=/opt/rubies/ruby-#{node['ruby']['version']}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+RAILS_ENV="#{node.engineyard.environment['framework_env']}"
+RACK_ENV="#{node.engineyard.environment['framework_env']}"
+CRON
   (node['dna']['crons']||[]).each do |c|
-    cron c['name'] do
-      minute   c['minute']
-      hour     c['hour']
-      day      c['day']
-      month    c['month']
-      weekday  c['weekday']
-      command  c['command']
-      user     c['user']
-    end
+    cron_text << "# #{c['name']}"
+    cron_text << "#{c['minute']} #{c['hour']} #{c['day']} #{c['month']} #{c['weekday']} #{c['user']} #{c['command']}"
+  end
+  cron_text << ""
+  file "/etc/cron.d/ey-cron-jobs" do
+    content cron_text.join("\n")
+    owner "root"
+    group "root"
+    mode 0644
   end
 end
 
