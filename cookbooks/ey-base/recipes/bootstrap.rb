@@ -121,5 +121,4 @@ if node.engineyard.instance.component?(:exim)
   end
 end
 
-#TODOv6 include_recipe 'ey-cron' #duplicate?
 =end

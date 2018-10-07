@@ -1,4 +1,3 @@
-#TODOv6 include_recipe "ey-cron"
 case node.engineyard.environment['db_stack_name']
 when /postgres/
   #TODOv6 include_recipe "postgresql::default"
