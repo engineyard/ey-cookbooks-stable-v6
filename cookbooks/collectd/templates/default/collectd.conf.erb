@@ -47,11 +47,9 @@ LoadPlugin threshold
   File "/var/log/collectd.log"
   Timestamp true
 </Plugin>
-  
+
 # Ignore (don't monitor) /dev, /dev/shm, /var/log (it's really /mnt/log)
-# Report the reserved disk space as being used, instead of free ... 'cause it's not
 <Plugin "df">
-  ReportReserved true
   FSType "ext3"
   FSType "ext4"
 </Plugin>
