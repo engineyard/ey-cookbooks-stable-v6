@@ -72,7 +72,7 @@ cookbook_file "/etc/systemd/system/collectd-httpd.service" do
   source 'collectd-httpd.service'
   owner 'root'
   group 'root'
-  mode 0755
+  mode 0644
   notifies :run, "execute[reload-systemd]", :immediately
   notifies :enable, "service[collectd-httpd]", :immediately
   notifies :start, "service[collectd-httpd]", :immediately

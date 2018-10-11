@@ -73,7 +73,7 @@ end
 cookbook_file "/etc/systemd/system/monit.service" do
   owner "root"
   group "root"
-  mode 0700
+  mode 0644
   source "monit.service"
   notifies :run, "execute[reload-systemd]", :immediately
   notifies :enable, "service[monit]", :immediately
