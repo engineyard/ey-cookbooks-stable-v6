@@ -27,6 +27,15 @@ file "/tmp/cron_header" do
   content cron_header
 end
 
+cron_files = ["/var/spool/cron/crontabs/root", "/var/spool/cron/crontabs/#{node['owner_name']}"]
+cron_files.each do |cron_file|
+  if !File.exist?(cron_file)
+    file cron_file do
+      content "#\n#\n#\n"
+    end
+  end
+end
+
 execute "add environment variables to cron" do
   command "sed -i '/begin-ey-cron-header/, /'end-ey-cron-header'/d' /var/spool/cron/crontabs/root && sed -i '3r /tmp/cron_header' /var/spool/cron/crontabs/root"
 end
