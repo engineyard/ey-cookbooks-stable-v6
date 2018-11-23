@@ -30,6 +30,7 @@ if is_memcached_instance
     include_recipe 'memcached::install_from_package'
   end
 
+=begin TODOv6
   template "/etc/conf.d/memcached" do
     source "memcached.erb"
     owner 'root'
@@ -47,4 +48,5 @@ if is_memcached_instance
     mode 0644
     notifies :run, 'execute[restart-monit]', :delayed
   end
+=end
 end
