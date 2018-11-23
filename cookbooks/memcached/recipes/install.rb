@@ -24,15 +24,8 @@ else
 end
 
 if is_memcached_instance
-  if node['memcached']['install_from_source']
-    include_recipe 'memcached::install_from_source'
-  else
-    include_recipe 'memcached::install_from_package'
-  end
-
-=begin TODOv6
-  template "/etc/conf.d/memcached" do
-    source "memcached.erb"
+  template "/etc/memcached.conf" do
+    source "memcached.conf.erb"
     owner 'root'
     group 'root'
     mode 0644
@@ -41,6 +34,13 @@ if is_memcached_instance
       :misc_opts => node['memcached']['misc_opts']
   end
 
+  if node['memcached']['install_from_source']
+    include_recipe 'memcached::install_from_source'
+  else
+    include_recipe 'memcached::install_from_package'
+  end
+
+=begin TODOv6
   template '/data/monit.d/memcached.monitrc' do
     source 'memcached.monitrc'
     owner 'root'
