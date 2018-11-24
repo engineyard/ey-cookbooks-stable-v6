@@ -6,7 +6,7 @@ require 'pp'
 # This drops memcached.yml on all app and utility instances
 #
 
-ey_cloud_report "memcached" do
+ey_cloud_report "configuring memcached" do
   message "Configuring memcached"
 end
 
