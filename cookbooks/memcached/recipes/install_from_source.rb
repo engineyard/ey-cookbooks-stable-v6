@@ -4,6 +4,22 @@ memcached_installer_directory = '/opt/memcached-installer'
 
 Chef::Log.info "Installing memcached #{memcached_version} from source..."
 
+# required when installing memcached from source
+package "libevent-dev"
+
+execute "create memcache user" do
+  command "adduser --system --home /nonexistent --no-create-home --group memcache"
+  not_if "getent passwd memcache"
+end
+
+directory "/var/run/memcached" do
+  owner "memcache"
+  group "memcache"
+  mode 0755
+  recursive true
+  action :create
+end
+
 remote_file "/opt/memcached-#{memcached_version}.tar.gz" do
   source "#{memcached_download_url}"
   owner node[:owner_name]
@@ -28,4 +44,27 @@ end
 execute "run memcached-installer/configure, make, install" do
   cwd memcached_installer_directory
   command "./configure && make && make install"
+end
+
+cookbook_file "/etc/systemd/system/memcached.service" do
+  source "memcached.service"
+  owner "root"
+  group "root"
+  mode 0644
+end
+
+directory "/usr/local/share/memcached/scripts" do
+  owner "root"
+  group "root"
+  mode 0755
+  recursive true
+  action :create
+end
+
+template "/usr/local/share/memcached/scripts/systemd-memcached-wrapper" do
+  source "systemd-memcached-wrapper.erb"
+  owner "root"
+  group "root"
+  mode 0755
+  variables memcached_path: "/usr/local/bin/memcached"
 end
