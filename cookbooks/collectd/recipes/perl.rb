@@ -1,5 +1,5 @@
 package "perl" do
-  version "5.26.1-6ubuntu0.2"
+  version "5.26.1-6ubuntu0*"
 end
 
 package "libconfig-general-perl" do
