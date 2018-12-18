@@ -44,13 +44,9 @@ if is_memcached_instance
     include_recipe 'memcached::install_from_package'
   end
 
-=begin TODOv6
-  template '/data/monit.d/memcached.monitrc' do
-    source 'memcached.monitrc'
-    owner 'root'
-    group 'root'
-    mode 0644
-    notifies :run, 'execute[restart-monit]', :delayed
+  service "memcached" do
+    provider Chef::Provider::Service::Systemd
+    action :enable
   end
-=end
+
 end
