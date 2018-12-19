@@ -1,0 +1,9 @@
+# sidekiq settings
+# see: https://github.com/mperham/sidekiq/blob/master/examples/config.yml
+---
+:verbose: <%= @verbose %>
+:concurrency: <%= @concurrency %>
+:queues:
+<% @queues.each do |queue, priority| %>
+  - [<%= queue.to_s.inspect %>, <%= priority %>]
+<% end %>
