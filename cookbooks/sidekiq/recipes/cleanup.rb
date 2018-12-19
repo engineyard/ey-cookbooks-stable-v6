@@ -3,20 +3,14 @@
 # Recipe:: cleanup
 #
 
-# reload monit
-execute "reload-monit" do
-  command "monit quit && telinit q"
-  action :nothing
-end
-
 if node['sidekiq']['is_sidekiq_instance']
   # report to dashboard
-  ey_cloud_report "sidekiq" do
+  ey_cloud_report "sidekiq cleanup" do
     message "Cleaning up sidekiq (if needed)"
   end
 
   # loop through applications
-  node.dna['applications'].each do |app_name, _|
+  node['dna']['applications'].each do |app_name, _|
     # monit
     file "/etc/monit.d/sidekiq_#{app_name}.monitrc" do
       action :delete
