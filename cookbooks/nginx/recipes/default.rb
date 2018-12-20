@@ -17,17 +17,6 @@ service "nginx" do
   only_if { ['solo','app', 'app_master'].include?(node['dna']['instance_role']) }
 end
 
-
-=begin TODOv6
-managed_template "/etc/conf.d/nginx" do
-  source "conf.d/nginx.erb"
-  variables({
-    :nofile => 16384
-  })
-  notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
-end
-=end
-
 behind_proxy = true
 managed_template "/data/nginx/nginx.conf" do
   owner node['owner_name']
