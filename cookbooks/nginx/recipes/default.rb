@@ -1,6 +1,5 @@
 recipe = self
 stack = node.engineyard.environment['stack_name']
-mongrel_unicorn = /(nginx_unicorn|nginx_mongrel)/
 php_fpm = /nginx_fpm/
 
 Chef::Log.debug "Nginx action: #{node['nginx'][:action]}"
@@ -125,10 +124,6 @@ node.engineyard.apps.each_with_index do |app, index|
     notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
   end
 
-=begin TODOv6
-  unicorn = app.recipes.include?('unicorn')
-=end
-
   # HAX for SD-4650
   # Remove it when awsm stops using dnapi to generate the dna and allows configure ports
   meta = node.engineyard.apps.detect {|a| a.metadata?(:nginx_http_port) }
@@ -150,7 +145,7 @@ node.engineyard.apps.each_with_index do |app, index|
   # name with different ifs, so since this can be determined during compile
   # time values, we can use just a regular if statement
 
-  #if stack.match(mongrel_unicorn)
+  if stack.match(/nginx_unicorn/)
     managed_template "/data/nginx/servers/#{app.name}.conf" do
       owner node['owner_name']
       group node['owner_name']
@@ -169,7 +164,7 @@ node.engineyard.apps.each_with_index do |app, index|
       )
       notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
     end
-  #end
+  end
 end
 
 service "start nginx" do
