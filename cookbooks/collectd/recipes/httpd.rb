@@ -1,18 +1,5 @@
 include_recipe "nginx::install"
 
-# The above include will cause nginx to be listening unnecessarily
-# on port 81 on db / util instances, so we stop it here.
-#
-# TODO: Split the nginx recipe up so we can include only what we
-#       need in this recipe
-# TODOv6
-unless %w(app_master app solo).include?(node['dna']['instance_role'])
-  service "nginx" do
-    action :stop
-    only_if "/etc/init.d/nginx status"
-  end
-end
-
 directory "/var/www/localhost/htdocs" do
   owner node.engineyard.environment.ssh_username
   group node.engineyard.environment.ssh_username

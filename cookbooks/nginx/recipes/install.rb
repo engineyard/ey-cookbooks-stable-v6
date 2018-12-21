@@ -14,6 +14,20 @@ ey_cloud_report "nginx" do
   message "processing nginx"
 end
 
+# Mask nginx on non-app instances
+if node['nginx']['systemd_mask']
+  link "/etc/systemd/system/nginx.service" do
+    to "/dev/null"
+    notifies :run, "execute[reload-systemd]", :immediately
+  end
+else
+  file "/etc/systemd/system/nginx.service" do
+    action :delete
+    only_if %Q{[ -L /etc/systemd/system/nginx.service ] && [ "$(readlink /etc/systemd/system/nginx.service)" = "/dev/null" ]}
+    notifies :run, "execute[reload-systemd]", :immediately
+  end
+end
+
 package "nginx" do
   version nginx_version
 end
