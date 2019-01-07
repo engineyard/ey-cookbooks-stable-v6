@@ -22,12 +22,10 @@
   end
 end
 
-=begin TODOv6
 logrotate "application-logs" do
   files "/var/log/engineyard/apps/*/*.log"
   copy_then_truncate true
 end
-=end
 
 (node['dna']['removed_applications'] || []).each do |dead_app|
   execute "remove-logs-for-#{dead_app}" do
