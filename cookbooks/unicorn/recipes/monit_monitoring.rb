@@ -80,9 +80,6 @@ node.engineyard.apps.each do |app|
     source "unicorn.rb.erb"
   end
 
-  #TODOv6 remove /etc/monit.d?
-  directory "/etc/monit.d"
-
   managed_template "/etc/monit.d/unicorn_#{app.name}.monitrc" do
     owner node.engineyard.environment.ssh_username
     group node.engineyard.environment.ssh_username
