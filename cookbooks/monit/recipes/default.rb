@@ -79,29 +79,3 @@ cookbook_file "/etc/systemd/system/monit.service" do
   notifies :enable, "service[monit]", :immediately
   notifies :restart, "service[monit]", :immediately
 end
-
-=begin
-# TODOv6 why does restart-monit pkill -9 rackup and mongrel_rails
-execute "restart-monit" do
-  apps = node['dna']['applications'].map{|app, data| data['type'] }
-  cmd = []
-  apps.each do |app|
-    case app
-    when 'rails'
-      cmd << "pkill -9 mongrel_rails"
-    when 'rack'
-      cmd << "pkill -9 rackup"
-    end
-  end
-  cmd.uniq!
-  command %Q{ #{cmd.join(' && ')} || [[ $? == 1 ]]}
-  command %Q{ pkill -9 monit || [[ $? == 1 ]]}
-  action :nothing
-end
-
-# TODOv6 is this needed?
-execute "monit quit" do
-  action :nothing
-  notifies :restart, 'service[monit]'
-end
-=end
