@@ -78,7 +78,6 @@ cookbook_file "/data/nginx/mime.types" do
   source "mime.types"
 end
 
-=begin TODOv6
 logrotate "nginx" do
   files "/var/log/engineyard/nginx/*log"
   copy_then_truncate true
@@ -86,7 +85,6 @@ logrotate "nginx" do
 [ ! -f /var/run/nginx.pid ] || kill -USR1 `cat /var/run/nginx.pid`
   SH
 end
-=end
 
 managed_template "/data/nginx/nginx_version.conf" do
   owner node.engineyard.environment.ssh_username
