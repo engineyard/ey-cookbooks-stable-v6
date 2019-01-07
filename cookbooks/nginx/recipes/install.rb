@@ -38,47 +38,6 @@ directory "/var/log/engineyard/nginx" do
   mode 0755
 end
 
-=begin TODOv6
-# Precreate Nginx Work Directories with Deploy permissions for Passenger
-directory "/var/tmp/nginx" do
-  owner 'root'
-  group 'root'
-  mode 0755
-end
-
-directory "/var/tmp/nginx/client" do
-  owner node.engineyard.environment.ssh_username
-  group node.engineyard.environment.ssh_username
-  mode 0755
-  recursive true
-end
-
-directory "/var/tmp/nginx/fastcgi" do
-  owner node.engineyard.environment.ssh_username
-  group 'root'
-  mode 0700
-end
-
-directory "/var/tmp/nginx/proxy" do
-  owner node.engineyard.environment.ssh_username
-  group 'root'
-  mode 0700
-  recursive true
-end
-
-directory "/var/tmp/nginx/scgi" do
-  owner node.engineyard.environment.ssh_username
-  group 'root'
-  mode 0700
-end
-
-directory "/var/tmp/nginx/uwscgi" do
-  owner node.engineyard.environment.ssh_username
-  group 'root'
-  mode 0700
-end
-=end
-
 %w{/data/nginx/servers /data/nginx/common}.each do |dir|
   directory dir do
     owner node['owner_name']
