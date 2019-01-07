@@ -79,22 +79,6 @@ cookbook_file "/data/nginx/mime.types" do
 end
 
 =begin TODOv6
-cookbook_file "/data/nginx/koi-utf" do
-  owner node['owner_name']
-  group node['owner_name']
-  mode 0755
-  source "koi-utf"
-end
-
-cookbook_file "/data/nginx/koi-win" do
-  owner node['owner_name']
-  group node['owner_name']
-  mode 0755
-  source "koi-win"
-end
-=end
-
-=begin TODOv6
 logrotate "nginx" do
   files "/var/log/engineyard/nginx/*log"
   copy_then_truncate true
