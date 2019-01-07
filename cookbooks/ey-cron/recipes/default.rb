@@ -83,40 +83,19 @@ CRON
   end
 end
 
-# This and the remote_file for cron_nanny go together
-# Cron touches a file every minute
-cron 'touch cron-check' do
-  minute  '*'
-  hour    '*'
-  day     '*'
-  month   '*'
-  weekday '*'
-  command 'touch /tmp/cron-check'
-end
+#TODOv6 include_recipe 'ntp::cronjobs'
 
-# Cron nanny attempts to DTRT when cron isn't updating
-# the file every minute
-cookbook_file '/engineyard/bin/cron_nanny' do
-  owner 'root'
-  group 'root'
+directory "/etc/systemd/system/cron.service.d" do
+  owner "root"
+  group "root"
   mode 0755
-  source 'cron_nanny'
+  recursive true
 end
 
-=begin TODOv6
-execute "Ensure that cron_nanny is restarted by init with the latest version" do
-  command %Q~
-  for proc in /proc/[0-9]*
-  do
-    _pid="${proc##*/}"
-    (( _pid > 1 )) && [[ ${_pid} != $self ]]|| continue
-
-    if command grep -q '/engineyard/bin/[c]ron_nanny' ${proc}/cmdline
-    then kill -9 ${_pid} ; fi
-  done
-  telinit q
-  ~
+cookbook_file "/etc/systemd/system/cron.service.d/override.conf" do
+  source "cron_override.conf"
+  owner "root"
+  group "root"
+  mode 0644
+  notifies :run, "execute[reload-systemd]", :delayed
 end
-
-include_recipe 'ntp::cronjobs'
-=end
