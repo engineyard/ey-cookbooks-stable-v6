@@ -105,20 +105,3 @@ include_recipe "ssh_keys"
 include_recipe "ruby" if node.engineyard.environment.ruby?
 
 include_recipe "motd" # educational message on login
-
-=begin TODOv6
-if node.engineyard.instance.component?(:ssmtp)
-  include_recipe "ssmtp"
-end
-
-if node.engineyard.instance.component?(:exim)
-  exim = node.engineyard.instance.component(:exim)
-  exim_auth "default" do
-    my_hostname exim['host']
-    smtp_host   exim['outbound_host']
-    username    exim['user']
-    password    exim['password']
-  end
-end
-
-=end
