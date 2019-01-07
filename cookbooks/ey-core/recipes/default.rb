@@ -1,4 +1,4 @@
-#TODOv6 include_recipe 'prechef'  # always
+include_recipe 'prechef'  # always
 
 execute "reload-systemd" do
   command "systemctl daemon-reload"
