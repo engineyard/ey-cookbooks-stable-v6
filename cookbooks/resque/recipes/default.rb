@@ -4,6 +4,12 @@
 #
 if node['resque']['is_resque_instance']
 
+  # bin script
+  cookbook_file "/engineyard/bin/resque" do
+    mode 0755
+    source "resque"
+  end
+
   execute "install resque gem" do
     command "gem install resque redis redis-namespace yajl-ruby -r"
     not_if { "gem list | grep resque" }

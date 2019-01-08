@@ -1,0 +1,331 @@
+#!/bin/bash
+
+# This script controls the Resque daemon and belongs in /engineyard/bin/resque
+
+original_path="$PWD"
+
+PATH=/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
+
+usage() {
+  echo -e "
+  Usage: $0 <appname> {start|stop|term|quit|pause|cont|abort} <environment> <config_file>
+
+  stop     is a synonym for quit
+  quit     issues -QUIT signal to request the worker to stop
+  term     issues -TERM signal to request the worker to stop
+  pause    issues -USR2 signal when the current job finishes, worker is to continue running, but not start any new jobs
+  cont     issues -CONT signal to continue after pausing
+  abort    issues -USR1 signal kills current job, or shuts down if there is no job
+
+  See http://github.com/defunkt/resque for more details
+
+  Set the GRACE_TIME env variable to configure how long we should wait for after
+  issuing quit, before asumming a problem and killing the worker and job.
+"
+  exit 1
+}
+
+remove_lockfile() {
+  if [[ -e "$lockfile" ]]
+  then
+    logger -t "monit-resque[$$]" "removing $lockfile for $(cat $lockfile)"
+    rm $lockfile
+  fi
+}
+
+exit_cleanly() {
+  cd "$original_path"
+  logger -t "monit-resque[$$]" "exiting wrapper cleanly with $result"
+  exit $result
+}
+
+unlock_and_exit_cleanly() {
+  remove_lockfile
+  exit_cleanly
+}
+
+set_pid_from_file() {
+  if [[ -s "${pidfile}" ]]
+  then pid=$(cat $pidfile)
+  else pid=0
+  fi
+}
+
+signal_worker() {
+  result=0
+  set_pid_from_file
+  (( pid )) || return 0
+  logger -t "monit-resque[$$]" "Issuing kill with -$signal $pid"
+  sleep_count=0
+  kill -$signal $pid
+}
+
+signal_worker_fatally() {
+  signal_worker
+  (( $pid )) || return 0
+  if [[ -n "$ALLOW_TIMEOUT" ]]
+  then
+    while [[ -e "/proc/$pid" ]]
+    do
+      sleep 0.25
+      let "sleep_count+=1"
+      let "REPORT_TIME = $sleep_count%4"
+      if (( sleep_count > ${GRACE_TIME:-60} ))
+      then
+        logger -t "monit-resque[$$]" "Resque worker with pid $pid for $worker_tag still running, issuing -TERM"
+        kill -15 $pid 2>/dev/null || true
+      elif (( REPORT_TIME == 0 ))
+      then
+        let "RUNTIME = $sleep_count/4"
+        logger -t "monit-resque[$$]" "Waiting for $pid to exit ( for $RUNTIME seconds now)"
+      fi
+    done
+  fi
+
+  sleep 1
+
+  if [[ -d "/proc/$pid" ]]
+  then
+    for child in $(ps axo pid,ppid | awk "{ if ( \$2 == $pid ) { print \$1 } }")
+    do
+      kill -9 $child 2>/dev/null || true
+      logger -t "monit-resque[$$]" "Murdering Resque workers child with $child for $worker_tag"
+      break
+    done
+
+    while [[ -d "/proc/$pid" ]]
+    do
+      logger -t "monit-resque[$$]" "Murdering Resque worker with $pid for $worker_tag"
+      kill -9 $pid
+      sleep 1
+    done
+  fi
+  logger -t "monit-resque[$$]" "Removing pid file for $pid - $worker_tag"
+  if [[ -e "$pidfile" && ! -d /proc/$pid ]]
+  then rm -f "$pidfile"
+  fi
+}
+
+lock() {
+  result=0
+  if [[ -e "$lockfile" ]]
+  then
+    last_lock_pid=$(cat $lockfile)
+    if [[ -n $last_lock_pid && -z "$(ps axo pid | grep $last_lock_pid)" && -f $lockfile ]]
+    then
+      sleep 1
+      logger -t "monit-resque[$$]" "Removing stale lock file for $worker_tag ($last_lock_pid)"
+      rm $lockfile 2>&1
+    else
+      logger -t "monit-resque[$$]" "Monit already acting on $worker_tag ($last_lock_pid)"
+      result=1
+      exit_cleanly
+    fi
+  fi
+  echo $$ > "$lockfile"
+}
+
+legacy_fix() {
+  # In the transition from 0.18.2 to 0.18.3 of ey monit scripts the way
+  # the pid file is used to find the process to kill has changed.
+  # To avert problems being left behind after an upgrade of this package,
+  if [[ -f "$pidfile" ]]
+  then
+    set_pid_from_file
+    (( pid )) || return 0
+    if [[ -n "$(ps axo pid,command | grep $pid | grep 'su -c')" ]]
+    then
+      logger -t "monit-resque[$$]" "Monit Scripts have just been upgraded, killing old style workers"
+      for child in $(ps axo pid,ppid| awk "{ if ( \$2 == $pid ) { print \$1 }}")
+      do
+        kill -TERM $child 2> /dev/null
+        while [[ -e "/proc/$child" ]]
+        do
+          logger -t "monit-resque[$$]" "killing legacy worker: $child"
+          if [[ -e "/proc/$child" ]]
+          then kill -9 $child 2> /dev/null
+          fi
+          sleep 1
+        done
+      done
+
+      if [[ -e "/proc/$pid" ]]
+      then kill -9 $pid 2> /dev/null
+      fi
+
+      if [[ -f "${pidfile}" ]] 
+      then rm "$pidfile"
+      fi
+
+      unlock_and_exit_cleanly
+    fi
+  fi
+}
+
+if (( UID ))
+then 
+  logger -t $(basename $0) -s "Must be run as root, not as $USER" 
+  exit 1
+fi
+
+application=$1
+action=$2
+environment=$3
+config_file=$4
+data_path="/data/${application}"
+application_root="${data_path}/current"
+shared_path="${data_path}/shared"
+config_path="${shared_path}/config"
+queue_parameters=()
+extra_options=() # somewhere to store extra env vars set in resque_x.conf files
+
+if (( $# < 4 ))
+then
+  usage 
+  exit 1
+fi
+
+if [[ "${action}" == "usage" ]]
+then
+  usage
+  exit_cleanly
+fi
+
+if [[ -e "${config_path}/${config_file}" ]]
+then
+  source "${config_path}/${config_file}"
+
+  # Resque supports both QUEUE and QUEUES variables for specifying queues to 
+  # operate on, for more information please read 
+  # https://github.com/defunkt/resque/#priorities-and-queue-lists
+  if [[ -n "${QUEUE}" ]]
+  then queue_parameters+=("QUEUE='${QUEUE}'")
+  fi
+
+  if [[ -n "${QUEUES}" ]]
+  then queue_parameters+=("QUEUES='${QUEUES}'")
+  fi
+
+  if (( ${#queue_parameters[@]} == 0 ))
+  then
+    logger -t "resque_${application}" -s "QUEUE(S) have not been defined in ${config_file} not found for application: ${application}"
+    exit 1
+  fi
+
+  # Support-610 - support for NEWRELIC_DISPATCHER variable
+  if [[ -n "${NEWRELIC_DISPATCHER}" ]]
+  then extra_options+=("NEWRELIC_DISPATCHER='${NEWRELIC_DISPATCHER}'")
+  fi
+
+else
+  logger -t "resque_${application}" -s "/data/${application}/shared/config/${config_file} not found for application: ${application}"
+  exit 1
+fi
+
+worker_tag=$(echo "$config_file" | sed 's/.conf//')
+logfile="${application_root}/log/$worker_tag.log"
+lockfile="/tmp/$worker_tag.monit-lock"
+pidfile="/var/run/engineyard/resque/$application/$worker_tag.pid"
+gemfile="${application_root}/Gemfile"
+
+if [[ -f "$gemfile" && -x "${application_root}/ey_bundler_binstubs/rake" ]]
+then RAKE="bundle exec '${application_root}/ey_bundler_binstubs/rake'"
+fi
+
+if [[ ! -d "${application_root}" ]]
+then
+  logger -t "monit-resque[$$]" "${application_root} does not exist."
+  exit 1
+fi
+
+# NOTE: Captials for the following two variables are intentional.
+USER=$(stat -L -c"%U" "${application_root}")
+HOME="/home/$USER"
+export HOME USER
+
+# Fix for SD-3786 - stop sending in VERBOSE= and VVERBOSE= by default
+if declare -p VERBOSE >/dev/null 2>&1
+then export V="VERBOSE=$VERBOSE"
+fi
+if declare -p VVERBOSE >/dev/null 2>&1
+then export VV="VVERBOSE=$VVERBOSE"
+fi
+
+if [[ ! -d "/var/run/engineyard/resque/$application" ]]
+then mkdir -p "/var/run/engineyard/resque/$application"
+fi
+
+# handle the second param, don't start if already existing
+
+logger -t "monit-resque[$$]" "${action} requested for Resque worker $worker_tag"
+set_pid_from_file
+
+case "$action" in
+  (start)
+    lock
+    cd "${application_root}"
+    if (( pid )) && [[ -d "/proc/$pid" ]]
+    then
+      logger -t "monit-resque[$$]" "Resque worker $worker_tag is already running with $pid."
+      result=1
+    else
+      rm -f "$pidfile"
+      logger -t "monit-resque[$$]" "Removing stale pid file ($pidfile) for pid $pid"
+    fi
+
+    if [[ ! -f "$pidfile" ]]
+    then
+      cmd="/usr/bin/env \$V \$VV APP_ROOT=\${application_root} RACK_ENV=\${environment} RAILS_ENV=\${environment} MERB_ENV=\${environment} ${queue_parameters[*]} ${extra_options[*]} ${RAKE:-'rake'} -f \${application_root}/Rakefile resque:work"
+      eval "sudo -u \$USER -H $cmd >> \$logfile 2>&1 &"
+      result=$?
+      logger -t "monit-resque[$$]" "Started with pid $! and exit $result"
+      echo $! > "$pidfile"
+      sleep 0.1
+    fi
+    unlock_and_exit_cleanly
+    ;;
+  (stop|quit)
+    legacy_fix
+    lock
+    signal="QUIT"
+    ALLOW_TIMEOUT=1
+    signal_worker
+    if [[ -e "$lockfile" ]]
+    then rm "$lockfile"
+    fi
+    unlock_and_exit_cleanly
+    ;;
+  (kill|term)
+    lock
+    legacy_fix
+    ALLOW_TIMEOUT=
+    signal="TERM"
+    signal_worker_fatally
+    unlock_and_exit_cleanly
+    ;;
+  (pause)
+    lock
+    ALLOW_TIMEOUT=
+    signal="USR2"
+    signal_worker
+    unlock_and_exit_cleanly
+    ;;
+  (cont)
+    lock
+    ALLOW_TIMEOUT=
+    signal="CONT"
+    signal_worker
+    unlock_and_exit_cleanly
+    ;;
+  (abort)
+    lock
+    ALLOW_TIMEOUT=
+    signal="USR1"
+    signal_worker
+    unlock_and_exit_cleanly
+    ;;
+  (*)
+    logger -t "monit-resque[$$]" "Unknown action ${action}."
+    exit 1
+    ;;
+esac
