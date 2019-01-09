@@ -143,6 +143,7 @@ node.engineyard.apps.each_with_index do |app,index|
               :username => ssh_username,
               :port => app_base_port,
               :version => version)
+    notifies :run, "execute[reload-monit]", :delayed
   end
 
   cookbook_file "/data/#{app.name}/shared/config/env.custom" do
@@ -164,9 +165,3 @@ cookbook_file "/engineyard/bin/passenger_monitor" do
   backup 0
 end
 
-=begin TODOv6
-# Reload monit after making changes
-execute "monit-reload" do
-  command "monit quit && telinit q"
-end
-=end
