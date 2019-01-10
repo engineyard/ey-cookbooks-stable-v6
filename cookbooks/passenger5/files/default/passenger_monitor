@@ -48,13 +48,13 @@ let "grace_time=$grace_time*4"
 ##      ^(^[0-9]+)\s* -- Get the pid (First set of numbers at beginning of string).
 ##      (\b[0-9]+)\.[0-9]+\sMB\s+ -- Grab the virtual memory for each process. Must begin with a word break (i.e. space), have numbers, a dot, more numbers a space and MB. Only the integer half of the number is grabbed.
 ##      (\b[0-9]+)\.[0-9]+\sMB -- same thing for the real memory for each process
-##      .*\/([^\/]+)\/current -- grab the application name out of the path
+##      .*\/([^\/]+)\/current.* -- grab the application name out of the path. .* captures different formats. Some passenger versions show /data/todo/current/public
 ##      \1,\2,\3,\4/ -- assembe the selected values into a comma-separated-list, to later be converted into an array
 
 # Create an array variable
 declare -a info
 
-for record in `passenger-memory-stats | egrep -i "Passenger RubyApp:" | sed -r '/MB/!d;s/(^[0-9]+)\s*(\b[0-9]+)\.[0-9]\sMB\s+(\b[0-9]+)\.[0-9]+\sMB.*\/([^\/]+)\/current\/.*/\1,\2,\3,\4/'`; do
+for record in `passenger-memory-stats | egrep -i "Passenger (Rails|Rack|Ruby|AppPreloader):" | sed -r '/MB/!d;s/(^[0-9]+)\s*(\b[0-9]+)\.[0-9]\sMB\s+(\b[0-9]+)\.[0-9]+\sMB.*\/([^\/]+)\/current.*/\1,\2,\3,\4/'`; do
 
   # Turn the record into an array, and assign to local variables for clarity
   info=(`echo ${record//,/ }`)
