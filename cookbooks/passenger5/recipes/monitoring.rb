@@ -37,7 +37,7 @@ if ['app_master', 'app', 'solo'].include?(node['dna']['instance_role'])
       day '*'
       weekday '*'
       month '*'
-      command "/engineyard/bin/passenger_monitor #{app_name} -l #{max_megabytes} -w #{grace_time} >/dev/null 2>&1"
+      command "/bin/bash -l -c '/engineyard/bin/passenger_monitor #{app_name} -l #{max_megabytes} -w #{grace_time} >/dev/null 2>&1'"
       action :create  # this actually replaces a cron entry if it already exists
     end
 
