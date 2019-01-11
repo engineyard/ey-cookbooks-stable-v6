@@ -4,7 +4,7 @@
 #
 
 # Find all cron jobs specified in attributes/cron.rb where current node name matches instance_name
-named_crons = node[:custom_crons].find_all {|c| c[:instance_name] == node.dna[:name] }
+named_crons = node[:custom_crons].find_all {|c| c[:instance_name] == node['dna']['name'] }
 
 # Find all cron jobs for utility instances
 util_crons = node[:custom_crons].find_all {|c| c[:instance_name] == 'util' }
