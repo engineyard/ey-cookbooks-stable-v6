@@ -54,7 +54,7 @@ let "grace_time=$grace_time*4"
 # Create an array variable
 declare -a info
 
-for record in `passenger-memory-stats | egrep -i "Passenger (Rails|Rack|Ruby|AppPreloader):" | sed -r '/MB/!d;s/(^[0-9]+)\s*(\b[0-9]+)\.[0-9]\sMB\s+(\b[0-9]+)\.[0-9]+\sMB.*\/([^\/]+)\/current.*/\1,\2,\3,\4/'`; do
+for record in `passenger-memory-stats | egrep -i "Passenger (RailsApp|RackApp|RubyApp|AppPreloader):" | sed -r '/MB/!d;s/(^[0-9]+)\s*(\b[0-9]+)\.[0-9]\sMB\s+(\b[0-9]+)\.[0-9]+\sMB.*\/([^\/]+)\/current.*/\1,\2,\3,\4/'`; do
 
   # Turn the record into an array, and assign to local variables for clarity
   info=(`echo ${record//,/ }`)
@@ -106,7 +106,7 @@ exit_code=$?
 ## Kill any passenger workers that are not in $pstats
 if [ "$exit_code" -eq "0" ] ; then
   pstats=$(echo "$raw_stats" | sed -r -e '/PID:/!d' -e 's/.*PID:\s([0-9]+).*/\1/' | sort -n| uniq)
-  for pid in `diff <(ps aux | egrep -i '[P]assenger RubyApp:' | awk '{print $2}' | sort -n) <(echo "$pstats") | grep '<' | awk '{print $2}'`; do
+  for pid in `diff <(ps aux | egrep -i '[P]assenger (RailsApp|RackApp|RubyApp|AppPreloader):' | awk '{print $2}' | sort -n) <(echo "$pstats") | grep '<' | awk '{print $2}'`; do
     kill -9 $pid
     logger -t passenger_monitor -s "Killing PID $pid - orphaned process"
   done
