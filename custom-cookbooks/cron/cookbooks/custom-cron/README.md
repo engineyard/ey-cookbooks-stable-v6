@@ -55,13 +55,13 @@ Yard.
 All customizations go to `cookbooks/custom-cron/attributes/default.rb`.
 
 Add your cron jobs as an array of hashes in `default[:custom_crons]` You must
-specify a name, time, command and instance name or instance type. They following arguments are valid: `app`, `db`, `util`, `all`, or "instance_name".  The time value must be the
+specify a name, time, command and instance name or instance type. They following arguments are valid: `app_master`, `app`, `db`, `util`, `all`, or "instance_name".  The time value must be the
 full string containing minute, hour, day, month and weekday separated by spaces
 (eg: '* * * * *').
 
 ```
 default[:custom_crons] = [
-   {:name => "Install on myRedisInstance only", :time => "10 * * * *",
+  {:name => "Install on myRedisInstance only", :time => "10 * * * *",
     :command => "echo 'test1'", :instance_name => "myRedisInstance"
   },
   {:name => "Install on all instances", :time => "10 1 * * *",

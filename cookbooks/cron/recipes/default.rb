@@ -9,6 +9,9 @@ named_crons = node[:custom_crons].find_all {|c| c[:instance_name] == node['dna']
 # Find all cron jobs for utility instances
 util_crons = node[:custom_crons].find_all {|c| c[:instance_name] == 'util' }
 
+# Find all cron jobs for app master only
+app_master_crons = node[:custom_crons].find_all {|c| c[:instance_name] == 'app_master' }
+
 # Find all cron jobs for application instances
 app_crons = node[:custom_crons].find_all {|c| c[:instance_name] == 'app' }
 
@@ -23,6 +26,10 @@ crons = all_crons + named_crons
 
 if node['dna']['instance_role'] == 'util'
     crons = crons + util_crons
+end
+
+if  node['dna']['instance_role'] == 'app_master'
+    crons = crons + app_master_crons
 end
 
 if node['dna']['instance_role'] == 'app' || node['dna']['instance_role'] == 'app_master'
