@@ -1,0 +1,78 @@
+#!/bin/bash
+
+user=$1
+dbroot=<%= @dbroot %>
+datadir=<%= @datadir %>
+keyname=<%= @keyname %>
+instances='<%= @instances %>'
+replicas='<%= @replicas %>'
+keypath="${dbroot}/keygen/${user}/"
+ssh_options='ssh -i /root/.ssh/internal -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10'
+
+function usage {
+  echo "Usage: $0 user"
+  echo
+  echo "  Copies keys from the db master to all instances in the environment."
+  exit 127
+}
+
+function push_keys {
+  local target=${1}
+
+  if [[ "$user" != 'mysql' ]]
+  then
+    eval ${ssh_options} ${target} "mkdir -p ${user_home}/.${keyname}"
+    rsync -a -e "${ssh_options}" ${keyname}.crt ${target}:${user_home}/.${keyname}/
+    rsync -a -e "${ssh_options}" ${keyname}.key ${target}:${user_home}/.${keyname}/
+    rsync -a -e "${ssh_options}" root.crt ${target}:${user_home}/.${keyname}/
+  fi
+}
+
+function is_up() {
+  eval ${ssh_options} $1 'date'
+  [[ $? -eq 0 ]]
+}
+
+if [[ -z $user ]]
+then
+  usage
+fi
+
+# Copy user keys to all instances
+user_home=$(cat /etc/passwd|grep ^${user} |awk -F: '{print $6}')
+cd ${keypath}
+# copy keys to other instances
+for instance in ${instances}
+do
+  if is_up ${instance}
+  then
+    push_keys ${instance}
+  else
+    echo "Instance ${instance} is not available. Skipping."
+  fi
+done
+
+# Copy keys to replicas
+for replica in ${replicas}
+do
+  if is_up ${replica}
+  then
+    # Copy Server Keys to replica data dir
+    cd ${datadir}
+    rsync -a -e "${ssh_options}" root.crt ${replica}:${datadir}/
+    rsync -a -e "${ssh_options}" server.crt ${replica}:${datadir}/
+    rsync -a -e "${ssh_options}" server.key ${replica}:${datadir}/
+    
+    # Copy User Keys to replica EBS
+    cd ${dbroot}
+    # needs to be an rsync to preserve priveleges and ownership
+    rsync -a -e "${ssh_options}" 9.srl ${replica}:${dbroot}/
+    rsync -a -e "${ssh_options}" keygen ${replica}:${dbroot}/
+    
+    # Copy User Keys to replica Users
+    cd ${keypath}
+    push_keys ${replica}
+  else
+    echo 'Replica DB not accessible, skipping.'
+  fi
+done
