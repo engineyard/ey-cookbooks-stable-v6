@@ -92,6 +92,12 @@ cookbook_file '/etc/default/locale' do
   source 'locale'
 end
 
+cookbook_file '/root/.profile' do
+  owner 'root'
+  group 'root'
+  source 'profile'
+end
+
 # all roles get these recipes
 include_recipe 'ey-cron'
 include_recipe "ey-env"
