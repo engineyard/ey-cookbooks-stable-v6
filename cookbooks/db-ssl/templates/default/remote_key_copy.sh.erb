@@ -25,6 +25,7 @@ function push_keys {
     rsync -a -e "${ssh_options}" ${keyname}.crt ${target}:${user_home}/.${keyname}/
     rsync -a -e "${ssh_options}" ${keyname}.key ${target}:${user_home}/.${keyname}/
     rsync -a -e "${ssh_options}" root.crt ${target}:${user_home}/.${keyname}/
+    eval ${ssh_options} ${target} "chown ${user}:${user} -R ${user_home}/.${keyname}"
   fi
 }
 
