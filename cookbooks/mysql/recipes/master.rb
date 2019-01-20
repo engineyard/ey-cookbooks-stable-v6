@@ -3,6 +3,7 @@ ey_cloud_report "mysql" do
 end
 
 include_recipe "mysql::install"
+include_recipe "mysql::user_my.cnf"
 
 directory "/db/mysql" do
   owner "mysql"
