@@ -1,3 +1,4 @@
+include_recipe 'db-ssl::setup'
 include_recipe 'mysql::client'
 
 mysql_slave node['dna']['db_host'] do

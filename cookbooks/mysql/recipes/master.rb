@@ -2,6 +2,7 @@ ey_cloud_report "mysql" do
   message "processing mysql"
 end
 
+include_recipe 'db-ssl::setup'
 include_recipe "mysql::install"
 include_recipe "mysql::user_my.cnf"
 
