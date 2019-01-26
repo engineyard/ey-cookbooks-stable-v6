@@ -5,7 +5,7 @@ password=$2
 max_age=$3
 
 # -- generate keys for users
-datadir=<%= @datadir %>
+ssldir=<%= @ssldir %>
 dbroot=<%= @dbroot %>
 keyname=<%= @keyname %>
 keypath="${dbroot}/keygen/<user>/"
@@ -41,8 +41,8 @@ cd ${keypath}
 openssl genrsa -des3 -passout pass:${password} -out ${keyname}.key 1024
 openssl rsa -passin pass:${password} -in ${keyname}.key -out ${keyname}.key
 openssl req -new -key ${keyname}.key -out ${keyname}.csr -subj "/C=US/ST=California/L=San Francisco/O=${organization}/CN=${user}"
-openssl x509 -req -in ${keyname}.csr -CA ${datadir}/root.crt -CAkey ${datadir}/server.key -days ${max_age} -out ${keyname}.crt -CAcreateserial
-cp ${datadir}/root.crt ./
+openssl x509 -req -in ${keyname}.csr -CA ${ssldir}/root.crt -CAkey ${ssldir}/server.key -days ${max_age} -out ${keyname}.crt -CAcreateserial
+cp ${ssldir}/root.crt ./
 # need to chmod and chown at this point
 chmod 0400 ${keyname}.key
 chown -R ${user}.${user} ./

@@ -7,7 +7,7 @@ end
 
 owner = node[keyname]['owner']
 dbroot = node[keyname]['dbroot']
-datadir = node[keyname]['datadir']
+ssldir = node[keyname]['ssldir']
 
 managed_template "/engineyard/bin/local_key_copy.sh" do
   owner 'root'
@@ -31,14 +31,14 @@ if ['solo','db_master'].include?(node['dna']['instance_role'])
       :db_owner => owner,
       :db_admin_pass => node['dna']['users'].first['password'],
       :max_age => 365*5,
-      :datadir => datadir,
+      :ssldir => ssldir,
       :replicas => (node.db_slaves || '').join(' '),
     )
   end
 
   execute "Setup Server SSL CA and root certificate" do
     command "/engineyard/bin/db_server_ssl_keys.sh"
-    not_if { File.exists?(File.join(datadir, 'root.crt')) }
+    not_if { File.exists?(File.join(ssldir, 'root.crt')) }
   end
 
   managed_template "/engineyard/bin/db_user_ssl_keys.sh" do
@@ -47,7 +47,7 @@ if ['solo','db_master'].include?(node['dna']['instance_role'])
     mode 0700
     source "db_user_ssl_keys.sh.erb"
     variables(    :max_age => 365*5,
-      :datadir => datadir,
+      :ssldir => ssldir,
       :dbroot => dbroot,
       :keyname => keyname
     )
@@ -55,13 +55,13 @@ if ['solo','db_master'].include?(node['dna']['instance_role'])
 
   execute "Setup #{owner} user SSL key" do
     command "/engineyard/bin/db_user_ssl_keys.sh #{owner} #{node['dna']['users'].first['password']} #{365*5}"
-    only_if { File.exists?(File.join(datadir, 'root.crt')) }
+    only_if { File.exists?(File.join(ssldir, 'root.crt')) }
     not_if { File.exists?(File.join(dbroot, 'keygen', owner, "#{keyname}.key")) }
   end
 
   execute "Setup #{node['dna']['users'].first['username']} user SSL key" do
     command "/engineyard/bin/db_user_ssl_keys.sh #{node['dna']['users'].first['username']} #{node['dna']['users'].first['password']} #{365*5}"
-    only_if { File.exists?(File.join(datadir, 'root.crt')) }
+    only_if { File.exists?(File.join(ssldir, 'root.crt')) }
     not_if { File.exists?(File.join(dbroot, 'keygen', node['dna']['users'].first['username'], "#{keyname}.key")) }
   end
 
@@ -76,7 +76,7 @@ if ['solo','db_master'].include?(node['dna']['instance_role'])
       :instances => (node.cluster - node.db_slaves).join(' '),
       :replicas => node.db_slaves.join(' '),
       :dbroot => dbroot,
-      :datadir => datadir
+      :ssldir => ssldir
     )
   end
 
@@ -90,12 +90,12 @@ end
 # needs to copy keys from ebs to home dirs
 execute "Copy db ssl keys for #{owner} from EBS if available" do
   command "/engineyard/bin/local_key_copy.sh #{owner}"
-  only_if { File.exists?(File.join(datadir, 'root.crt')) and
+  only_if { File.exists?(File.join(ssldir, 'root.crt')) and
     File.exists?(File.join(dbroot, 'keygen', owner, "#{keyname}.key")) }
 end
 
 execute "Copy db ssl keys for #{node['dna']['users'].first['username']} from EBS if available" do
   command "/engineyard/bin/local_key_copy.sh #{node['dna']['users'].first['username']}"
-  only_if { File.exists?(File.join(datadir, 'root.crt')) and
+  only_if { File.exists?(File.join(ssldir, 'root.crt')) and
     File.exists?(File.join(dbroot, 'keygen', node['dna']['users'].first['username'], "#{keyname}.key")) }
 end

@@ -51,6 +51,7 @@ mkdir -p /etc/mysql
 cp /root/my.cnf /etc/mysql # on chef, use template to upload my.cnf
 chown -R mysql:mysql /etc/mysql/
 mkdir -p #{node['mysql']['datadir']}
+mkdir -p #{node['mysql']['ssldir']}
 mkdir -p #{node['mysql']['logbase']}
 touch #{node['mysql']['logbase']}/mysqld.err
 chown -R mysql:mysql /db/mysql
@@ -68,6 +69,7 @@ managed_template "/etc/mysql/my.cnf" do
   variables(lazy {
     {
       :datadir => node['mysql']['datadir'],
+      :ssldir => node['mysql']['ssldir'],
       :mysql_version => Gem::Version.new(node['mysql']['short_version']),
       :mysql_5_5 => Gem::Version.new('5.5'),
       :mysql_5_6 => Gem::Version.new('5.6'),

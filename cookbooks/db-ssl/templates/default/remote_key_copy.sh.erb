@@ -2,7 +2,7 @@
 
 user=$1
 dbroot=<%= @dbroot %>
-datadir=<%= @datadir %>
+ssldir=<%= @ssldir %>
 keyname=<%= @keyname %>
 instances='<%= @instances %>'
 replicas='<%= @replicas %>'
@@ -59,10 +59,10 @@ do
   if is_up ${replica}
   then
     # Copy Server Keys to replica data dir
-    cd ${datadir}
-    rsync -a -e "${ssh_options}" root.crt ${replica}:${datadir}/
-    rsync -a -e "${ssh_options}" server.crt ${replica}:${datadir}/
-    rsync -a -e "${ssh_options}" server.key ${replica}:${datadir}/
+    cd ${ssldir}
+    rsync -a -e "${ssh_options}" root.crt ${replica}:${ssldir}/
+    rsync -a -e "${ssh_options}" server.crt ${replica}:${ssldir}/
+    rsync -a -e "${ssh_options}" server.key ${replica}:${ssldir}/
     
     # Copy User Keys to replica EBS
     cd ${dbroot}

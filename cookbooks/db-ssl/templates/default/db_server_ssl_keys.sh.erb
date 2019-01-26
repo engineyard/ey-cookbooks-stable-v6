@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # -- generate server keys
-datadir=<%= @datadir %>           # db data directory
+ssldir=<%= @ssldir %>             # db ssl directory
 admin_pass=<%= @db_admin_pass %>  # from DNA
 owner=<%= @db_owner %>            # postgres or mysql
 max_age=<%= @max_age %>           # Five years in days
 
-cd ${datadir}
+cd ${ssldir}
 openssl genrsa -des3 -passout pass:${admin_pass} -out server.key 1024
 openssl rsa -passin pass:${admin_pass} -in server.key -out server.key
 chmod 400 server.key
