@@ -104,6 +104,21 @@ end
 package "libmysqlclient-dev"
 
 if node['dna']['instance_role'][/db|solo/]
+  directory "/etc/systemd/system/mysql.service.d" do
+    owner "root"
+    group "root"
+    mode 0755
+    recursive true
+  end
+
+  cookbook_file "/etc/systemd/system/mysql.service.d/override.conf" do
+    source "mysql_override.conf"
+    owner "root"
+    group "root"
+    mode 0644
+    notifies :run, "execute[reload-systemd]", :immediately
+  end
+
   package "percona-server-server-#{node['mysql']['short_version']}"
 else
   package "percona-server-client-#{node['mysql']['short_version']}"
