@@ -137,9 +137,10 @@ class Chef
         # https://github.com/engineyard/awsm/blob/0accca6f3695b700524f0fff62e3d79375fdb580/lib/awsm/component_version.rb#L21
         versions = {
           :ruby_220   => "2.2.10",
-          :ruby_230   => "2.3.7",
-          :ruby_240   => "2.4.4",
-          :ruby_250   => "2.5.1",
+          :ruby_230   => "2.3.8",
+          :ruby_240   => "2.4.5",
+          :ruby_250   => "2.5.3",
+          :ruby_260   => "2.6.1"
         }
         if versions.has_key?(ruby_archtype.to_sym)
           version = versions[ruby_archtype.to_sym]
