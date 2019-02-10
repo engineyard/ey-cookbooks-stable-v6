@@ -18,7 +18,7 @@ known_versions = {
 }
 
 # create or delete /db/.lock_db_version
-if node.dna['instance_role'][/^(db|solo)/]
+if node['dna']['instance_role'][/^(db|solo)/]
   execute "dropping lock version file" do
     command "echo $(mysql --version | grep -E -o 'Distrib [0-9]+\.[0-9]+\.[0-9]+' | awk '{print $NF}') > #{lock_version_file}"
     action :run
