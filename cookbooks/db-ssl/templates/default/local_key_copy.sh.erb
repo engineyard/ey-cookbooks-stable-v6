@@ -19,6 +19,7 @@ function copy_keys () {
   rsync -a ${keyname}.crt ${user_home}/.${keyname}/
   rsync -a ${keyname}.key ${user_home}/.${keyname}/
   rsync -a root.crt ${user_home}/.${keyname}/
+  chown -R ${loc_user}:${loc_user} -R ${user_home}/.${keyname}
 }
 
 if [[ -z $user ]]
