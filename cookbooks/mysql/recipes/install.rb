@@ -31,41 +31,6 @@ if node['dna']['instance_role'][/^(db|solo)/]
   end
 end
 
-# check if the version is valid
-if File.exists?(lock_version_file)
-  install_version  = %x{cat #{lock_version_file}}.strip
-else
-  install_version = node['mysql']['latest_version']
-end
-package_url = known_versions[install_version]
-
-if package_url.nil?
-  Chef::Log.info "Chef does not know about MySQL version #{install_version}"
-  exit(1)
-else
-  Chef::Log.info "lock_db_version: #{lock_db_version}, Installing: #{install_version}"
-end
-
-# download the tar file from Percona
-remote_file "/tmp/src/Percona-Server-#{install_version}.tar" do
-  source package_url
-end
-
-directory "delete Percona src directory" do
-  path "/tmp/src/Percona-Server-#{install_version}"
-  action :delete
-  recursive true
-end
-
-directory "create Percona src directory" do
-  path "/tmp/src/Percona-Server-#{install_version}"
-  action :create
-end
-
-execute "extract Percona" do
-  command "tar xvf /tmp/src/Percona-Server-#{install_version}.tar -C /tmp/src/Percona-Server-#{install_version}"
-end
-
 # install the dependencies of the Percona packages
 %w[debsums libaio1 libmecab2].each do |package|
   package package
@@ -104,18 +69,46 @@ if node['dna']['instance_role'][/db|solo/]
   packages << 'percona-server-server'
 end
 
-packages.each do |package|
-  execute "install #{package}" do
-    command %Q{
-      installed=$(apt-cache policy #{package}-#{node['mysql']['short_version']} | grep "Installed: #{install_version}-")
-      if [ -z $installed ]
-      then
-        echo 'Installing #{package} for #{node['mysql']['short_version']}'
-        dpkg -i /tmp/src/Percona-Server-#{install_version}/#{package}*.deb
-      else
-        echo '#{package} for #{node['mysql']['short_version']} is already installed'
+ruby_block "install mysql using version on lock file if present" do
+  block do
+    # check if the version is valid
+    if File.exists?(lock_version_file)
+      install_version  = %x{cat #{lock_version_file}}.strip
+    else
+      install_version = node['mysql']['latest_version']
+    end
+    package_url = known_versions[install_version]
+
+    if package_url.nil?
+      Chef::Log.info "Chef does not know about MySQL version #{install_version}"
+      exit(1)
+    else
+      Chef::Log.info "lock_db_version: #{lock_db_version}, Installing: #{install_version}"
+      Chef::Log.debug "Download URL: #{package_url}"
+    end
+
+    # download tar file if it doesn't exist
+    download_command = %Q{
+      if [ ! -f /tmp/src/Percona-Server-#{install_version}.tar ]; then
+        curl -o /tmp/src/Percona-Server-#{install_version}.tar #{package_url}
       fi
+      rm -rf /tmp/src/Percona-Server-#{install_version} && mkdir -p /tmp/src/Percona-Server-#{install_version}
+      tar xvf /tmp/src/Percona-Server-#{install_version}.tar -C /tmp/src/Percona-Server-#{install_version}
     }
-    environment({"DEBIAN_FRONTEND" => "noninteractive"})
+    %x{ #{download_command} }
+
+    # install the packages using dpkg -i
+    packages.each do |package|
+      install_command = %Q{
+        installed=$(apt-cache policy #{package}-#{node['mysql']['short_version']} | grep "Installed: #{install_version}-" > /dev/null)
+        if [ $? -ne 0 ]; then
+          echo 'Installing #{package} for #{node['mysql']['short_version']}'
+          DEBIAN_FRONTEND=noninteractive dpkg -i /tmp/src/Percona-Server-#{install_version}/#{package}*.deb
+        else
+          echo '#{package} for #{node['mysql']['short_version']} is already installed'
+        fi
+      }
+      %x{ #{install_command} }
+    end
   end
 end
