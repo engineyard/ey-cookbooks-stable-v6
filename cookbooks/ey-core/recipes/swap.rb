@@ -11,13 +11,3 @@ bash "make-swap-xvdc" do
   EOH
   only_if { File.exists?("/dev/xvdc") && !system("grep -q '/dev/xvdc1' /etc/fstab") && (`blkid /dev/xvdc1 -o value -s TYPE` !~ /^swap/) }
 end
-
-## TODOv6 remove this as on v6 we certainly wont support c1 and m1
-# xvda3 is provided by the AWS IaaS on m1.small and c1.medium by default
-bash "use-ec2-swap-partition" do
-  code <<-EOH
-    swapon /dev/xvda3
-    echo "/dev/xvda3 swap swap sw 0 0" >> /etc/fstab
-  EOH
-  only_if { File.exists?("/dev/xvda3") && %w(c1.medium m1.small).include?(node['ec2']['instance_type']) && !system("grep -q xvda3 /etc/fstab") }
-end
