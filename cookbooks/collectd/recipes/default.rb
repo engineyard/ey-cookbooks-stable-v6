@@ -20,6 +20,7 @@ end
 
 =end
 include_recipe 'collectd::httpd'
+include_recipe 'collectd::ec2_credit_balances'
 
 template "/engineyard/bin/ey-alert.rb" do
   owner 'root'
@@ -107,7 +108,8 @@ managed_template "/etc/engineyard/collectd.conf" do
     :swap_critical_total => node['swap_critical_total'],
     :swap_warning_total => node['swap_warning_total'],
     :short_version => 'TODOv6', #short_version,
-    :disk_thresholds => DiskThresholds.new
+    :disk_thresholds => DiskThresholds.new,
+    :enable_credit_balances_monitoring => node['collectd']['enable_credit_balances_monitoring']
   })
   notifies :restart, "service[collectd]", :delayed
 end
