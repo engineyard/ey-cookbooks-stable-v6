@@ -2,12 +2,14 @@
 
 Consult [Cooking V6 spreadsheet](https://docs.google.com/spreadsheets/d/1-21XaN8wVH1KAmeyv-jwfOIzZemYQU1a7ywgd6VgqfA/edit#gid=0) for the latest update on V6 cookbooks.
 
+Chef recipes' structure on V6 is identical to V5 one. The repository is divided into `cookbooks` and `custom-cookbooks` directories and custom recipes have to be included into `cookbooks/ey-custom/metadata.rb` and `cookbooks/ey-custom/recipes/after-main.rb`. There is a single chef run executing the main recipes and then the custom ones defined on files above.
+
+Consider the following before starting porting/QAing recipes:
+
 - Use account `EngineyardCookbooksQA` for testing 
 - Use `US East (N. Virginia)` region
-- Use `TODO` app. This app requires DB, use MySQL
+- Use `TODO` app. This app requires DB, use MySQL for now (see WIP below)
 - Use `stable-v6 1.0` stack
-- Use both `deploy` and no `deploy` as SSH Username
-
 
 
 *REMEMBER TO STOP/TERMINATE YOUR INSTANCES ONCE TESTING IS DONE*
