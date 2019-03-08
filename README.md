@@ -4,6 +4,7 @@ Consult [Cooking V6 spreadsheet](https://docs.google.com/spreadsheets/d/1-21XaN8
 
 Chef recipes' structure on V6 is identical to V5 one. The repository is divided into `cookbooks` and `custom-cookbooks` directories and custom recipes have to be included into `cookbooks/ey-custom/metadata.rb` and `cookbooks/ey-custom/recipes/after-main.rb`. There is a single chef run executing the main recipes and then the custom ones defined on files above.
 
+
 Consider the following before starting porting/QAing recipes:
 
 - Use account `EngineyardCookbooksQA` for testing 
@@ -13,6 +14,12 @@ Consider the following before starting porting/QAing recipes:
 
 
 *REMEMBER TO STOP/TERMINATE YOUR INSTANCES ONCE TESTING IS DONE*
+
+### Need to run chef with recipes modified locally on instance?
+
+```
+/opt/chef/embedded/bin/chef-solo -j /etc/chef/dna.json -c /etc/chef/solo.rb > /var/log/chef.manual.log 2>&1
+```
 
 ## NOT available - WIP
 
