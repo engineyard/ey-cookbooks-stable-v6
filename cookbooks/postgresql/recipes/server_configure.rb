@@ -42,7 +42,7 @@ group "postgres" do
   members node.engineyard.environment.ssh_username
 end
 
-=begin
+=begin TODOv6
 template "/etc/conf.d/postgresql-#{postgres_version}" do
   source "etc-postgresql.conf.erb"
   owner "root"
@@ -110,6 +110,7 @@ if ['app_master', 'solo', 'db_master'].include?(node.dna['instance_role'])
     variables(
       :pg_port => "5432",
       :data_directory => "/db/postgresql/#{postgres_version}/data",
+      :ssl_directory => node['postgresql']['ssldir'],
       :wal_level => postgres_version_gte?('9.6') ? 'replica' : 'hot_standby',
       :shared_buffers => node['shared_buffers'],
       :maintenance_work_mem => node['maintenance_work_mem'],
@@ -168,6 +169,7 @@ if ['db_slave'].include?(node.dna['instance_role'])
     variables(
       :pg_port => "5432",
       :data_directory => "/db/postgresql/#{postgres_version}/data",
+      :ssl_directory => node['postgresql']['ssldir'],
       :wal_level => "hot_standby",
       :shared_buffers => node['shared_buffers'],
       :maintenance_work_mem => node['maintenance_work_mem'],
@@ -236,6 +238,7 @@ elsif ip =~ /^172\./
 elsif ip =~ /^192\./
   cidr = '192.168.0.0/16'
 end
+cidr = '172.16.0.0/12' if cidr.nil? # TODOv6 remove this
 
 # Chef versions that don't support the lazy evaluation keyword
 # found here: http://blog.arangamani.net/blog/2013/03/24/dynamically-changing-chef-attributes-during-converge/
@@ -264,6 +267,10 @@ template "#{postgres_root}/#{postgres_version}/data/pg_hba.conf" do
 end
 
 include_recipe 'db-ssl::setup'
+
+#cookbook_file "/etc/systemd/system/postgresql.service" do
+
+#end
 
 service "postgresql" do
   action [:enable, :start]

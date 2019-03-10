@@ -72,7 +72,9 @@ max_connections = 512			# (change requires restart)
 
 #authentication_timeout = 1min		# 1s-600s
 ssl = on				# (change requires restart)
-ssl_ca_file = 'root.crt'
+ssl_cert_file = '<%= @ssl_directory %>server.crt'
+ssl_ca_file = '<%= @ssl_directory %>root.crt'
+ssl_key_file = '<%= @ssl_directory %>server.key'
 #ssl_ciphers = 'ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH'	# allowed SSL ciphers
 					# (change requires restart)
 <% if postgres_version_lt?("9.5") %>
