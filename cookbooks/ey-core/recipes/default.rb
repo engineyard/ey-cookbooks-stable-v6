@@ -10,6 +10,11 @@ execute "reload-monit" do
   action :nothing
 end
 
+execute "update-apt" do
+  command "apt-get update"
+  action :nothing
+end
+
 include_recipe 'sysctl::tune'
 include_recipe "ey-core::swap"
 

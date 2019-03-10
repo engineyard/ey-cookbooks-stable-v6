@@ -7,6 +7,7 @@ known_ebuild_versions = %w[
   10.4
 ]
 
+=begin
 execute "dropping lock version file" do
   command "echo #{running_pg_version} > #{node['lock_version_file']}"
   action :run
@@ -17,18 +18,42 @@ execute "remove lock version file" do
   command "rm #{node['lock_version_file']}"
   only_if { not lock_db_version and File.exists?(node['lock_version_file']) }
 end
+=end
 
+=begin
 enable_package "dev-libs/ossp-uuid" do
   version "1.6*"
 end
+=end
 
 ey_cloud_report "postgresql" do
   message "Handling PostgreSQL Install"
 end
 
-install_version = node['postgresql']['latest_version']
-package_version = known_ebuild_versions.detect {|v| v =~ /^#{install_version}/}
+#install_version = node['postgresql']['latest_version']
+#package_version = known_ebuild_versions.detect {|v| v =~ /^#{install_version}/}
 
+directory "/etc/postgresql-common" do
+  action :create
+end
+
+cookbook_file "/etc/postgresql-common/createcluster.conf" do
+  source "createcluster.conf"
+end
+
+cookbook_file "/etc/apt/sources.list.d/pgdg.list" do
+  source "pgdg.list"
+end
+
+execute "wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -" do
+  notifies :run, "execute[update-apt]", :immediately
+end
+
+package "postgresql-#{node['postgresql']['short_version']}" do
+
+end
+
+=begin
 # this ruby block handles if the lock version file is set
 # It needs to be done like this since the file isn't present during the compile
 # phase on first runs on new instances booted from snapshots
@@ -77,3 +102,4 @@ end
 #   command %Q{emerge -Cv "<dev-db/postgresql-base-#{node['postgresql']['short_version']}" 2>&1 }
 #   action :run
 # end
+=end

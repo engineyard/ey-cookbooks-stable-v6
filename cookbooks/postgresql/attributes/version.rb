@@ -13,5 +13,6 @@ when "postgres10"
   default['postgresql']['short_version'] = '10'
 end
 default['postgresql']['datadir'] = "/db/postgresql/#{node['postgresql']['short_version']}/data/"
+default['postgresql']['ssldir'] = "/db/postgresql/#{node['postgresql']['short_version']}/ssl/"
 default['postgresql']['dbroot'] = '/db/postgresql/'
 default['postgresql']['owner'] = 'postgres'

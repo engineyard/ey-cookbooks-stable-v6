@@ -11,6 +11,7 @@ depends 'env_vars'
 depends 'cdn_distribution'
 depends 'db_admin_tools'
 depends 'mysql'
+depends 'postgresql'
 depends 'nginx'
 depends 'ruby'
 

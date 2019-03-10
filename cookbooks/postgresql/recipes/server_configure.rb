@@ -20,11 +20,10 @@ sysctl "Set vm.swappiness" do
   variables 'vm.swappiness' => '15'
 end
 
-service "postgresql-#{postgres_version}" do
-  service_name "postgresql-#{postgres_version}"
+service "postgresql" do
+  service_name "postgresql"
   supports :restart => true, :reload => true, :status => true
   action :nothing
-  only_if { running_pg_version == binary_pg_version }
 end
 
 directory "/var/run/postgresql" do
@@ -43,6 +42,7 @@ group "postgres" do
   members node.engineyard.environment.ssh_username
 end
 
+=begin
 template "/etc/conf.d/postgresql-#{postgres_version}" do
   source "etc-postgresql.conf.erb"
   owner "root"
@@ -65,6 +65,7 @@ template "/etc/conf.d/postgresql-#{postgres_version}" do
     :pg_forcetimeout => "2"
   )
 end
+=end
 
 directory postgres_temp do
     owner "postgres"
@@ -78,7 +79,7 @@ zone = "#{node.engineyard.environment['timezone']}"
 zonepath = "/usr/share/zoneinfo/#{zone}"
 timezone = (File.exists?(zonepath) and !zone.empty? ) ? zone : 'GMT'
 
-if ['solo', 'db_master'].include?(node.dna['instance_role'])
+if ['app_master', 'solo', 'db_master'].include?(node.dna['instance_role'])
   ey_cloud_report "configuring postgresql #{postgres_version}" do
     message "processing postgresql #{postgres_version} configuration"
   end
@@ -91,8 +92,9 @@ if ['solo', 'db_master'].include?(node.dna['instance_role'])
     recursive true
   end
 
+  initdb_path = "/usr/lib/postgresql/#{postgres_version}/bin/initdb"
   execute "init-postgres" do
-    command "echo #{node.engineyard.environment['db_admin_password']} > /tmp/.pass && initdb -D #{postgres_root}/#{postgres_version}/data --encoding=UTF8 --locale=en_US.UTF-8 --pwfile=/tmp/.pass; rm /tmp/.pass > /dev/null 2>&1"
+    command "echo #{node.engineyard.environment['db_admin_password']} > /tmp/.pass && #{initdb_path} -D #{postgres_root}/#{postgres_version}/data --encoding=UTF8 --locale=en_US.UTF-8 --pwfile=/tmp/.pass; rm /tmp/.pass > /dev/null 2>&1"
     action :run
     user "postgres"
     not_if { FileTest.directory?("#{postgres_root}/#{postgres_version}/data") }
@@ -104,9 +106,10 @@ if ['solo', 'db_master'].include?(node.dna['instance_role'])
     group "root"
     mode 0600
     backup 0
-    notifies :reload, "service[postgresql-#{postgres_version}]"
+    notifies :reload, "service[postgresql]"
     variables(
       :pg_port => "5432",
+      :data_directory => "/db/postgresql/#{postgres_version}/data",
       :wal_level => postgres_version_gte?('9.6') ? 'replica' : 'hot_standby',
       :shared_buffers => node['shared_buffers'],
       :maintenance_work_mem => node['maintenance_work_mem'],
@@ -161,9 +164,10 @@ if ['db_slave'].include?(node.dna['instance_role'])
     group "root"
     mode 0600
     backup 0
-    notifies :reload, "service[postgresql-#{postgres_version}]"
+    notifies :reload, "service[postgresql]"
     variables(
       :pg_port => "5432",
+      :data_directory => "/db/postgresql/#{postgres_version}/data",
       :wal_level => "hot_standby",
       :shared_buffers => node['shared_buffers'],
       :maintenance_work_mem => node['maintenance_work_mem'],
@@ -232,6 +236,7 @@ elsif ip =~ /^172\./
 elsif ip =~ /^192\./
   cidr = '192.168.0.0/16'
 end
+cidr = '172.16.0.0/12' if cidr.nil?
 
 # Chef versions that don't support the lazy evaluation keyword
 # found here: http://blog.arangamani.net/blog/2013/03/24/dynamically-changing-chef-attributes-during-converge/
@@ -250,7 +255,7 @@ template "#{postgres_root}/#{postgres_version}/data/pg_hba.conf" do
   group 'root'
   mode 0600
   source "pg_hba.conf.erb"
-  notifies :reload, "service[postgresql-#{postgres_version}]", :immediately
+  notifies :reload, "service[postgresql]", :immediately
   variables({
     :app_users => node.engineyard.apps.collect {|app| app.database_username}.uniq,
     :cidr => cidr,
@@ -261,7 +266,7 @@ end
 
 include_recipe 'db-ssl::setup'
 
-service "postgresql-#{postgres_version}" do
+service "postgresql" do
   action [:enable, :start]
   timeout 7200
 end

@@ -1,6 +1,6 @@
 require 'tempfile'
 require 'open-uri'
-require 'right_aws'
+#TODOv6 require 'right_aws'
 
 postgresql_slave_default_params = {
   :password => nil,
