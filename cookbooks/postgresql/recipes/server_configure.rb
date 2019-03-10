@@ -236,7 +236,6 @@ elsif ip =~ /^172\./
 elsif ip =~ /^192\./
   cidr = '192.168.0.0/16'
 end
-cidr = '172.16.0.0/12' if cidr.nil?
 
 # Chef versions that don't support the lazy evaluation keyword
 # found here: http://blog.arangamani.net/blog/2013/03/24/dynamically-changing-chef-attributes-during-converge/
