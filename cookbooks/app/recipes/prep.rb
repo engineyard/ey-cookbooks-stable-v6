@@ -21,5 +21,5 @@ include_recipe "app-logs"
 
 # TODOv6 packages for database gems
 # mysql client is installed on mysql::install
-package "postgresql-server-dev-10"
+# TODOv6 package "postgresql-server-dev-10"
 package "libsqlite3-dev"

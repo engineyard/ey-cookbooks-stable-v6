@@ -53,6 +53,10 @@ package "postgresql-#{node['postgresql']['short_version']}" do
 
 end
 
+package "postgresql-server-dev-#{node['postgresql']['short_version']}" do
+
+end
+
 =begin
 # this ruby block handles if the lock version file is set
 # It needs to be done like this since the file isn't present during the compile
