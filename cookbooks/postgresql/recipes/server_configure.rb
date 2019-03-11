@@ -268,9 +268,14 @@ end
 
 include_recipe 'db-ssl::setup'
 
-#cookbook_file "/etc/systemd/system/postgresql.service" do
-
-#end
+template "/etc/systemd/system/postgresql.service" do
+  source "postgresql.service.erb"
+  variables({
+    :version => postgres_version,
+    :data_directory => node['postgresql']['datadir']
+  })
+  notifies :run, "execute[reload-systemd]", :immediately
+end
 
 service "postgresql" do
   action [:enable, :start]
