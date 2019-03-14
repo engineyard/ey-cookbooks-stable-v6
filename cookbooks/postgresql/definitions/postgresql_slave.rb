@@ -14,7 +14,7 @@ define :postgresql_slave, postgresql_slave_default_params do
 
   ruby_block "clean up half-done install" do
     block do
-      system('/etc/init.d/postgresql-#{postgres_version} stop')
+      system('systemctl stop postgresql')
       system('umount /db')
       FileUtils.rmdir '/db'
     end
@@ -27,7 +27,7 @@ define :postgresql_slave, postgresql_slave_default_params do
   end
 
   execute "stop postgresql" do
-    command "/etc/init.d/postgresql-#{postgres_version} stop"
+    command "systemctl stop postgresql"
   end
 
   directory "/db" do
