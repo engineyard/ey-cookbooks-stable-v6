@@ -230,7 +230,8 @@ file "#{postgres_root}/#{postgres_version}/custom_pg_hba.conf" do
   not_if { FileTest.exists?("#{postgres_root}/#{postgres_version}/custom_pg_hba.conf") }
 end
 
-ip = %x{ifconfig eth0 | grep inet | awk '{print $2}' | awk -F: '{print $NF}'}
+primary_interface = %x[ip route list | grep default | grep -E  'dev (\w+)' -o | awk '{print $2}']
+ip = %x{ifconfig #{primary_interface} | grep inet | awk '{print $2}' | awk -F: '{print $NF}'}
 if ip =~ /^10\./
   cidr = '10.0.0.0/8'
 elsif ip =~ /^172\./
@@ -238,7 +239,6 @@ elsif ip =~ /^172\./
 elsif ip =~ /^192\./
   cidr = '192.168.0.0/16'
 end
-cidr = '172.16.0.0/12' if cidr.nil? # TODOv6 remove this
 
 # Chef versions that don't support the lazy evaluation keyword
 # found here: http://blog.arangamani.net/blog/2013/03/24/dynamically-changing-chef-attributes-during-converge/
