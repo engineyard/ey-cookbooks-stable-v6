@@ -3,7 +3,7 @@ Description=PostgreSQL
 
 [Service]
 Type=forking
-ExecStart=/usr/lib/postgresql/<%= @version %>/bin/pg_ctl start -D <%= @data_directory %> -t <%= @pg_start_timeout %>
+ExecStart=/usr/lib/postgresql/<%= @version %>/bin/pg_ctl start -D <%= @data_directory %> -w -t <%= @pg_start_timeout %>
 TimeoutStartSec=<%= @systemd_start_timeout %>
 ExecStop=/usr/lib/postgresql/<%= @version %>/bin/pg_ctl stop -D <%= @data_directory %> -m fast
 ExecReload=/usr/lib/postgresql/<%= @version %>/bin/pg_ctl reload -D <%= @data_directory %>
