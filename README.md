@@ -7,7 +7,7 @@ Chef recipes' structure on V6 is identical to V5 one. The repository is divided 
 
 Consider the following before starting porting/QAing recipes:
 
-- Use account `EngineyardCookbooksQA` for testing 
+- Use account [EngineyardCookbooksQA](https://cloud.engineyard.com/admin/accounts/EngineyardCookbooksQA) for testing 
 - Use `US East (N. Virginia)` region
 - Use `TODO` app. This app requires DB, use MySQL for now (see WIP below)
 - Use `stable-v6 1.0` stack
