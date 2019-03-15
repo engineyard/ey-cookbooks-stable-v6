@@ -14,9 +14,5 @@ end
 include_recipe 'app::remove'
 include_recipe 'app::create'
 include_recipe "app-logs"
-include_recipe "db_admin_tools"
-
-# TODOv6 packages for database gems
-# mysql client is installed on mysql::install
-# TODOv6 package "postgresql-server-dev-10"
-package "libsqlite3-dev"
+#TODOv6 include_recipe "db_admin_tools"
+include_recipe "ey-db-libs"
