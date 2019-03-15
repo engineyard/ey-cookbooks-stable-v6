@@ -8,7 +8,7 @@ if ['solo', 'db_master', 'db_slave'].include?(node.dna['instance_role'])
   include_recipe "postgresql::client_config"
   include_recipe "postgresql::server_install"
   include_recipe "postgresql::server_configure"
-  #TODOv6 include_recipe "postgresql::monitoring"
+  include_recipe "postgresql::monitoring"
   include_recipe "postgresql::relink_postgresql"
   ey_cloud_report "stop postgresql run" do
     message "processing postgresql #{postgres_version} finished"

@@ -6,15 +6,9 @@ ey_cloud_report "postgresql monitoring" do
   message "processing postgresql #{node['postgresql']['short_version']} monitoring"
 end
 
-package "dev-perl/DBD-Pg" do
-  version "3.4.2"
-  action :install
-end
+package "libdbd-pg-perl"
 
-package "dev-perl/TimeDate" do
-  version "2.300.0"
-  action :install
-end
+package "libdatetime-perl"
 
 cookbook_file "/mnt/check_postgres.tar.gz" do
   source "check_postgres.tar.gz"
