@@ -268,6 +268,17 @@ end
 
 include_recipe 'db-ssl::setup'
 
+template "/etc/systemd/system/postgresql.service" do
+  source "postgresql.service.erb"
+  variables({
+    :version => postgres_version,
+    :data_directory => node['postgresql']['datadir'],
+    :pg_start_timeout => 7200,
+    :systemd_start_timeout => 7200 + 15
+  })
+  notifies :run, "execute[reload-systemd]", :immediately
+end
+
 service "postgresql" do
   action [:enable, :start]
   timeout 7200

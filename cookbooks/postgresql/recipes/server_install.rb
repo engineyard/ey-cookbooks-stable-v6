@@ -49,21 +49,17 @@ execute "wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo 
   notifies :run, "execute[update-apt]", :immediately
 end
 
-if node['dna']['instance_role'][/db|solo/]
-  template "/etc/systemd/system/postgresql.service" do
-    source "postgresql.service.erb"
-    variables({
-      :version => postgres_version,
-      :data_directory => node['postgresql']['datadir'],
-      :pg_start_timeout => 7200,
-      :systemd_start_timeout => 7200 + 15
-    })
-    notifies :run, "execute[reload-systemd]", :immediately
-  end
+bash "delete-postgresql-service-from-package" do
+  code %Q{
+    [[ -n $(systemctl status postgresql | grep "Loaded.*/lib/systemd/system/postgresql.service") ]]  && systemctl stop postgresql && rm /lib/systemd/system/postgresql.service
+  }
+  action :nothing
+  only_if { !File.exist?("#{node['postgresql']['datadir']}/postmaster.pid") }
+  notifies :run, "execute[reload-systemd]", :immediately
 end
 
 package "postgresql-#{node['postgresql']['short_version']}" do
-
+  notifies :run, "bash[delete-postgresql-service-from-package]", :immediately
 end
 
 package "postgresql-server-dev-#{node['postgresql']['short_version']}" do
