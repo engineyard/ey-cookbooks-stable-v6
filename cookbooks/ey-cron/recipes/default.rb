@@ -83,7 +83,7 @@ CRON
   end
 end
 
-#TODOv6 include_recipe 'ntp::cronjobs'
+include_recipe 'ntp::cronjobs'
 
 directory "/etc/systemd/system/cron.service.d" do
   owner "root"
