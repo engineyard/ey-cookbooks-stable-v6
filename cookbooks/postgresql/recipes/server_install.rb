@@ -51,7 +51,7 @@ end
 
 bash "delete-postgresql-service-from-package" do
   code %Q{
-    [[ -n $(systemctl status postgresql | grep "Loaded.*/lib/systemd/system/postgresql.service") ]]  && systemctl stop postgresql && rm /lib/systemd/system/postgresql.service
+    [[ -n $(systemctl status postgresql | grep "Loaded.*/lib/systemd/system/postgresql.service") ]] && systemctl stop postgresql && rm /lib/systemd/system/postgresql.service
   }
   action :nothing
   only_if { !File.exist?("#{node['postgresql']['datadir']}/postmaster.pid") }
@@ -116,3 +116,8 @@ end
 #   action :run
 # end
 =end
+
+template "/etc/profile.d/postgresql.sh" do
+  source "postgresql.sh.erb"
+  variables version: postgres_version
+end
