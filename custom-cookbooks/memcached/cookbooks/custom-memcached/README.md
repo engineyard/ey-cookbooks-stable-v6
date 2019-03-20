@@ -100,32 +100,3 @@ your application and rebuilding your instances (i.e. running chef) are not
 always done at the same time. It is best to restart your application
 when you ship (deploy) your application code.
 
-## Test Cases
-
-This custom chef recipe has been verified using these test cases:
-
-```
-A. Do not enable the perform_install flag
-  A1. Chef run should not fail
-  A2. memcached should not be running
-B. Enable the perform_install flag. Install from source
-  B1. Install on all app instances
-  B1.1. memcached should be running on app_master
-  B1.2. memcached should be running on app instances
-  B1.3. memcached should not be running on utility or database instances
-  B1.4. /data/app_name/shared/config/memcached.yml should list all the app instances in the environment
-  B2. Install utility instances named 'memcached' - Boot 2 utility instances named 'memcached' and one utility instance named 'redis'
-  B2.1. memcached should be running on the utility instances named memcached
-  B2.2. memcached should not be running on app_master, app, database instances, and utility instances not named 'memcached'
-  B2.3. /data/app_name/shared/config/memcached.yml should list all the utility instances named memcached in the environment
-C. Enable the perform_install flag. Install from package
-  C1. Install on all app instances
-  C1.1. memcached should be running on app_master
-  C1.2. memcached should be running on app instances
-  C1.3. memcached should not be running on utility or database instances
-  C1.4. /data/app_name/shared/config/memcached.yml should list all the app instances in the environment
-  C2. Install utility instances named 'memcached' - Boot 2 utility instances named 'memcached' and one utility instance named 'redis'
-  C2.1. memcached should be running on the utility instances named memcached
-  C2.2. memcached should not be running on app_master, app, database instances, and utility instances not named 'memcached'
-  C2.3. /data/app_name/shared/config/memcached.yml should list all the utility instances named memcached in the environment
-```
