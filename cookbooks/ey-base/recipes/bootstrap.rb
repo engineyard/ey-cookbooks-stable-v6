@@ -68,7 +68,7 @@ end
   end
 end
 
-cookbook_file '/etc/security/limits.conf' do
+cookbook_file '/etc/security/limits.d/90-ey-limits.conf' do
   owner 'root'
   group 'root'
   mode '0644'
