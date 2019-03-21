@@ -38,7 +38,7 @@ if is_memcached_instance
     include_recipe 'memcached::install_from_source'
   else
     file "/etc/systemd/system/memcached.service" do
-      action :remove
+      action :delete
       only_if "grep /usr/local/share/memcached/scripts/systemd-memcached-wrapper /etc/systemd/system/memcached.service"
     end
     include_recipe 'memcached::install_from_package'

@@ -29,7 +29,9 @@ remote_file "/opt/memcached-#{memcached_version}.tar.gz" do
 end
 
 memcached_installed_version = Mixlib::ShellOut.new 'memcached --version'
-memcached_installed_version.run_command
+if system("memcached --version")
+	memcached_installed_version.run_command
+end
 if memcached_installed_version.stdout.chomp == "memcached #{memcached_version}"
   Chef::Log.info "memcached #{memcached_version} is already installed. Skipping installation"
 else
