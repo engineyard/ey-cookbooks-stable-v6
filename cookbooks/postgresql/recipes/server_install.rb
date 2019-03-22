@@ -45,6 +45,7 @@ bash "delete-postgresql-service-from-package" do
   code %Q{
     [[ -n $(systemctl status postgresql | grep "Loaded.*/lib/systemd/system/postgresql.service") ]] && systemctl stop postgresql && rm /lib/systemd/system/postgresql.service
   }
+  returns [0, 1]
   action :nothing
   only_if { !File.exist?("#{node['postgresql']['datadir']}/postmaster.pid") }
   notifies :run, "execute[reload-systemd]", :immediately
