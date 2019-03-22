@@ -79,7 +79,7 @@ zone = "#{node.engineyard.environment['timezone']}"
 zonepath = "/usr/share/zoneinfo/#{zone}"
 timezone = (File.exists?(zonepath) and !zone.empty? ) ? zone : 'GMT'
 
-if ['app_master', 'solo', 'db_master'].include?(node.dna['instance_role'])
+if ['app_master', 'solo', 'db_master'].include?(node['dna']['instance_role'])
   ey_cloud_report "configuring postgresql #{postgres_version}" do
     message "processing postgresql #{postgres_version} configuration"
   end
@@ -135,7 +135,7 @@ if ['app_master', 'solo', 'db_master'].include?(node.dna['instance_role'])
   end
 end
 
-if ['db_slave'].include?(node.dna['instance_role'])
+if ['db_slave'].include?(node['dna']['instance_role'])
 
   ey_cloud_report "postgresql slave" do
     message "processing postgresql #{postgres_version} configuration"

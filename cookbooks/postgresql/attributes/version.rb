@@ -1,4 +1,4 @@
-case attribute.dna.engineyard.environment.db_stack_name
+case attribute['dna']['engineyard']['environment']['db_stack_name']
 when "postgres9_4"
   default['postgresql']['latest_version'] = '9.4.21'
   default['postgresql']['short_version'] = '9.4'

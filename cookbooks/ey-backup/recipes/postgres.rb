@@ -8,9 +8,9 @@ managed_template "/etc/.postgresql.backups.yml" do
   variables({
     :dbuser => node.engineyard.environment['db_admin_username'],
     :dbpass => node.engineyard.environment['db_admin_password'],
-    :keep   => node.dna['backup_window'] || 14,
-    :id     => node.dna['aws_secret_id'],
-    :key    => node.dna['aws_secret_key'],
+    :keep   => node['dna']['backup_window'] || 14,
+    :id     => node['dna']['aws_secret_id'],
+    :key    => node['dna']['aws_secret_key'],
     :env    => node.engineyard.environment['name'],
     :region => node.engineyard.environment.region,
     :backup_bucket => node.engineyard.environment.backup_bucket,
@@ -40,7 +40,7 @@ node.engineyard.environment['apps'].each do |app|
 	end
 end
 
-if node.dna['db_slaves'].empty? && node.dna['backup_window'] != 0
+if node['dna']['db_slaves'].empty? && node['dna']['backup_window'] != 0
   # No slaves detected, put the backup on the solo/db_master if backups are enabled
   if ['db_master','solo'].include?(node.dna['instance_role'])
     encryption_command = @encryption_command
@@ -56,7 +56,7 @@ if node.dna['db_slaves'].empty? && node.dna['backup_window'] != 0
   end
   # Slaves detected, put them on the db_slave if backups are enabled
 else
-  if ['db_slave'].include?(node.dna['instance_role']) && node.dna['backup_window'] != 0
+  if ['db_slave'].include?(node['dna']['instance_role']) && node['dna']['backup_window'] != 0
     db_slave1_fqdn=node.dna['db_slaves'].first
     encryption_command = @encryption_command
 
