@@ -15,18 +15,21 @@ cookbook_file "/mnt/check_postgres.tar.gz" do
   backup 0
   mode 0755
   not_if %Q{ [[ -e #{postgres_check_bin} ]] && [[ $(#{postgres_check_bin} --version |awk '{print $3}') == #{check_postgres_version} ]] }
+  guard_interpreter :bash
 end
 
 execute "untar check_postgres" do
   cwd "/mnt"
   command "mkdir -p /mnt/check_postgres; tar xfv /mnt/check_postgres.tar.gz -C /mnt/check_postgres --strip-components 1"
   not_if %Q{ [[ -e #{postgres_check_bin} ]] && [[ $(#{postgres_check_bin} --version |awk '{print $3}') == #{check_postgres_version} ]] }
+  guard_interpreter :bash
 end
 
 execute "make check_postgres / install" do
   cwd "/mnt/check_postgres"
   command "perl Makefile.PL && make && make install"
   not_if %Q{ [[ -e #{postgres_check_bin} ]] && [[ $(#{postgres_check_bin} --version |awk '{print $3}') == #{check_postgres_version} ]] }
+  guard_interpreter :bash
 end
 
 template "/engineyard/bin/check_postgres_wrapper.sh" do
