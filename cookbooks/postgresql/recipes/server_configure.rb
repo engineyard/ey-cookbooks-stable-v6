@@ -20,7 +20,7 @@ sysctl "Set vm.swappiness" do
   variables 'vm.swappiness' => '15'
 end
 
-service "postgresql" do
+service "postgresql used for notifications" do
   service_name "postgresql"
   supports :restart => true, :reload => true, :status => true
   action :nothing
@@ -281,6 +281,7 @@ end
 
 service "postgresql" do
   action [:enable, :start]
+  supports :restart => true, :reload => true, :status => true
   timeout 7200
 end
 
