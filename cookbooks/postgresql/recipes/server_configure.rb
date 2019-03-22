@@ -293,7 +293,7 @@ end
 
 ruby_block "symlink load_foreign_postgres_db.sh" do
   block do
-    %x{ [[ -f /engineyard/bin/load_foreign_postgres_db.sh ]] && rm /engineyard/bin/load_foreign_postgres_db.sh }
+    %x{ [ -f /engineyard/bin/load_foreign_postgres_db.sh ] && rm /engineyard/bin/load_foreign_postgres_db.sh }
     %x{ ln -s /engineyard/bin/load_postgres_db.sh /engineyard/bin/load_foreign_postgres_db.sh }
   end
 end
