@@ -12,6 +12,10 @@ ey_cloud_report "cron" do
   only_if node['dna']['crons'].empty?
 end
 
+execute "clearing old crons" do
+  command "crontab -r; crontab -r -u #{node['owner_name']}; true"
+end
+
 cron_header = <<-CRON
 # begin-ey-cron-header This is a delimeter. DO NOT DELETE
 
