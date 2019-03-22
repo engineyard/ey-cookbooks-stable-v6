@@ -153,7 +153,7 @@ if ['db_slave'].include?(node['dna']['instance_role'])
   if File.exists?("#{postgres_root}/#{postgres_version}/data/postmaster.pid")
     # TODO: Improve this check to see if the slave is up and running.
   else
-    postgresql_slave node.dna['db_host'] do
+    postgresql_slave node['dna']['db_host'] do
       require 'yaml'
       password node.engineyard.environment['db_admin_password']
     end
@@ -201,7 +201,7 @@ if ['db_slave'].include?(node['dna']['instance_role'])
     backup 0
     variables(
       :standby_mode => "on",
-      :primary_host => node.dna['db_host'],
+      :primary_host => node['dna']['db_host'],
       :primary_port => 5432,
       :primary_user => "postgres",
       :primary_password => node.engineyard.environment['db_admin_password'],

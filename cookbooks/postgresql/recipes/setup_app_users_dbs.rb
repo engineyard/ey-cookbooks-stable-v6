@@ -11,7 +11,7 @@ node.engineyard.apps.each do |app|
 
   if db_host_is_rds?
     execute "grant db user role #{app.database_username} to admin user #{admin_username}" do
-      command %{psql -U #{admin_username} -h #{node.dna['db_host']} -c "GRANT #{app.database_username} TO #{admin_username} WITH ADMIN OPTION;" postgres}
+      command %{psql -U #{admin_username} -h #{node['dna']['db_host']} -c "GRANT #{app.database_username} TO #{admin_username} WITH ADMIN OPTION;" postgres}
     end
   end
 

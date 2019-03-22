@@ -42,7 +42,7 @@ end
 
 if node['dna']['db_slaves'].empty? && node['dna']['backup_window'] != 0
   # No slaves detected, put the backup on the solo/db_master if backups are enabled
-  if ['db_master','solo'].include?(node.dna['instance_role'])
+  if ['db_master','solo'].include?(node['dna']['instance_role'])
     encryption_command = @encryption_command
 
     backup_cron "postgresql" do
@@ -57,7 +57,7 @@ if node['dna']['db_slaves'].empty? && node['dna']['backup_window'] != 0
   # Slaves detected, put them on the db_slave if backups are enabled
 else
   if ['db_slave'].include?(node['dna']['instance_role']) && node['dna']['backup_window'] != 0
-    db_slave1_fqdn=node.dna['db_slaves'].first
+    db_slave1_fqdn=node['dna']['db_slaves'].first
     encryption_command = @encryption_command
 
     hostname = Mixlib::ShellOut.new("hostname")
