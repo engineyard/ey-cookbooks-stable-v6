@@ -56,7 +56,7 @@ function run_check() {
         return
     fi
 
-    out=$(export PGPASSWORD=<%= @dbpass %>  ; <%= @postgres_check_bin %> --exclude='postgres,template1' --showperf=0 --action=${ACTION} ${OTHER_OPTS}) 
+    out=$(export PGBINDIR=<%= @pgbindir %>; export PGPASSWORD=<%= @dbpass %>  ; <%= @postgres_check_bin %> --exclude='postgres,template1' --showperf=0 --action=${ACTION} ${OTHER_OPTS}) 
     res=$?
     
     if [ "${res}" = "0" ]

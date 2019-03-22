@@ -16,3 +16,4 @@ default['postgresql']['datadir'] = "/db/postgresql/#{node['postgresql']['short_v
 default['postgresql']['ssldir'] = "/db/postgresql/#{node['postgresql']['short_version']}/ssl/"
 default['postgresql']['dbroot'] = '/db/postgresql/'
 default['postgresql']['owner'] = 'postgres'
+default['postgresql']['pgbindir'] = "/usr/lib/postgresql/#{node['postgresql']['short_version']}/bin/"

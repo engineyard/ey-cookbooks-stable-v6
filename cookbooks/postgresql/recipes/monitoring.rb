@@ -36,6 +36,7 @@ template "/engineyard/bin/check_postgres_wrapper.sh" do
   group 'postgres'
   mode 0751
   variables({
+    :pgbindir => node['postgresql']['pgbindir'],
     :dbpass => node.engineyard.environment['db_admin_password'],
     :postgres_check_bin => postgres_check_bin
   })
