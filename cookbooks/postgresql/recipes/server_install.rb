@@ -64,6 +64,7 @@ ruby_block 'check lock version' do
       end
 
       run_context.resource_collection.find(:package => "postgresql-#{postgres_version}").version "#{package_version}-*"
+      run_context.resource_collection.find(:package => "postgresql-#{postgres_version}").not_if "apt-cache policy postgresql-#{postgres_version} | grep -E 'Installed.*#{package_version}-'"
     end
   end
 end
