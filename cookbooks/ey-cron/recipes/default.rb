@@ -15,8 +15,6 @@ end
 cron_header = <<-CRON
 # begin-ey-cron-header This is a delimeter. DO NOT DELETE
 
-# The cron jobs from the Engine Yard UI can be found on /etc/cron.d/ey-cron-jobs
-
 PATH=/opt/rubies/ruby-#{node['ruby']['version']}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 RAILS_ENV="#{node.engineyard.environment['framework_env']}"
 RACK_ENV="#{node.engineyard.environment['framework_env']}"
@@ -61,27 +59,7 @@ directory "/var/spool/cron" do
   group "crontab"
 end
 
-if crontab_instance?(node)
-  cron_text = []
-  cron_text << <<-CRON
-# These are the cron jobs from the Engine Yard UI
-
-PATH=/opt/rubies/ruby-#{node['ruby']['version']}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-RAILS_ENV="#{node.engineyard.environment['framework_env']}"
-RACK_ENV="#{node.engineyard.environment['framework_env']}"
-CRON
-  (node['dna']['crons']||[]).each do |c|
-    cron_text << "# #{c['name']}"
-    cron_text << "#{c['minute']} #{c['hour']} #{c['day']} #{c['month']} #{c['weekday']} #{c['user']} #{c['command']}"
-  end
-  cron_text << ""
-  file "/etc/cron.d/ey-cron-jobs" do
-    content cron_text.join("\n")
-    owner "root"
-    group "root"
-    mode 0644
-  end
-end
+include_recipe 'ey-cron::ui'
 
 include_recipe 'ntp::cronjobs'
 
