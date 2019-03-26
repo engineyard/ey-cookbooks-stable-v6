@@ -25,8 +25,8 @@ Our main recipes have the `elasticsearch` recipe but it is not included by defau
       ```
       cd ~ # Change this to your preferred directory. Anywhere but inside the application
 
-      git clone https://github.com/engineyard/ey-cookbooks-stable-v5
-      cd ey-cookbooks-stable-v5
+      git clone https://github.com/engineyard/ey-cookbooks-stable-v6
+      cd ey-cookbooks-stable-v6
       cp custom-cookbooks/elasticsearch/cookbooks/custom-elasticsearch /path/to/app/cookbooks/
       ```
 
@@ -55,7 +55,7 @@ Results should be simlar to:
   "version" : {
     "number" : "5.4.0",
     "build_hash" : "780f8c4",
-    "build_date" : "2017-04-28T17:43:27.229Z",
+    "build_date" : "2019-03-28T17:43:27.229Z",
     "build_snapshot" : false,
     "lucene_version" : "6.5.0"
   },
@@ -186,12 +186,12 @@ custom-cookbooks:
 Caveats
 --------
 
-plugin support is still not complete/automated.  CouchDB and Memcached plugins may be worth investigating, pull requests to improve this.
+plugin support is still not complete/automated. CouchDB and Memcached plugins may be worth investigating, pull requests to improve this.
 
 Backups
 --------
 
-Non-automated, regular snapshot should work.  If you have a large cluster this may complicate things, please consult the [elasticsearch][2] documentation regarding that.
+Non-automated, regular snapshot should work. If you have a large cluster this may complicate things, please consult the [elasticsearch][2] documentation regarding that.
 
 
 Warranty
