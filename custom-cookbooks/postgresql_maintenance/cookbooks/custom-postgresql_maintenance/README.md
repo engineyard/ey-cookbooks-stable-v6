@@ -58,7 +58,7 @@ Your database is configured by default with autovacuum but minimizes resources t
 
 The default action for the recipe will set up a weekly vacuum of all databases on the server at midnight Saturday night/Sunday morning server time. 
 
-Additional information on vacuum operation can be found in the PostgreSQL Manual: http://www.postgresql.org/docs/9.3/static/sql-vacuum.html.
+Additional information on vacuum operation can be found in the PostgreSQL Manual: https://www.postgresql.org/docs/10/sql-vacuum.html.
 
 ## Customizations
 
