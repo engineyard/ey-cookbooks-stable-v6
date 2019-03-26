@@ -1,10 +1,10 @@
 # Here you can set a few key attributes for individual extensions. Each key
-# has a default so an extension entry is only needed if one or more of the 
+# has a default so an extension entry is only needed if one or more of the
 # defaults need to be overriden.
 #
 # Valid keys w/ their defualts:
 #
-# min_pg_version: 9.4 - minimum Postgres version needed
+# min_pg_version: nil
 # max_pg_version: nil
 # use_load: nil -- this is mostly for auto_explain which needs LOAD
 #    statement instead of CREATE EXTENSION
