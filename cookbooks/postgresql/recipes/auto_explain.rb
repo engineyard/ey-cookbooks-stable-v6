@@ -21,5 +21,5 @@ end
 
 
 execute "reload postgres service" do
-  command "/etc/init.d/postgresql-#{node[:postgresql][:short_version]} reload"
+  command "systemctl reload postgresql"
 end
