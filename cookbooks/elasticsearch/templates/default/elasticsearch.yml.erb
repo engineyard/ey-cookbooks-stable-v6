@@ -1,0 +1,28 @@
+path:
+  <% if @is_V2 %>
+  work: /var/lib/elasticsearch/work
+  <% end %>
+  logs: /var/log/elasticsearch
+  data: /data/elasticsearch
+
+
+cluster:
+  name: <%= @elasticsearch_clustername %>
+
+network:
+  bind_host: [127.0.0.1, <%= @elasticsearch_host %>]
+  publish_host: <%= @elasticsearch_host %>
+
+discovery:
+  zen:
+    minimum_master_nodes: 1
+    <% if @is_V2 %>
+    ping.timeout: 3s
+    ping.multicast.enabled: false
+    <% end %>
+    ping.unicast.hosts: ["<%= @elasticsearch_instances %>"]
+
+gateway:
+  recover_after_nodes: 1
+  recover_after_time: 5m
+  expected_nodes: <%= @elasticsearch_expected %>
