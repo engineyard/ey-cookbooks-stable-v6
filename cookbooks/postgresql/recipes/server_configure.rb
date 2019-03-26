@@ -2,16 +2,6 @@ postgres_root    = '/db/postgresql'
 postgres_temp    = '/mnt/postgresql/tmp'
 postgres_version = node['postgresql']['short_version']
 
-if postgres_version_lt?('9.3')
-  sysctl "Raise kernel.shmmax" do
-    variables 'kernel.shmmax' => node['total_memory']
-  end
-
-  sysctl "Raise kernel.shmall" do
-    variables 'kernel.shmall' => node['total_memory']/4096
-  end
-end
-
 sysctl "Raise kernel.SEMMNI via kernel.sem" do
   variables 'kernel.sem' => '250 32000 32 512'
 end
@@ -41,31 +31,6 @@ group "postgres" do
   append true
   members node.engineyard.environment.ssh_username
 end
-
-=begin TODOv6
-template "/etc/conf.d/postgresql-#{postgres_version}" do
-  source "etc-postgresql.conf.erb"
-  owner "root"
-  group "root"
-  mode 0644
-  backup 0
-  notifies :reload, "service[postgresql-#{postgres_version}]"
-  variables(
-    :pg_data => "/db/postgresql/#{postgres_version}/data",
-    :pg_user => "postgres",
-    :pg_port => "5432",
-    :pg_waitforstart => "-w",
-    :pg_waitforstop => "-w",
-    :pg_starttimeout => "7200",
-    :pg_nicequit => "YES",
-    :pg_nicetimeout => "60",
-    :pg_rudequit => "YES",
-    :pg_rudetimeout => "30",
-    :pg_forcequit => "NO",
-    :pg_forcetimeout => "2"
-  )
-end
-=end
 
 directory postgres_temp do
     owner "postgres"
