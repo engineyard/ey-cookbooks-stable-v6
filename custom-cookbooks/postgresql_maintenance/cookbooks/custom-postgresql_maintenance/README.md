@@ -1,6 +1,15 @@
 # custom-postgresql_maintenance
 
-This is a wrapper cookbook around Engine Yard's `postgresql_maintenance` cookbook.  It allows customization of the cronjob that weekly vacuum all databases.
+This is a wrapper cookbook around Engine Yard's `postgresql_maintenance` cookbook. Currently this recipe consists of setting up a vacuumdb cron job for a PostgreSQL database that can be customized to a specific application need (see below). This recipe may be updated in the future to support additional maintenance options.
+
+
+Dependencies
+--------------------------
+
+These recipes are designed and build for use with PostgreSQL.
+
+
+
 
 ## Installation
 
@@ -41,6 +50,15 @@ Yard.
   gem install ey-core
   ey-core recipes upload --environment=<nameofenvironment> --file=<pathtocookbooksfilder> --apply
   ```
+
+VacuumDB
+--------------------------
+
+Your database is configured by default with autovacuum but minimizes resources to this process to prevent it from negatively impacting application performance. Databases that see regular heavy load, or lots of writes and deletes may need regular manual vacuum operations globally or for specific tables.
+
+The default action for the recipe will set up a weekly vacuum of all databases on the server at midnight Saturday night/Sunday morning server time. 
+
+Additional information on vacuum operation can be found in the PostgreSQL Manual: http://www.postgresql.org/docs/9.3/static/sql-vacuum.html.
 
 ## Customizations
 
