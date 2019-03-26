@@ -17,3 +17,7 @@ default['postgresql']['ssldir'] = "/db/postgresql/#{node['postgresql']['short_ve
 default['postgresql']['dbroot'] = '/db/postgresql/'
 default['postgresql']['owner'] = 'postgres'
 default['postgresql']['pgbindir'] = "/usr/lib/postgresql/#{node['postgresql']['short_version']}/bin/"
+
+# postgis
+default['postgis']['version'] = "2.5"
+default['postgis']['package_name'] = "postgresql-#{default['postgresql']['short_version']}-postgis-#{default['postgis']['version']}"

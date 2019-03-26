@@ -43,9 +43,12 @@ action :install do
 
           # and a couple follow up commands for Postgis
           if ext_name[/postgis/]
-            execute "Updating to correct postgis minor version" do
+            bash "Updating to correct postgis minor version" do
               # this is essentially a no-op if already on this version.
-              command %Q(psql -U postgres -d #{db_name} -c 'ALTER EXTENSION postgis UPDATE TO "#{node[:postgis_version]}";')
+              code %Q(
+                minor_version=$(apt-cache policy #{node['postgis']['package_name']} | grep -E -o "Installed: ([0-9]+\.[0-9]+\.[0-9]+)" | awk '{print $NF}');
+                [[ -n "${minor_version// }" ]] && psql -U postgres -d #{db_name} -c "ALTER EXTENSION postgis UPDATE TO '$minor_version';" || echo "Postgis version not found. Is it installed?"
+              )
             end
 
             execute "Grant permissions to the #{node.engineyard.environment.ssh_username} user on the geometry_columns schema" do
