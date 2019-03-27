@@ -14,7 +14,7 @@ default['memcached'].tap do |memcached|
   memcached['install_from_source'] = false
 
   memcached['version'] = '1.5.6-0ubuntu1'
-  # memcached['download_url'] = 'http://www.memcached.org/files/memcached-1.5.12'
+  # memcached['download_url'] = 'http://www.memcached.org/files/memcached-1.5.12.tar.gz'
 
   # Install memcached on a utility instance named 'memcached'
   memcached['install_type'] = 'NAMED_UTILS'
