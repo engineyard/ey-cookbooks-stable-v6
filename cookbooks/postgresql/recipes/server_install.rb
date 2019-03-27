@@ -4,6 +4,7 @@ known_versions = %w[
   9.5.16
   9.6.12
   10.3 10.6 10.7
+  11.2
 ]
 
 execute "dropping lock version file" do

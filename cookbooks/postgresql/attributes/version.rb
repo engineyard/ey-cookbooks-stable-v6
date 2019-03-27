@@ -8,6 +8,9 @@ when "postgres9_6"
 when "postgres10"
   default['postgresql']['latest_version'] = '10.7'
   default['postgresql']['short_version'] = '10'
+when "postgres11"
+  default['postgresql']['latest_version'] = '11.2'
+  default['postgresql']['short_version'] = '11'
 end
 default['postgresql']['datadir'] = "/db/postgresql/#{node['postgresql']['short_version']}/data/"
 default['postgresql']['ssldir'] = "/db/postgresql/#{node['postgresql']['short_version']}/ssl/"
