@@ -9,8 +9,6 @@ ES = node.elasticsearch
 include_recipe 'elasticsearch::apt'
 include_recipe 'elasticsearch::install'
 if ES['is_elasticsearch_instance']
-  # TODO jf
   include_recipe 'elasticsearch::configure_cluster'
-  # TODO jf
-  include_recipe 'elasticsearch::configure_limits'
+  include_recipe 'elasticsearch::start'
 end
