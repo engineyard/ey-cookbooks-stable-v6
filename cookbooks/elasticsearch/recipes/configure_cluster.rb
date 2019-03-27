@@ -14,7 +14,7 @@ else
     end
   end
 
-  template "/opt/elasticsearch/config/elasticsearch.yml" do
+  template "/etc/elasticsearch/elasticsearch.yml" do
     source "elasticsearch.yml.erb"
     owner "elasticsearch"
     group "nogroup"
