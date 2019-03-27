@@ -13,6 +13,7 @@ if ES['is_elasticsearch_instance']
     uri "https://artifacts.elastic.co/packages/#{es_version_series}/apt"
     key 'https://artifacts.elastic.co/GPG-KEY-elasticsearch'
     components ['stable', 'main']
+    distribution false
     action :add
     notifies :run, "execute[apt-get update for elasticsearch-#{es_version_series}]", :immediately
   end
