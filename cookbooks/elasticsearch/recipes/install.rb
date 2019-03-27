@@ -16,7 +16,7 @@ if ES['is_elasticsearch_instance']
 
   directory "/data/elasticsearch-#{ES['version']}/data" do
     owner "elasticsearch"
-    group "nogroup"
+    group "elasticsearch"
     mode 0755
     action :create
     recursive true

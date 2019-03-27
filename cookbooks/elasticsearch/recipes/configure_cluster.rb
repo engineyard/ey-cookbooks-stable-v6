@@ -17,7 +17,7 @@ else
   template "/etc/elasticsearch/elasticsearch.yml" do
     source "elasticsearch.yml.erb"
     owner "elasticsearch"
-    group "nogroup"
+    group "elasticsearch"
     variables(
       :elasticsearch_instances => elasticsearch_instances.join('", "'),
       :elasticsearch_defaultreplicas => ES['defaultreplicas'],
