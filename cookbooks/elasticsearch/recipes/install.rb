@@ -37,7 +37,7 @@ if ES['is_elasticsearch_instance']
   template "/etc/elasticsearch/jvm.options" do
     cookbook "custom-elasticsearch"
     source "jvm.options.#{es_version_series}.erb"
-    mode 0644
+    mode "0644"
     backup 0
     variables(
       :Xms => ES['jvm_options']['Xms'],
@@ -53,6 +53,16 @@ if ES['is_elasticsearch_instance']
     group "root"
     mode "0644"
     backup 0
+  end
+
+  # Add elasticsearch systemd override.conf
+  cookbook_file "/etc/systemd/system/elasticsearch.service.d/override.conf" do
+    source "elasticsearch-service.override.conf"
+    owner "root"
+    group "root"
+    mode "0644"
+    backup 0
+    notifies :run, "execute[reload-systemd]", :immediately
   end
 end
 
