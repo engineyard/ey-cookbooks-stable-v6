@@ -56,6 +56,14 @@ if ES['is_elasticsearch_instance']
   end
 
   # Add elasticsearch systemd override.conf
+  directory "/etc/systemd/system/elasticsearch.service.d" do
+    owner "root"
+    group "root"
+    mode 0755
+    recursive true
+    action :create
+  end
+
   cookbook_file "/etc/systemd/system/elasticsearch.service.d/override.conf" do
     source "elasticsearch-service.override.conf"
     owner "root"
