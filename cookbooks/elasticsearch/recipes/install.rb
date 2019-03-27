@@ -1,4 +1,5 @@
 ES = node.elasticsearch
+es_version_series = "#{ES['version'][0]}.x"
 
 if ES['is_elasticsearch_instance']
   package 'default-jdk'
@@ -32,22 +33,10 @@ if ES['is_elasticsearch_instance']
     end
   end
 
-  # TODO jf
-  elasticsearch_classpath = "$ES_HOME/lib/*"
-  template "/usr/share/elasticsearch/elasticsearch.in.sh" do
-    source "elasticsearch.in.sh.erb"
-    mode 0644
-    backup 0
-    variables(
-      :elasticsearch_classpath => elasticsearch_classpath
-    )
-  end
-
-  # TODO jf
   # Create the jvm.options file
-  template "/opt/elasticsearch/config/jvm.options" do
+  template "/etc/elasticsearch/jvm.options" do
     cookbook "custom-elasticsearch"
-    source "jvm.options.erb"
+    source "jvm.options.#{es_version_series}.erb"
     mode 0644
     backup 0
     variables(
