@@ -78,7 +78,7 @@ if ['solo','app_master','app','util'].include?(node.dna['instance_role'])
     end
   end
 
-  nodedna['applications'].each do |app_name, data|
+  node.dna['applications'].each do |app_name, data|
     template "/data/#{app_name}/shared/config/elasticsearch.yml" do
       owner owner_name
       group owner_name
