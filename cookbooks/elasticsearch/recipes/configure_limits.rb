@@ -1,3 +1,4 @@
+# TODO jf
 # Elasticsearch 5.x requires higher limits for max files descriptors and vm.max_map_count
 
 # Override /etc/security/limits.conf

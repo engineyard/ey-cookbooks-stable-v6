@@ -1,14 +1,16 @@
-ES = node['elasticsearch']
+ES = node.elasticsearch
 
-if node['dna']['utility_instances'].empty?
+if node.dna['utility_instances'].empty?
   Chef::Log.info "No utility instances found"
 else
   elasticsearch_instances = []
   elasticsearch_expected = 0
-  node['dna']['utility_instances'].each do |elasticsearch|
+  node.dna['utility_instances'].each do |elasticsearch|
     if elasticsearch['name'].include?("elasticsearch")
-      elasticsearch_expected = elasticsearch_expected + 1 unless node['dna']['fqdn'] == elasticsearch['hostname']
-      elasticsearch_instances << "#{elasticsearch['hostname']}:9300" unless node['dna']['fqdn'] == elasticsearch['hostname']
+      unless node.dna['fqdn'] == elasticsearch['hostname'] do
+        elasticsearch_expected = elasticsearch_expected + 1
+        elasticsearch_instances << "#{elasticsearch['hostname']}:9300"
+      end
     end
   end
 
@@ -22,8 +24,7 @@ else
       :elasticsearch_expected => elasticsearch_expected,
       :elasticsearch_defaultshards => ES['defaultshards'],
       :elasticsearch_clustername => ES['clustername'],
-      :elasticsearch_host => node['fqdn'],
-      :is_V2 => ES['version'].match(/^2/)
+      :elasticsearch_host => node['fqdn']
     )
     mode 0600
     backup 0
