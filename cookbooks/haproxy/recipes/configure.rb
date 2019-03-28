@@ -102,6 +102,21 @@ template "/etc/haproxy/ssl/#{app.name}.crt" do
     )
 end
 
+
+template "/etc/haproxy/ssl/#{app.name}.pem" do
+  owner node['owner_name']
+  group node['owner_name']
+  mode 0644
+  source "sslpem.erb"
+  backup 0
+  variables(
+    :crt => app[:vhosts][0][:ssl_cert][:certificate],
+    :chain => app[:vhosts][0][:ssl_cert][:certificate_chain],
+    :key => app[:vhosts][0][:ssl_cert][:private_key]
+  )
+  notifies :run, resources(:execute => 'reload-haproxy'), :delayed
+end
+
 # SSL configuration - END
 
 
