@@ -41,12 +41,6 @@ file "/data/nginx/http-custom.conf" do
   mode 0644
 end
 
-directory "/data/nginx/ssl" do
-  owner node['owner_name']
-  group node['owner_name']
-  mode 0775
-end
-
 managed_template "/data/nginx/common/proxy.conf" do
   owner node['owner_name']
   group node['owner_name']
