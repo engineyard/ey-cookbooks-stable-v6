@@ -10,6 +10,8 @@ execute "reload-haproxy" do
   action :nothing
 end
 
+
+
 directory "/etc/haproxy/errorfiles" do
   action :create
   owner 'root'
@@ -49,6 +51,59 @@ unless haproxy_httpchk_path
     haproxy_httpchk_host = app.vhosts.first.domain_name.empty? ? nil : app.vhosts.first.domain_name
   end
 end
+
+# SSL configuration
+directory "/etc/haproxy/ssl" do
+  owner 'root'
+  group 'root'
+  mode 0775
+  action:create
+end
+
+#TODOv6 Make sure that the correct app is selected
+app = node.engineyard.environment.apps.first
+
+Chef::Log.info "Installing SSL certificates for application #{app.name}"
+
+dhparam_available = app.components[1].dh_key
+
+if dhparam_available
+  managed_template "/etc/haproxy/ssl/dhparam.pem" do
+     owner node['owner_name']
+     group node['owner_name']
+     mode 0600
+     source "dhparam.erb"
+     variables ({
+       :dhparam => app.components[1].dh_key
+     })
+  end
+end
+
+template "/etc/haproxy/ssl/#{app.name}.key" do
+    owner node['owner_name']
+    group node['owner_name']
+    mode 0644
+    source "sslkey.erb"
+    backup 0
+    variables(
+      :key => app[:vhosts][0][:ssl_cert][:private_key]
+    )
+end
+
+template "/etc/haproxy/ssl/#{app.name}.crt" do
+    owner node['owner_name']
+    group node['owner_name']
+    mode 0644
+    source "sslcrt.erb"
+    backup 0
+    variables(
+      :crt => app[:vhosts][0][:ssl_cert][:certificate],
+      :chain => app[:vhosts][0][:ssl_cert][:certificate_chain]
+    )
+end
+
+# SSL configuration - END
+
 
 use_http2 = node['haproxy'] && node['haproxy']['http2']
 managed_template "/etc/haproxy.cfg" do
