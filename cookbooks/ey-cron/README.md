@@ -7,6 +7,4 @@ Sets up cron jobs specific to the EY Stack on top of whatever ones are defined o
  - adds cronjob for executing `ey-snapshot`.
  - adds cronjobs that were configured through the web UI.
  - adds cronjob to monitor/restart `ntp`
- 
- 
-**Note:** Dashboard-defined cronjobs are added in file _/etc/cron.d/ey-cron-jobs_
+
