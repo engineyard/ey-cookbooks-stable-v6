@@ -23,8 +23,6 @@ default['elasticsearch'].tap do |elasticsearch|
   elasticsearch['home'] = '/data/elasticsearch'
 
   # Elasticsearch configuration parameters
-  elasticsearch['heap_size'] = 1000
-  elasticsearch['fdulimit'] = nil
   elasticsearch['defaultreplicas'] = 1
   elasticsearch['defaultshards'] = 6
 
