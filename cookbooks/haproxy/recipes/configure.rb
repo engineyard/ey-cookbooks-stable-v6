@@ -66,60 +66,60 @@ end
 
 node.engineyard.environment['apps'].each do |app|
 
-    if (!app[:vhosts][0][:ssl_cert].nil?)
+  if (!app[:vhosts][0][:ssl_cert].nil?)
 
-        Chef::Log.info "Installing SSL certificates for application #{app.name}"
-        dhparam_available = app.components[1].dh_key
+    Chef::Log.info "Installing SSL certificates for application #{app.name}"
+    dhparam_available = app.components[1].dh_key
 
-        if dhparam_available
-          managed_template "/etc/haproxy/ssl/dhparam.#{app.name}.pem" do
-             owner node['owner_name']
-             group node['owner_name']
-             mode 0600
-             source "dhparam.erb"
-             variables ({
-               :dhparam => app.components[1].dh_key
-             })
-          end
-        end
-
-        template "/etc/haproxy/ssl/#{app.name}.key" do
-            owner node['owner_name']
-            group node['owner_name']
-            mode 0644
-            source "sslkey.erb"
-            backup 0
-            variables(
-              :key => app[:vhosts][0][:ssl_cert][:private_key]
-            )
-        end
-
-        template "/etc/haproxy/ssl/#{app.name}.crt" do
-            owner node['owner_name']
-            group node['owner_name']
-            mode 0644
-            source "sslcrt.erb"
-            backup 0
-            variables(
-              :crt => app[:vhosts][0][:ssl_cert][:certificate],
-              :chain => app[:vhosts][0][:ssl_cert][:certificate_chain]
-            )
-        end
-
-        template "/etc/haproxy/ssl/#{app.name}.pem" do
-          owner node['owner_name']
-          group node['owner_name']
-          mode 0644
-          source "sslpem.erb"
-          backup 0
-          variables(
-            :crt => app[:vhosts][0][:ssl_cert][:certificate],
-            :chain => app[:vhosts][0][:ssl_cert][:certificate_chain],
-            :key => app[:vhosts][0][:ssl_cert][:private_key]
-          )
-          notifies :run, resources(:execute => 'reload-haproxy'), :delayed
-        end
+    if dhparam_available
+      managed_template "/etc/haproxy/ssl/dhparam.#{app.name}.pem" do
+        owner node['owner_name']
+        group node['owner_name']
+        mode 0600
+        source "dhparam.erb"
+        variables ({
+          :dhparam => app.components[1].dh_key
+        })
+      end
     end
+
+    template "/etc/haproxy/ssl/#{app.name}.key" do
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0644
+      source "sslkey.erb"
+      backup 0
+      variables(
+        :key => app[:vhosts][0][:ssl_cert][:private_key]
+      )
+    end
+
+    template "/etc/haproxy/ssl/#{app.name}.crt" do
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0644
+      source "sslcrt.erb"
+      backup 0
+      variables(
+        :crt => app[:vhosts][0][:ssl_cert][:certificate],
+        :chain => app[:vhosts][0][:ssl_cert][:certificate_chain]
+      )
+    end
+
+    template "/etc/haproxy/ssl/#{app.name}.pem" do
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0644
+      source "sslpem.erb"
+      backup 0
+      variables(
+        :crt => app[:vhosts][0][:ssl_cert][:certificate],
+        :chain => app[:vhosts][0][:ssl_cert][:certificate_chain],
+        :key => app[:vhosts][0][:ssl_cert][:private_key]
+      )
+      notifies :run, resources(:execute => 'reload-haproxy'), :delayed
+    end
+  end
 end
 # SSL configuration - END
 
