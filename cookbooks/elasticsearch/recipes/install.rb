@@ -74,18 +74,18 @@ if ES['is_elasticsearch_instance']
   end
 end
 
-owner_name = node.dna['users'].first['username']
+owner_name = node['dna']['users'].first['username']
 # This portion of the recipe should run on all instances in your environment.
 # We are going to drop elasticsearch.yml for you so you can parse it and provide the instances to your application.
-if ['solo','app_master','app','util'].include?(node.dna['instance_role'])
+if ['solo','app_master','app','util'].include?(node['dna']['instance_role'])
   elasticsearch_hosts = []
-  node.dna['utility_instances'].each do |instance|
+  node['dna']['utility_instances'].each do |instance|
     if instance['name'].include?(ES['instance_name'])
       elasticsearch_hosts << "#{instance['hostname']}:9200"
     end
   end
 
-  node.dna['applications'].each do |app_name, data|
+  node['dna']['applications'].each do |app_name, data|
     template "/data/#{app_name}/shared/config/elasticsearch.yml" do
       owner owner_name
       group owner_name
@@ -93,7 +93,7 @@ if ['solo','app_master','app','util'].include?(node.dna['instance_role'])
       source "es.yml.erb"
       backup 0
       variables(:yaml_file => {
-        node.dna['environment']['framework_env'] => {
+        node['dna']['environment']['framework_env'] => {
           :hosts => elasticsearch_hosts
         }
       })

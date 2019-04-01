@@ -3,13 +3,13 @@ default['elasticsearch'].tap do |elasticsearch|
   # This is the default
   elasticsearch['instance_name'] = 'elasticsearch'
   elasticsearch['is_elasticsearch_instance'] = (
-    node.dna['instance_role'] == 'util' &&
-    node.dna['name'].include?(elasticsearch['instance_name'])
+    node['dna']['instance_role'] == 'util' &&
+    node['dna']['name'].include?(elasticsearch['instance_name'])
   )
 
   # Run Elasticsearch on a solo or app_master instance
   # Not recommended for production environments
-  #elasticsearch['is_elasticsearch_instance'] = ( ['solo', 'app_master'].include?(node.dna['instance_role']) )
+  #elasticsearch['is_elasticsearch_instance'] = ( ['solo', 'app_master'].include?(node['dna']['instance_role']) )
 
   # Elasticsearch version to install
   # Go to https://www.elastic.co/downloads/past-releases to see the available version
@@ -17,7 +17,7 @@ default['elasticsearch'].tap do |elasticsearch|
   elasticsearch['version'] = '6.6.2'
   
   # Elasticsearch cluster name
-  elasticsearch['clustername'] = node.dna['environment']['name']
+  elasticsearch['clustername'] = node['dna']['environment']['name']
 
   # Where to store the ES index
   elasticsearch['home'] = '/data/elasticsearch'
