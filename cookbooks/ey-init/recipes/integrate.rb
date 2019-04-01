@@ -7,7 +7,7 @@ when 'app', 'app_master'
 when 'util'
 when /^db/
   if node.engineyard.environment['db_stack_name'][/^postgres/]
-    #TODOv6 include_recipe 'ey-backup::postgres'
+    include_recipe 'ey-backup::postgres'
   end
 end
 include_recipe "ssh_keys" # CC-691 - update ssh whitelist after takeovers
