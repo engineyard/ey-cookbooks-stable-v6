@@ -1,4 +1,4 @@
-ES = node.elasticsearch
+ES = node['elasticsearch']
 es_version_series = "#{ES['version'][0]}.x"
 
 if ES['is_elasticsearch_instance']

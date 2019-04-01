@@ -1,4 +1,4 @@
-ES = node.elasticsearch
+ES = node['elasticsearch']
 
 if node['dna']['utility_instances'].empty?
   Chef::Log.info "No utility instances found"
