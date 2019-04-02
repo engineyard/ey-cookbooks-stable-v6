@@ -6,6 +6,7 @@ admin_pass=<%= @db_admin_pass %>  # from DNA
 owner=<%= @db_owner %>            # postgres or mysql
 max_age=<%= @max_age %>           # Five years in days
 
+mkdir -p ${ssldir}
 cd ${ssldir}
 openssl genrsa -des3 -passout pass:${admin_pass} -out server.key 1024
 openssl rsa -passin pass:${admin_pass} -in server.key -out server.key

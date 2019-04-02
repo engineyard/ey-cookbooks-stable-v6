@@ -67,9 +67,9 @@ end
 
 has_db = ['solo','db_master','db_slave'].include?(node['dna']['instance_role'])
 
-=begin TODOv6
 case node.engineyard.environment['db_stack_name']
 when /mysql/
+=begin TODOv6
   cookbook_file "/usr/lib/collectd/mysql.so" do
     source "#{node['kernel']['machine']}/#{node['mysql']['short_version']}/mysql.so"
     #source "#{node['kernel']['machine']}/5.7/mysql.so"
@@ -77,13 +77,13 @@ when /mysql/
     mode 0755
     backup 0
   end
+=end
   short_version=node['mysql']['short_version']
 when /postgres/
   short_version=node['postgresql']['short_version']
 when "no_db"
   has_db=false
 end
-=end
 
 include_recipe "collectd::perl"
 
@@ -106,7 +106,7 @@ managed_template "/etc/engineyard/collectd.conf" do
     :load_failure => node['collectd']['load']['failure'],
     :swap_critical_total => node['swap_critical_total'],
     :swap_warning_total => node['swap_warning_total'],
-    :short_version => 'TODOv6', #short_version,
+    :short_version => short_version,
     :disk_thresholds => DiskThresholds.new
   })
   notifies :restart, "service[collectd]", :delayed

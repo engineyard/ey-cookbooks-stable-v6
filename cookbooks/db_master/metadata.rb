@@ -3,6 +3,6 @@ maintainer 'Engine Yard'
 
 depends 'ey-lib'
 depends 'mysql'
-#TODOv6 depends 'postgresql'
+depends 'postgresql'
 #TODOv6 depends 'db_admin_tools'
 
