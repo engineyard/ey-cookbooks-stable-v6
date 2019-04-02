@@ -8,3 +8,6 @@ default['swap_warning_total'] = node['swap_total_bytes'] * node['swap_warn_thres
 default['swap_critical_total'] = node['swap_total_bytes'] * node['swap_crit_threshold'].to_f
 
 default['collectd']['version'] = "5.7.2-2ubuntu1"
+
+# Enable monitoring of EC2/EBS credit balances only on T instances (T2, T3)
+default['collectd']['enable_credit_balances_monitoring'] = (size =~ /^t[a-z0-9]+\./)
