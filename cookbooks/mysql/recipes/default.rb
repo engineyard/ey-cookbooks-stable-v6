@@ -83,13 +83,11 @@ managed_template "/etc/mysql/my.cnf" do
   })
 end
 
-=begin TODOv6
 logrotate 'mysql_slow' do
   files "#{node['mysql']['logbase']}/slow_query.log"
   delay_compress true
   copy_then_truncate true
 end
-=end
 
 directory '/etc/mysql.d' do
   owner 'mysql'
