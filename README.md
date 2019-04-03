@@ -15,18 +15,13 @@ Consider the following before starting porting/QAing recipes:
 
 *REMEMBER TO STOP/TERMINATE YOUR INSTANCES ONCE TESTING IS DONE*
 
+*Remember to log time spent on Cookbooks on a ZD ticket (internal) to keep your stats healthy*
+
 ### Need to run chef with recipes modified locally on instance?
 
 ```
 /opt/chef/embedded/bin/chef-solo -j /etc/chef/dna.json -c /etc/chef/solo.rb > /var/log/chef.manual.log 2>&1
 ```
-
-## NOT available - WIP
-
-Avoid booting environments with the following settings as they're still WIP:
-
-- PostgreSQL
-
 
 ## Ready to commit changes?
 
