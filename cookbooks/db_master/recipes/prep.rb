@@ -13,4 +13,4 @@ when "no_db"
   #no-op
 end
 
-#TODOv6 include_recipe "db_admin_tools"
+include_recipe "db_admin_tools"
