@@ -90,13 +90,6 @@ node.engineyard.apps.each_with_index do |app,index|
              )
   end
 
-  file "/data/#{app.name}/shared/config/env.custom" do
-    owner ssh_username
-    group ssh_username
-    mode 0644
-    action :create_if_missing
-  end
-
   template "/engineyard/bin/app_#{app.name}" do
     source  'app_control.erb'
     owner   ssh_username
