@@ -14,5 +14,4 @@ end
 include_recipe 'app::remove'
 include_recipe 'app::create'
 include_recipe "app-logs"
-include_recipe "db_admin_tools"
 include_recipe "ey-db-libs"
