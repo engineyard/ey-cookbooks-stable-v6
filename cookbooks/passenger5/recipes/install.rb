@@ -39,7 +39,6 @@ port          = node['passenger5']['port']
 #   action :create
 # end
 nginx_http_port = 8081
-nginx_https_port = 8082
 base_port = node['passenger5']['port'].to_i
 stepping = 200
 app_base_port = base_port
@@ -73,41 +72,6 @@ node.engineyard.apps.each_with_index do |app,index|
       :framework_env => framework_env
     })
     notifies :restart, resources(:service => "nginx"), :delayed
-  end
-
-  # Render proxy.conf
-  cookbook_file "/etc/nginx/common/proxy.conf" do
-    owner ssh_username
-    group ssh_username
-    mode 0644
-    source "proxy.conf"
-    action :create
-    notifies :restart, resources(:service => "nginx"), :delayed
-  end
-
-  # If certificates have been added, render the https Nginx vhost and custom config
-  if app.vhosts.first.https?
-    file "/data/nginx/servers/#{app.name}/custom.ssl.conf" do
-      action :create_if_missing
-      owner ssh_username
-      group ssh_username
-      mode 0644
-    end
-
-    template "/data/nginx/servers/#{app.name}.ssl.conf" do
-      owner ssh_username
-      group ssh_username
-      mode 0644
-      source "nginx_app.conf.erb"
-      variables({
-        :vhost => app.vhosts.first,
-        :ssl => true,
-        :port => nginx_https_port,
-        :upstream_port => app_base_port,
-        :framework_env => framework_env
-      })
-      notifies :restart, resources(:service => "nginx"), :delayed
-    end
   end
 
   # Render app control script, this script calls the passenger enterprise binaries using the full path
@@ -164,4 +128,3 @@ cookbook_file "/engineyard/bin/passenger_monitor" do
   mode "0655"
   backup 0
 end
-

@@ -41,12 +41,6 @@ file "/data/nginx/http-custom.conf" do
   mode 0644
 end
 
-directory "/data/nginx/ssl" do
-  owner node['owner_name']
-  group node['owner_name']
-  mode 0775
-end
-
 managed_template "/data/nginx/common/proxy.conf" do
   owner node['owner_name']
   group node['owner_name']
@@ -78,21 +72,6 @@ end
 end
 
 node.engineyard.apps.each_with_index do |app, index|
-
-  dhparam_available = app.metadata('dh_key',nil)
-
-  if dhparam_available
-    managed_template "/data/nginx/ssl/dhparam.#{app.name}.pem" do
-       owner node['owner_name']
-       group node['owner_name']
-       mode 0600
-       source "dhparam.erb"
-       variables ({
-         :dhparam => app.metadata('dh_key')
-       })
-       notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
-    end
-  end
 
   directory "/data/nginx/servers/#{app.name}" do
     owner node['owner_name']

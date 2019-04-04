@@ -1,12 +1,6 @@
-<% if @ssl %>
-upstream <%= @vhost.app.name %>ssl_upstream {
-  server 127.0.0.1:<%= @upstream_port %>;
-}
-<% else %>
 upstream <%= @vhost.app.name %>_upstream {
   server 127.0.0.1:<%= @upstream_port %>;
 }
-<% end %>
 
 server {
 
@@ -50,11 +44,6 @@ server {
   # start up the Nginx server the password will need to be typed in every time.
   # This precludes automatic/automated web server restarts on boot or otherwise.
   #
-  <% if @ssl %>
-  ssl on;
-  ssl_certificate /etc/nginx/ssl/<%= @vhost.app.name %>.crt;
-  ssl_certificate_key /etc/nginx/ssl/<%= @vhost.app.name %>.key;
-  <% end %>
 
   #
   # This assigns the maximum accepted body size of client request. It is placed
@@ -74,13 +63,8 @@ server {
   #
   # Log files are stored within the /var/log/engineyard/nginx/ directory.
   #
-  <% if @ssl %>
-  access_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.ssl.access.log main;
-  error_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.ssl.error.log notice;
-  <% else %>
   access_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.access.log main;
   error_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.error.log notice;
-  <% end %>
 
 <% domain =  @vhost.domain_name %>
 <% domain = domain.split(" ") %>
@@ -126,20 +110,11 @@ server {
 
   error_page 503 /system/maintenance.html;
 
-  <% if @ssl %>
-  location @app_<%=@vhost.app.name%>ssl {
-  include /etc/nginx/common/proxy.conf;
-  proxy_set_header        X-Forwarded-Proto https;
-  proxy_pass http://<%= @vhost.app.name %>ssl_upstream;
-  proxy_hide_header X-Powered-By;
-  }
-  <% else %>
   location @app_<%=@vhost.app.name%> {
   include /etc/nginx/common/proxy.conf;
   proxy_pass http://<%= @vhost.app.name %>_upstream;
   proxy_hide_header X-Powered-By;
   }
-  <% end %>
 
   #
   # The default location will process the request as follows:
@@ -153,16 +128,8 @@ server {
   #
   location / {
     if (-f $document_root/system/maintenance.html) { return 503; }
-  <% if @ssl %>
-    try_files $uri $uri/index.html $uri.html @app_<%=@vhost.app.name%>ssl;
-  <% else %>
     try_files $uri $uri/index.html $uri.html @app_<%=@vhost.app.name%>;
-  <% end %>
   }
-  <% if @ssl %>
-  include /etc/nginx/servers/<%= @vhost.app.name %>/custom.ssl.conf;
-  <% else %>
-   include /etc/nginx/servers/<%= @vhost.app.name %>/custom.conf;
-  <% end %>
 
+   include /etc/nginx/servers/<%= @vhost.app.name %>/custom.conf;
 }
