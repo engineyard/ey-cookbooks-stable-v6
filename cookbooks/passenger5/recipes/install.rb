@@ -109,15 +109,6 @@ node.engineyard.apps.each_with_index do |app,index|
               :version => version)
     notifies :run, "execute[reload-monit]", :delayed
   end
-
-  cookbook_file "/data/#{app.name}/shared/config/env.custom" do
-    source "env.custom"
-    owner node["owner_name"]
-    group node["owner_name"]
-    mode 0644
-    backup 0
-    not_if { FileTest.exists?("/data/#{app.name}/shared/config/env.custom") }
-  end
 end
 
 # Render passenger_monitor script
