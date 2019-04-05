@@ -13,6 +13,11 @@ chef_gem "ey_cloud_server" do
   compile_time false
 end
 
+chef_gem "ey_services_setup" do
+  version "0.0.7"
+  compile_time false
+end
+
 ["eybackup", "eyrestore", "ey-snapshots", "ey-snaplock"].each do |executable|
   link "#{bin_path}/#{executable}" do
     to "#{gem_bin_path}/#{executable}"
@@ -29,7 +34,7 @@ directory resin_path do
   action :create
 end
 
-["ruby", "gem", "engineyard-serverside"].each do |executable|
+["ruby", "gem", "engineyard-serverside", "ey-services-setup"].each do |executable|
   link "#{resin_path}/#{executable}" do
     to "#{gem_bin_path}/#{executable}"
   end
