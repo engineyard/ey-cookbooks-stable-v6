@@ -12,7 +12,7 @@ util_crons = node[:custom_crons].find_all {|c| c[:instance_name] == 'util' }
 # Find all cron jobs for app master only
 app_master_crons = node[:custom_crons].find_all {|c| c[:instance_name] == 'app_master' }
 
-# Find all cron jobs for app master only
+# Find all cron jobs for solo only
 solo_crons = node[:custom_crons].find_all {|c| c[:instance_name] == 'solo' }
 
 # Find all cron jobs for application instances
