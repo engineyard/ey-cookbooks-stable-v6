@@ -31,3 +31,4 @@ include_recipe 'logrotate'
 include_recipe 'run-one'
 
 include_recipe 'ey-hosts'
+include_recipe "ey-core::sshd"

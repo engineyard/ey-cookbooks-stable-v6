@@ -2,7 +2,6 @@
 
 case node['dna']['instance_role']
 when 'app', 'app_master'
-  #TODOv6 include_recipe 'ey-monitor'
   include_recipe 'haproxy'
 when 'util'
 when /^db/
