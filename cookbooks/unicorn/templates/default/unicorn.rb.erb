@@ -87,7 +87,7 @@ before_fork do |server, worker|
 
   if File.exists?(old_pid) && server.pid != old_pid
     begin
-      sig = (worker.nr + 1) >= server.worker_processes ? :TERM : :TTOU
+      sig = (worker.nr + 1) >= server.worker_processes ? :QUIT : :TTOU
       Process.kill(sig, File.read(old_pid).to_i)
     rescue Errno::ENOENT, Errno::ESRCH
       # someone else did our job for us
@@ -96,11 +96,11 @@ before_fork do |server, worker|
   sleep 1
 end
 
-# If Bundler is available; and unicorn is reloading ensure the PATH and 
+# If Bundler is available; and unicorn is reloading ensure the PATH and
 # GEM_HOME and BUNDLE_GEMFILE are pointing to a correct path/filename.
 if defined?(Bundler.settings)
   before_exec do |server|
-    paths = (ENV["PATH"] || "").split(File::PATH_SEPARATOR) 
+    paths = (ENV["PATH"] || "").split(File::PATH_SEPARATOR)
     paths.unshift "#{shared_bundler_gems_path}/bin"
     ENV["PATH"] = paths.uniq.join(File::PATH_SEPARATOR)
 
