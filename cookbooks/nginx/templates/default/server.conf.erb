@@ -39,7 +39,7 @@ server {
   # The application root which is inherited for all location blocks below.
   #
   root /data/<%= @app_name %>/current/public;
-  
+
   access_log /var/log/engineyard/nginx/<%= @app_name %>.access.log main;
 
   error_log /var/log/engineyard/nginx/<%= @app_name %>.error.log notice;
@@ -53,6 +53,8 @@ server {
   proxy_pass http://upstream_<%= @app_name %>;
   }
 
+  proxy_hide_header X-Powered-By;
+
   # Adding CORS Header to the font files.
   location ~* \.(eot|otf|ttf|woff|woff2|svg)$ {
     add_header Access-Control-Allow-Origin *;
@@ -62,7 +64,7 @@ server {
   location ~ ^/(images|assets|javascripts|stylesheets)/ {
   try_files  $uri $uri/index.html /last_assets/$uri /last_assets/$uri.html @app_<%= @app_name %>;
   expires 10y;
-  }  
+  }
 
   location / {
   if (-f $document_root/system/maintenance.html) { return 503; }
@@ -76,7 +78,7 @@ server {
   <% end %>
   try_files  $uri $uri/index.html $uri.html @app_<%= @app_name %>;
   }
-  
+
   location = /500.html {
     root /data/<%= @app_name %>/current/public;
   }
