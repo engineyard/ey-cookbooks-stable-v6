@@ -6,7 +6,7 @@ MaxStartups 10:30:60
 Ciphers chacha20-poly1305@openssh.com,aes128-cbc,aes128-ctr,aes192-cbc,aes192-ctr,aes256-cbc,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com
 PasswordAuthentication no
 ChallengeResponseAuthentication no
-Subsystem sftp /usr/lib64/misc/sftp-server
+Subsystem sftp /usr/lib/openssh/sftp-server
 UseDNS no
 UsePAM yes
 PrintMotd no
