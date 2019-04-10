@@ -1,4 +1,3 @@
-#TODOv6 include_recipe 'ey-monitor' # stonith
 include_recipe "ec2" if ['solo', 'app', 'util', 'app_master','node'].include?(node['dna']['instance_role'])
 
 #TODOv6 include_recipe 'ey-dynamic::packages'

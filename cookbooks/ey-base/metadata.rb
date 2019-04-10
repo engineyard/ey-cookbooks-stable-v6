@@ -28,7 +28,6 @@ depends 'util'
 
 =begin
 depends 'ey-bin'
-depends 'ey-monitor'
 depends 'ephemeraldisk'
 depends 'app-logs'
 depends 'collectd'
