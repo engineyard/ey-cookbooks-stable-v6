@@ -31,12 +31,6 @@ end
   end
 end
 
-#
-# SD-4650
-# Remove it when awsm stops using dnapi to generate the dna and allows configure ports
-
-haproxy_http_port = (app = node.engineyard.apps.detect {|a| a.metadata?(:haproxy_http_port) } and app.metadata?(:haproxy_http_port)) || 80
-haproxy_https_port = (app = node.engineyard.apps.detect {|a| a.metadata?(:haproxy_https_port) } and app.metadata?(:haproxy_https_port)) || 443
 
 # CC-52
 # Add http check for accounts with adequate settings in their dna metadata
@@ -52,6 +46,8 @@ unless haproxy_httpchk_path
   end
 end
 
+=begin
+
 # SSL configuration
 directory "/etc/haproxy/ssl" do
   owner 'root'
@@ -63,6 +59,7 @@ end
 execute "clearing old SSL certificates" do
   command "rm -rf /etc/haproxy/ssl/*"
 end
+
 
 node.engineyard.environment['apps'].each do |app|
 
@@ -122,6 +119,7 @@ node.engineyard.environment['apps'].each do |app|
   end
 end
 # SSL configuration - END
+=end
 
 
 use_http2 = node['haproxy'] && node['haproxy']['http2']
@@ -136,8 +134,6 @@ managed_template "/etc/haproxy.cfg" do
     :app_master_weight => members.size < 51 ? (50 - (members.size - 1)) : 0,
     :haproxy_user => node['dna']['haproxy']['username'],
     :haproxy_pass => node['dna']['haproxy']['password'],
-    :http_bind_port => haproxy_http_port,
-    :https_bind_port => haproxy_https_port,
     :httpchk_host => haproxy_httpchk_host,
     :httpchk_path => haproxy_httpchk_path,
     :http2 => use_http2
