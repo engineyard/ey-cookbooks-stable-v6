@@ -106,7 +106,6 @@ node.engineyard.apps.each_with_index do |app,index|
               :shared_path   => "#{app_path}/shared",
               :ports         => ports,
               :framework_env => framework_env,
-              :jruby         => node.engineyard.environment.jruby?),
               :sleep_timeout => sleep_timeout)
 
   end

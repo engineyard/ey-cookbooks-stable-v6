@@ -141,9 +141,6 @@ start() {
 }
 
 deploy() {
-  <% if @jruby %>
-  sudo monit restart all -g ${application}
-  <% else %>
   for PORT in <%= @ports.join(' ') %>; do
     if is_running ; then
       echo "Hot deploying Puma for ${application} on port $PORT (pid: ${current_pid}) ..."
@@ -153,7 +150,6 @@ deploy() {
       start
     fi
   done
-  <% end %>
 }
 
 stop() {
