@@ -25,6 +25,7 @@ depends 'ey-cron'
 depends 'ey-backup'
 depends 'collectd'
 depends 'util'
+depends 'efs'
 
 =begin
 depends 'ey-bin'
@@ -63,6 +64,5 @@ depends 'ssmtp'
 depends 'sudo'
 depends 'zsh'
 depends 'passenger5'
-depends 'efs'
 depends 'elixir'
 =end
