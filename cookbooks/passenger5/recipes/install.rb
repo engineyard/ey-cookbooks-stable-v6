@@ -58,22 +58,6 @@ node.engineyard.apps.each_with_index do |app,index|
   memory_option = memory_limit ? "-l #{memory_limit}" : ""
   worker_count = get_pool_size
 
-  # Render the http Nginx vhost
-  template "/data/nginx/servers/#{app.name}.conf" do
-    owner ssh_username
-    group ssh_username
-    mode 0644
-    source "nginx_app.conf.erb"
-    cookbook "passenger5"
-    variables({
-      :vhost => app.vhosts.first,
-      :port => nginx_http_port,
-      :upstream_port => app_base_port,
-      :framework_env => framework_env
-    })
-    notifies :restart, resources(:service => "nginx"), :delayed
-  end
-
   # Render app control script, this script calls the passenger enterprise binaries using the full path
   template "/engineyard/bin/app_#{app.name}" do
     source  'app_control.erb'
