@@ -25,8 +25,8 @@ Our main recipes have the `packages` recipe but it is not included by default. T
   ```
   cd ~ # Change this to your preferred directory. Anywhere but inside the application
 
-  git clone https://github.com/engineyard/ey-cookbooks-stable-v5
-  cd ey-cookbooks-stable-v5
+  git clone https://github.com/engineyard/ey-cookbooks-stable-v6
+  cd ey-cookbooks-stable-v6
   cp custom-cookbooks/packages/cookbooks/custom-packages /path/to/app/cookbooks/
   ```
 
@@ -48,13 +48,8 @@ To install a package, modify the `install` array inside `default['packages']`:
 ```
 default['packages'].tap do |packages|
   packages['install'] = [
-    {'name' => "dev-lang/erlang", 'version' => "18.3"},
-    {'name' => "dev-lang/elixir", 'version' => "1.2.5"},
-    {'name' => "dev-util/lockrun", 'version' => "20120508"}
+    {'name' => "sphinxsearch", 'version' => "2.2.11-2"},
+    {'name' => "wkhtmltopdf"}
   ]
 end
 ```
-
-The packages listed above are just custom-cookbooks; feel free to remove them.
-
-The recipe will automatically unmask the package you listed. If a package in the list depends on a masked package, that masked package should appear on the list before the dependent package. In the example above, Elixir 1.2.5 depends on Erlang 18.3 which is a masked package, and so Erlang 18.3 is included in the list and appears before Elixir 1.2.5.
