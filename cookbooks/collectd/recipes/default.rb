@@ -11,14 +11,6 @@ ey_cloud_report "collectd" do
   message 'processing performance monitoring'
 end
 
-=begin TODOv6
-# Update rrdtool-binding to latest available
-# - updates net-analyzer/rrdtool as well
-package 'dev-ruby/rrdtool-bindings' do
-  action :upgrade
-end
-
-=end
 include_recipe 'collectd::httpd'
 
 template "/engineyard/bin/ey-alert.rb" do
@@ -27,7 +19,7 @@ template "/engineyard/bin/ey-alert.rb" do
   mode 0755
   source "ey-alert.erb"
   variables({
-    :url => node['dna'][:reporting_url]
+    :url => node['dna']['reporting_url']
   })
 end
 
@@ -69,15 +61,6 @@ has_db = ['solo','db_master','db_slave'].include?(node['dna']['instance_role'])
 
 case node.engineyard.environment['db_stack_name']
 when /mysql/
-=begin TODOv6
-  cookbook_file "/usr/lib/collectd/mysql.so" do
-    source "#{node['kernel']['machine']}/#{node['mysql']['short_version']}/mysql.so"
-    #source "#{node['kernel']['machine']}/5.7/mysql.so"
-    cookbook "mysql"
-    mode 0755
-    backup 0
-  end
-=end
   short_version=node['mysql']['short_version']
 when /postgres/
   short_version=node['postgresql']['short_version']
