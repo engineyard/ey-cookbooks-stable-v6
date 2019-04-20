@@ -11,7 +11,7 @@ ey_cloud_report "puma" do
   message "processing puma"
 end
 
-base_port     = 8200
+base_port     = 8000
 stepping      = 200
 app_base_port = base_port
 ports = []
@@ -45,27 +45,6 @@ node.engineyard.apps.each_with_index do |app,index|
     mode 0644
   end
 
-  # HAX for SD-4650
-  # Remove it when awsm stops using dnapi to generate the dna and allows configure ports
-  meta = node.engineyard.apps.detect {|a| a.metadata?(:nginx_http_port) }
-  nginx_http_port = ( meta and meta.metadata?(:nginx_http_port) ) || 8081
-
-  managed_template "#{app.name}.conf for puma" do
-    path "/data/nginx/servers/#{app.name}.conf"
-    owner node.engineyard.environment.ssh_username
-    group node.engineyard.environment.ssh_username
-    mode 0644
-    source "nginx_app.conf.erb"
-    variables({
-      :app_name => app.name,
-      :vhost => app.vhosts.first,
-      :port => nginx_http_port,
-      :upstream_ports => ports,
-      :framework_env => node.engineyard.environment.framework_env
-    })
-    notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
-  end
-
   directory "/var/run/engineyard/#{app.name}" do
     owner ssh_username
     group ssh_username
@@ -79,7 +58,6 @@ node.engineyard.apps.each_with_index do |app,index|
     owner ssh_username
     group ssh_username
     mode 0755
-    cookbook 'puma'
     variables(:app_name      => app.name,
               :user          => ssh_username,
               :deploy_file   => deploy_file,
