@@ -22,9 +22,7 @@ server {
   # addresses assigned to the host.
   #
   <% if @http2 %>
-    listen <%= @port %> http2 proxy_protocol;
-    listen 8089;
-    real_ip_header proxy_protocol;
+    listen <%= @port %> ssl http2 proxy_protocol;
   <% else %>
     listen <%= @port %> proxy_protocol;
   <% end %>

@@ -120,7 +120,7 @@ node.engineyard.apps.each_with_index do |app, index|
         :vhost => app.vhosts.first,
         :port => nginx_http_port,
         :upstream_port => app_base_port,
-        :http2 => node['nginx']['http2']
+        :http2 => false
       })
       notifies :restart, resources(:service => "nginx"), :delayed
     end
