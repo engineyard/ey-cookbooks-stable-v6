@@ -127,31 +127,31 @@ backend egress_80
 <% else -%>
   option httpchk HEAD / HTTP/1.1\r\nHost:\ _
 <% end -%>
-http-check expect rstatus ((2|3)[0-9][0-9]|503)
+  http-check expect rstatus ((2|3)[0-9][0-9]|503)
 
 <% if @backends.any? %>
   <% @backends.each_with_index do |instance, i| %>
   server app-<%= i %> <%= instance['private_hostname'] %>:8081 check inter 5000 fastinter 1000 fall 1 weight <%= (instance['role'] == 'app_master') ? @app_master_weight : 50 %> send-proxy-v2 # <%= instance['id'] %>
   <% end %>
 <% else %>
-    # It must be a solo.
+  # It must be a solo.
   server solo 127.0.0.1:8081 check inter 5000 fastinter 1000 fall 1 weight 50 send-proxy-v2
 <% end %>
 
 backend egress_443
+  mode tcp
 <% if @httpchk_path -%>
   option httpchk HEAD <%= @httpchk_path %><% if @httpchk_host %> HTTP/1.1\r\nHost:\ <%= @httpchk_host %><% end %>
   http-check expect rstatus ((2|3)[0-9][0-9]|503)
 <% else -%>
-  option ssl-hello-chk
-  option log-health-checks
+  option tcp-check
 <% end -%>
 
 <% if @backends.any? %>
   <% @backends.each_with_index do |instance, i| %>
-  server app-<%= i %> <%= instance['private_hostname'] %>:8082 check inter 5000 fastinter 1000 fall 1 weight <%= (instance['role'] == 'app_master') ? @app_master_weight : 50 %> send-proxy-v2 # <%= instance['id'] %>
+  server app-<%= i %> <%= instance['private_hostname'] %>:8082 check check-ssl verify none inter 5000 fastinter 1000 fall 1 weight <%= (instance['role'] == 'app_master') ? @app_master_weight : 50 %> send-proxy-v2 # <%= instance['id'] %>
   <% end %>
 <% else %>
-    # It must be a solo.
-  server solo 127.0.0.1:8082 check inter 5000 fastinter 1000 fall 1 weight 50 send-proxy-v2
+  # It must be a solo.
+  server solo 127.0.0.1:8082 check check-ssl verify none inter 5000 fastinter 1000 fall 1 weight 50 send-proxy-v2
 <% end %>
