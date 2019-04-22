@@ -17,8 +17,11 @@ service "nginx" do
   only_if { ['solo','app', 'app_master'].include?(node['dna']['instance_role']) }
 end
 
-nginx_http_port = 8081
-nginx_https_port = 8082
+nginx_haproxy_http_port = 8091
+nginx_haproxy_https_port = 8092
+nginx_xlb_http_port = 8081
+nginx_xlb_https_port = 8082
+
 base_port = node['passenger5']['port'].to_i
 stepping = 200
 app_base_port = base_port
@@ -118,7 +121,8 @@ node.engineyard.apps.each_with_index do |app, index|
         :puma => is_puma,
         :ssl => false,
         :vhost => app.vhosts.first,
-        :port => nginx_http_port,
+        :haproxy_nginx_port => nginx_haproxy_http_port,
+        :xlb_nginx_port => nginx_xlb_http_port,
         :upstream_port => app_base_port,
         :http2 => false
       })
@@ -180,7 +184,7 @@ node.engineyard.apps.each_with_index do |app, index|
     mode 0644
     source "listen-http.erb"
     variables({
-        :http_bind_port => nginx_http_port,
+        :http_bind_port => nginx_haproxy_http_port,
     })
     notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
   end
@@ -211,7 +215,8 @@ node.engineyard.apps.each_with_index do |app, index|
            :puma => is_puma,
            :ssl => true,
            :vhost => app.vhosts.first,
-           :port => nginx_https_port,
+           :haproxy_nginx_port => nginx_haproxy_https_port,
+           :xlb_nginx_port => nginx_xlb_https_port,
            :upstream_port => app_base_port,
            :http2 => node['nginx']['http2']
        })
@@ -308,7 +313,7 @@ node.engineyard.apps.each_with_index do |app, index|
          variables({
            :application => app,
            :app_name   => app.name,
-           :http_bind_port => nginx_http_port,
+           :http_bind_port => nginx_haproxy_https_port,
            :server_names =>  app[:vhosts][1][:name].empty? ? [] : [app[:vhosts][1][:name]],
            :webroot => php_webroot,
            :env_name => node.engineyard.environment[:name]

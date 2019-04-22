@@ -38,7 +38,6 @@ port          = node['passenger5']['port']
 #   source "config.erb"
 #   action :create
 # end
-nginx_http_port = 8081
 base_port = node['passenger5']['port'].to_i
 stepping = 200
 app_base_port = base_port
