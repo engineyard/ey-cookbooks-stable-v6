@@ -22,9 +22,10 @@ server {
   # addresses assigned to the host.
   #
   <% if @http2 %>
-    listen <%= @port %> ssl http2 proxy_protocol;
+    listen <%= @haproxy_nginx_port %> ssl http2 proxy_protocol;
   <% else %>
-    listen <%= @port %> proxy_protocol;
+    listen <%= @haproxy_nginx_port %> proxy_protocol;
+    listen <%= @xlb_nginx_port %> ;
   <% end %>
 
   #

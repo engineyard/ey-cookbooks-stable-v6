@@ -7,11 +7,12 @@
 #
 # Port layout and usage:
 #
-# 1) haproxy: 80 / 443
-# 2) nginx HTTP: 8081
-# 3) nginx HTTPs: 8082
-# 3) apps: 8000+200*app_index + worker_index
-#
+# 1) HAproxy: 80 / 443
+# 2) HAproxy -> nginx HTTP: 8091
+# 3) HAproxy -> nginx HTTPs: 8092
+# 4) xLB -> nginx HTTP: 8081
+# 5) xLB -> nginx HTTPs: 8091
+# 6) apps: 8000+200*app_index + worker_index
 ######
 
 
@@ -131,11 +132,11 @@ backend egress_80
 
 <% if @backends.any? %>
   <% @backends.each_with_index do |instance, i| %>
-  server app-<%= i %> <%= instance['private_hostname'] %>:8081 check inter 5000 fastinter 1000 fall 1 weight <%= (instance['role'] == 'app_master') ? @app_master_weight : 50 %> send-proxy-v2 # <%= instance['id'] %>
+  server app-<%= i %> <%= instance['private_hostname'] %>:8091 check inter 5000 fastinter 1000 fall 1 weight <%= (instance['role'] == 'app_master') ? @app_master_weight : 50 %> send-proxy-v2 # <%= instance['id'] %>
   <% end %>
 <% else %>
   # It must be a solo.
-  server solo 127.0.0.1:8081 check inter 5000 fastinter 1000 fall 1 weight 50 send-proxy-v2
+  server solo 127.0.0.1:8091 check inter 5000 fastinter 1000 fall 1 weight 50 send-proxy-v2
 <% end %>
 
 backend egress_443
@@ -149,9 +150,9 @@ backend egress_443
 
 <% if @backends.any? %>
   <% @backends.each_with_index do |instance, i| %>
-  server app-<%= i %> <%= instance['private_hostname'] %>:8082 check check-ssl verify none inter 5000 fastinter 1000 fall 1 weight <%= (instance['role'] == 'app_master') ? @app_master_weight : 50 %> send-proxy-v2 # <%= instance['id'] %>
+  server app-<%= i %> <%= instance['private_hostname'] %>:8092 check check-ssl verify none inter 5000 fastinter 1000 fall 1 weight <%= (instance['role'] == 'app_master') ? @app_master_weight : 50 %> send-proxy-v2 # <%= instance['id'] %>
   <% end %>
 <% else %>
   # It must be a solo.
-  server solo 127.0.0.1:8082 check check-ssl verify none inter 5000 fastinter 1000 fall 1 weight 50 send-proxy-v2
+  server solo 127.0.0.1:8092 check check-ssl verify none inter 5000 fastinter 1000 fall 1 weight 50 send-proxy-v2
 <% end %>
