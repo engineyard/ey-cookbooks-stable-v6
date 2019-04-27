@@ -24,6 +24,10 @@ end
 default['packages'].tap do |packages|
   packages['keys'] = [
     {"url" => "https://dl.yarnpkg.com/debian/pubkey.gpg"}
+
+    # adding the fingerprint is optional
+    # if you add the fingerprint, the key will only be downloaded once
+    # {"url" => "https://dl.yarnpkg.com/debian/pubkey.gpg", "fingerprint" => "23E7166788B63E1E"}
   ]
 
   packages['apt_sources'] = [

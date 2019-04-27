@@ -6,6 +6,9 @@
 node['packages']['keys'].each do |key|
   execute "add key from #{key['url']}" do
     command "curl -sS #{key['url']} | apt-key add -"
+    if key['fingerprint']
+      not_if "apt-key adv --list-public-key --with-fingerprint --with-colons | grep #{key['fingerprint']} -q"
+    end
   end
 end
 
