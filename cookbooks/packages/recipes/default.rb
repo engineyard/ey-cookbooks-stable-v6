@@ -24,7 +24,6 @@ node['packages']['install'].each do |package|
   package package['name'] do
     version package['version']
     action :install
-    ignore_failure true
   end
 
 end
