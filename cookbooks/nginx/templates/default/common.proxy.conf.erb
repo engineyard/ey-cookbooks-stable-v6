@@ -8,6 +8,7 @@ proxy_set_header  Host              $http_host;
 proxy_set_header  Upgrade           $http_upgrade;
 proxy_set_header  Connection        "upgrade";
 proxy_set_header  X-Queue-Start     't=${msec}000';
+proxy_hide_header X-Powered-By;
 
 proxy_buffering                 off;
 proxy_redirect                  off;
