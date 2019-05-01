@@ -26,7 +26,6 @@ depends 'postgresql'
 depends 'mysql'
 depends 'app-logs'
 depends 'deploy'
-depends 'lb'
 depends 'env_vars'
 depends 'cdn_distribution'
 =end
