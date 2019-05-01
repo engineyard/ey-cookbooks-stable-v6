@@ -24,6 +24,7 @@ depends 'ey-cron'
 depends 'ey-backup'
 depends 'collectd'
 depends 'util'
+depends 'prompt'
 depends 'efs'
 
 =begin
