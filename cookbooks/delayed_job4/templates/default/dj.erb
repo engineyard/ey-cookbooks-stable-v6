@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # This script starts and stops the Dj daemon
 # This script is created by the delayed_job4 recipe
@@ -7,6 +7,8 @@
 # Updated for Rails 4.x
 
 PATH=/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
+source /etc/profile.d/chruby.sh
+
 CURDIR=`pwd`
 export NEW_RELIC_DISPATCHER=delayed_job
 
