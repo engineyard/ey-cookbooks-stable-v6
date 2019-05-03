@@ -18,7 +18,7 @@ end
 
 execute "install passenger" do
   command "gem install passenger -v #{node['passenger5']['version']}"
-  not_if "gem list --installed --slient passenger -v #{node['passenger5']['version']}"
+  not_if "gem list --installed --silent passenger -v #{node['passenger5']['version']}"
 end
 
 # Grab version, ssh user, rails_env and port
