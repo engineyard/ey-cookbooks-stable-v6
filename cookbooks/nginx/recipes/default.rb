@@ -348,6 +348,20 @@ node.engineyard.apps.each_with_index do |app, index|
 
 end
 
+existing_apps = `cd /data/nginx/servers && ls -d */  |rev | cut -c 2- | rev`.split
+
+existing_apps.each do |existing_app|
+  unless node['dna']['applications'].include? existing_app
+    execute 'Remove SSL files of detached apps' do
+      command %Q{rm -rf /data/nginx/ssl/#{existing_app}}
+    end
+    execute 'Remove nginx config files of detached apps' do
+      command %Q{rm -rf /data/nginx/servers/#{existing_app} && rm -rf /data/nginx/servers/#{existing_app}.*}
+    end
+  end
+end
+
+
 service "start nginx" do
   service_name "nginx"
   provider Chef::Provider::Service::Systemd

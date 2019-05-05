@@ -27,10 +27,12 @@ logrotate "application-logs" do
   copy_then_truncate true
 end
 
-(node['dna']['removed_applications'] || []).each do |dead_app|
-  execute "remove-logs-for-#{dead_app}" do
-    command %Q{
-      rm -rf /var/log/engineyard/apps/#{dead_app}
-    }
+existing_apps = `ls /var/log/engineyard/apps/`.split
+
+existing_apps.each do |existing_app|
+  unless node['dna']['applications'].include? existing_app
+    execute 'Remove files of detached apps' do
+      command %Q{rm -rf /var/log/engineyard/apps/#{existing_app}}
+    end
   end
 end
