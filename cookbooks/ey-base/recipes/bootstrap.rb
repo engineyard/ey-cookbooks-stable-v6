@@ -109,5 +109,3 @@ include_recipe "efs"
 
 # do not run the ruby recipes when we install Node.js and other languages.
 include_recipe "ruby" if node.engineyard.environment.ruby?
-
-include_recipe "motd" # educational message on login
