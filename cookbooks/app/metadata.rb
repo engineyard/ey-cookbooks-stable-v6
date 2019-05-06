@@ -15,6 +15,7 @@ depends 'postgresql'
 depends 'nginx'
 depends 'ruby'
 depends 'ey-db-libs'
+depends 'haproxy'
 
 =begin
 depends 'ey-lib'
