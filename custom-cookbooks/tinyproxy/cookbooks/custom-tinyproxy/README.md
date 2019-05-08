@@ -41,6 +41,13 @@ Our main recipes have the tinyproxy recipe but it is not included by default. To
 
 All customizations go to `cookbooks/custom-tinyproxy/attributes/default.rb`.
 
+### Specify the App that will use Tinyproxy
+
+Update `tinyproxy['app_name']` to suit your needs
+
+```
+  tinyproxy['app_name'] = "todo_V6"
+```
 
 ### Specify where Tinyproxy runs
 
@@ -130,22 +137,3 @@ Net::HTTP.new(target_url, nil, tinyproxy_host, tinyproxy_port).start { |http|
   http.get(target_url, '')
 }
 ```
-
-## Test Cases
-
-This custom chef recipe has been verified using these test cases:
-
-```
-A. Install tinyproxy on app_master
-  A1. tinyproxy should be running on app_master
-  A2. tinyproxy should not be running on any other instance
-  A3. /data/app_name/shared/config/tinyproxy.yml should have the correct host and port settings
-  A4. Initiate a takeover. tinyproxy should be running on the new app_master
-
-B. Install tinyproxy on util instance named tinyproxy
-  B1. tinyproxy should be running on tinyproxy
-  B2. tinyproxy should not be running on any other instance
-  B3. /data/app_name/shared/config/tinyproxy.yml should have the correct host and port settings
-```
-
-If you encounter a problem, please open a Github issue and metion which of these cases failed.

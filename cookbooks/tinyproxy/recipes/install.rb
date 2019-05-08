@@ -7,15 +7,15 @@ pid_file = "/data/#{app_name}/shared/tinyproxy/tinyproxy.pid"
 
 if node['tinyproxy']['is_tinyproxy_instance']
   # Install the tinyproxy package
-  package 'net-proxy/tinyproxy' do
+  package "tinyproxy" do
     version node['tinyproxy']['version']
     action :install
   end
 
   # Create the tinyproxy directory
   directory "/data/#{app_name}/shared/tinyproxy" do
-    owner 'nobody'
-    group 'nobody'
+    owner 'deploy'
+    group 'deploy'
     mode 0777
     recursive true
     action :create
@@ -23,8 +23,8 @@ if node['tinyproxy']['is_tinyproxy_instance']
 
   # Create the tinyproxy config file
   template config_file do
-    owner 'nobody'
-    group 'nobody'
+    owner 'deploy'
+    group 'deploy'
     mode 0644
     source 'tinyproxy.conf.erb'
     variables({
@@ -33,9 +33,9 @@ if node['tinyproxy']['is_tinyproxy_instance']
     })
   end
 
-  # Ensure everything in the tinyproxy directory is owned by nobody
+  # Ensure everything in the tinyproxy directory is owned by deploy
   execute "chown tinyproxy directory" do
-    command "chown -R nobody:nobody /data/#{app_name}/shared/tinyproxy"
+    command "chown -R deploy:deploy /data/#{app_name}/shared/tinyproxy"
     action :run
   end
 

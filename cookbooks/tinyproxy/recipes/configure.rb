@@ -1,5 +1,5 @@
 # Change app_name based on your application name
-app_name = 'todo'
+app_name = node['tinyproxy']['app_name']
 proxy_port = node['tinyproxy']['port']
 
 # Write down the IP address and port used by the tinyproxy host
@@ -33,4 +33,3 @@ if ['solo', 'app_master', 'app', 'util'].include?(node['dna']['instance_role'])
     })
   end
 end
-
