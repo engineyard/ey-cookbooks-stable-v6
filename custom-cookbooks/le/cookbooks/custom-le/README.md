@@ -1,6 +1,6 @@
 # Logentries
 
-This recipe installs Logentries on Engine Yard Cloud. It sets the default Python to 2.7 - we've issues with Python 3.4.
+This recipe installs Logentries on Engine Yard Cloud.
 
 
 ## Installation
@@ -21,8 +21,8 @@ Our main recipes have the `le` recipe but it is not included by default. To use 
 
       cd ~ # Change this to your preferred directory. Anywhere but inside the application
 
-      git clone https://github.com/engineyard/ey-cookbooks-stable-v5
-      cd ey-cookbooks-stable-v5
+      git clone https://github.com/engineyard/ey-cookbooks-stable-v6
+      cd ey-cookbooks-stable-v6
       cp custom-cookbooks/le/cookbooks/custom-le /path/to/app/cookbooks/
 
 4. Download the ey-core gem on your local machine and upload the recipes
