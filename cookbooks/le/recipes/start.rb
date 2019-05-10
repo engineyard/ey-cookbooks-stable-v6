@@ -5,5 +5,5 @@
 
 # Restart the le agent
 service 'logentries' do
-  action :restart
+  action [:enable, :restart]
 end
