@@ -21,6 +21,9 @@ def tinyproxy_host
 end
 
 hostname = tinyproxy_host
+Chef::Log.info "eytinyproxy install_type: #{node['tinyproxy']['install_type']}"
+Chef::Log.info "eytinyproxy utility_name: #{node['tinyproxy']['utility_name']}"
+Chef::Log.info "eytinyproxy host: #{tinyproxy_host}"
 if ['solo', 'app_master', 'app', 'util'].include?(node['dna']['instance_role'])
   template "/data/#{app_name}/shared/config/tinyproxy.yml" do
     owner 'deploy'
