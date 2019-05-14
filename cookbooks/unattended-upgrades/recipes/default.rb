@@ -5,7 +5,7 @@ node['dna']['engineyard']['environment']['apps'].each do |app_data|
   environment_variables = fetch_environment_variables(app_data)
 
   environment_variables.each do |variable|
-    if variable[:name] == 'EY_UNATTENDED_UPGRADES' && variable[:value] == 'true'
+    if variable[:name] == 'EY_ENABLE_UNATTENDED_UPGRADES' && variable[:value] == 'true'
       unattended_flag = 1
     end
   end
