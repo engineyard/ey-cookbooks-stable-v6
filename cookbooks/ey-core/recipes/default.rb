@@ -32,3 +32,4 @@ include_recipe 'run-one'
 
 include_recipe 'ey-hosts'
 include_recipe "ey-core::sshd"
+include_recipe "unattended-upgrades"

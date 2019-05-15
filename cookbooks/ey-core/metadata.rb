@@ -12,6 +12,7 @@ depends 'ey-hosts'
 depends 'timezones'
 depends 'syslog-ng'
 depends 'prechef'
+depends 'unattended-upgrades'
 
 =begin
 depends 'ey-lib'
