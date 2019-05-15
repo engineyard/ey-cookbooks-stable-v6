@@ -58,16 +58,8 @@ The recipe supports running Tinyproxy in app_master, or in a dedicated utility i
 Uncomment these lines if you want to run Tinyproxy in a utility instance.
 
 ```
-  #tinyproxy['is_tinyproxy_instance'] = (
-  #  node['dna']['instance_role'] == 'util' &&
-  #  node['dna']['name'] == tinyproxy['utility_name']
-  #)
-```
-
-Comment out this line:
-
-```
-  tinyproxy['is_tinyproxy_instance'] = (node['dna']['instance_role'] == 'app_master')
+  tinyproxy['install_type'] = 'NAMED_UTIL'
+  tinyproxy['utility_name'] = 'tinyproxy'
 ```
 
 Change this if you're using a different name for the Tinyproxy instance.
@@ -76,21 +68,25 @@ Change this if you're using a different name for the Tinyproxy instance.
     tinyproxy['utility_name'] = 'tinyproxy'
 ```
 
+Comment out this line:
+
+```
+  tinyproxy['install_type'] = 'APP_MASTER'
+```
+
 #### B. Run Tinyproxy in app_master
 
 Uncomment this line:
 
 ```
-  #tinyproxy['is_tinyproxy_instance'] = (node['dna']['instance_role'] == 'app_master')
+  #tinyproxy['install_type'] = 'APP_MASTER'
 ```
 
 And comment out these lines, if not yet commented out:
 
 ```
-  tinyproxy['is_tinyproxy_instance'] = (
-    node['dna']['instance_role'] == 'util' &&
-    node['dna']['name'] == tinyproxy['utility_name']
-  )
+  tinyproxy['install_type'] = 'NAMED_UTIL'
+  tinyproxy['utility_name'] = 'tinyproxy'
 ```
 
 When an automated takeover happens, the recipe will install Tinyproxy in the new app_master.
