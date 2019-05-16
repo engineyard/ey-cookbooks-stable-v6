@@ -8,7 +8,7 @@ proxy_port = node['tinyproxy']['port']
 def tinyproxy_host
   case node['tinyproxy']['install_type']
   when 'NAMED_UTIL'
-    node.dna.utility_instances.
+    node['dna']['utility_instances'].
       select{ |i| i.name == node['tinyproxy']['utility_name'] }.
       map{ |i| i.hostname }.
       first
