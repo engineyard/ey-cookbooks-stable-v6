@@ -4,8 +4,8 @@ proxy_port = node['tinyproxy']['port']
 config_file = "/data/#{app_name}/shared/tinyproxy/tinyproxy.conf"
 pid_file = "/data/#{app_name}/shared/tinyproxy/tinyproxy.pid"
 
-if (tinyproxy['install_type'] == 'APP_MASTER' && node['dna']['instance_role'] == 'app_master' ||
-     tinyproxy['install_type'] == 'NAMED_UTIL' && node['dna']['instance_role'] == 'util' && node['dna']['name'] == tinyproxy['utility_name'] )
+if (node['tinyproxy']['install_type'] == 'APP_MASTER' && node['dna']['instance_role'] == 'app_master' ||
+     node['tinyproxy']['install_type']== 'NAMED_UTIL' && node['dna']['instance_role'] == 'util' && node['dna']['name'] == node['tinyproxy']['utility_name'])
 
   # Install the tinyproxy package
   package "tinyproxy" do
