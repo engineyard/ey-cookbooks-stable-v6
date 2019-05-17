@@ -2,8 +2,7 @@ ey_cloud_report "ey_backup" do
   message "processing encrypted database backups"
 end
 
-package "app-crypt/gnupg" do
-  version '2.0.28'
+package "gnupg" do
   action :nothing
 end.run_action(:install)
 
