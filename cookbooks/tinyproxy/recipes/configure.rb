@@ -13,7 +13,7 @@ def tinyproxy_host
       map{ |i| i.hostname }.
       first
   when 'APP_MASTER'
-    node['engineyard']['environment']['instances'].
+    node.engineyard.environment.instances.
       select{ |i| 'app_master' == i.role }.
       map{ |i| i.private_hostname}.
       first
