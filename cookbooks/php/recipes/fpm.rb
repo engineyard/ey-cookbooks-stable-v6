@@ -8,7 +8,7 @@ ey_cloud_report "processing php#{node["php"]["minor_version"]}" do
 end
 
 # Overwrite default php config
-cookbook_file "/etc/php/fpm-php#{node["php"]["minor_version"]}/php.ini" do
+cookbook_file "/etc/php/#{node["php"]["minor_version"]}/fpm/php.ini" do
   source "php.ini"
   owner "root"
   group "root"
@@ -42,6 +42,7 @@ directory "/var/run/engineyard" do
 end
 
 
+=begin
 bash 'eselect php and restart via monit' do
   code <<-EOH
     eselect php set fpm php#{node["php"]["minor_version"]}
@@ -49,15 +50,7 @@ bash 'eselect php and restart via monit' do
   not_if "php-fpm -v | grep PHP | grep #{node['php']['version']}"
   notifies :run, 'execute[monit_restart_fpm]'
 end
-
-
-execute 'monit_restart_fpm' do
-  command "sudo monit restart php-fpm"
-  action :nothing
-end
-
-
-
+=end
 
 # get all applications with type PHP
 apps = node.dna['applications'].select{ |app, data| data['recipes'].detect{ |r| r == 'php' } }
@@ -80,6 +73,7 @@ end
 app_fpm_count = (get_fpm_count / node.dna['applications'].size)
 app_fpm_count = 1 unless app_fpm_count >= 1
 
+ssh_username = node.engineyard.environment.ssh_username
 # generate an fpm pool for each php app
 app_names.each do |app_name|
   cookbook_file "/data/#{app_name}/shared/config/env.custom" do
@@ -113,32 +107,14 @@ app_names.each do |app_name|
   end
 end
 
-# Report to Cloud dashboard
-#ey_cloud_report "processing php" do
-#  message "processing php - monitoring"
-#end
-
-# Create global init.d file
-# We are unable to start and stop each app individually
-cookbook_file "/engineyard/bin/php-fpm" do
-  owner node["owner_name"]
-  group node["owner_name"]
-  mode 0777
-  source "init.d-php-fpm.sh"
-  backup 0
-end
-
-# Delete any existing init.d file if it's not a symlink
-cookbook_file "/etc/init.d/php-fpm" do
-  action :delete
-  backup 0
-
-  not_if "test -h /etc/init.d/php-fpm"
-end
-
-# Create a symlink under init.d
-link "/etc/init.d/php-fpm" do
-  to "/engineyard/bin/php-fpm"
+template "/etc/systemd/system/php#{node["php"]["minor_version"]}-fpm.service" do
+  source "php-fpm.service.erb"
+  variables({
+    version: node["php"]["minor_version"],
+    user: node.engineyard.environment.ssh_username,
+    group: node.engineyard.environment.ssh_username
+  })
+  notifies :run, "execute[reload-systemd]", :immediately
 end
 
 # get all applications with type PHP
@@ -147,28 +123,18 @@ apps = node.dna['applications'].select{ |app, data| data['recipes'].detect{ |r| 
 app_names = apps.collect{ |app, data| app }
 
 app_names.each do |app|
-  # create symlinks for each app, too. Required for deploy.
-  link "/engineyard/bin/app_#{app}" do
-    to "/engineyard/bin/php-fpm"
+  template "/engineyard/bin/app_#{app}" do
+    source "app_control.erb"
+    owner   ssh_username
+    group   ssh_username
+    mode    0755
+    variables({
+      version: node["php"]["minor_version"]
+    })
   end
 
   # Change ownership of app slowlog if set to root
   check_fpm_log_owner(app)
-end
-
-# Create monitrc file (all apps) and restart monit
-template "/etc/monit.d/php-fpm.monitrc" do
-  owner node["owner_name"]
-  group node["owner_name"]
-  mode 0600
-  source "php-fpm.monitrc.erb"
-  variables(
-    :apps => app_names,
-    :user => node["owner_name"]
-  )
-  backup 0
-
-  notifies :run, 'execute[restart-monit]'
 end
 
 # cookbooks/php/libraries/php_helpers.rb
