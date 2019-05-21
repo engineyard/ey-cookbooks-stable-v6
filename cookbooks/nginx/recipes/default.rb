@@ -105,11 +105,20 @@ end
   end
 end
 
+managed_template "/data/nginx/common/fcgi.conf" do
+  owner node['owner_name']
+  group node['owner_name']
+  mode 0644
+  source "common.fcgi.conf.erb"
+  notifies node['nginx']['action'], resources(:service => "nginx"), :delayed
+end
+
 node.engineyard.apps.each_with_index do |app, index|
 
     app_base_port = base_port + ( stepping * index )
     dhparam_available = app.metadata('dh_key',nil)
 
+  if node.engineyard.environment.ruby?
     template "/data/nginx/servers/#{app.name}.conf" do
       owner node['owner_name']
       group node['owner_name']
@@ -128,6 +137,25 @@ node.engineyard.apps.each_with_index do |app, index|
       })
       notifies :restart, resources(:service => "nginx"), :delayed
     end
+  elsif stack.match(php_fpm)
+    php_webroot = node.engineyard.environment.apps.first['components'].find {|component| component['key'] == 'app_metadata'}['php_webroot']
+    managed_template "/data/nginx/servers/#{app.name}.conf" do
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0644
+      source "fpm-server.conf.erb"
+      variables({
+        :application => app,
+        :app_name => app.name,
+        :http_bind_port => nginx_haproxy_http_port,
+        :server_names => app.vhosts.first.domain_name.empty? ? [] : [app.vhosts.first.domain_name],
+        :webroot => php_webroot,
+        :env_name => node.engineyard.environment[:name],
+		    :http2 => node['nginx']['http2']
+      })
+      notifies node['nginx']['action'], resources(:service => "nginx"), :delayed
+    end
+  end
 
   directory "/data/nginx/ssl/#{app.name}" do
     owner node['owner_name']
