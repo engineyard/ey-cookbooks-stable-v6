@@ -9,4 +9,5 @@ default['php']['version'] = case attribute['dna']['engineyard']['environment']['
     '7.2'
 end
 
+default['php']['known_versions'] = %w[ 7.1 7.2 7.3 ]
 default['php']['minor_version'] =  default['php']['version'].split(".").first(2).join(".")
