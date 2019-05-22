@@ -125,7 +125,19 @@ template "/etc/systemd/system/php#{node["php"]["minor_version"]}-fpm.service" do
   notifies :run, "execute[reload-systemd]", :immediately
 end
 
+other_versions = node['php']['known_versions'].reject{ |version| version == node['php']['minor_version'] }
+other_versions.each do |version|
+  execute "stop php #{version} if installed" do
+    command "systemctl stop php#{version}-fpm"
+    ignore_failure true
+    only_if { File.exist?("/etc/systemd/system/php#{version}-fpm.service") }
+  end
+end
 package "php#{node["php"]["minor_version"]}-fpm"
+
+service "php#{node["php"]["minor_version"]}-fpm" do
+  action :start
+end
 
 # get all applications with type PHP
 apps = node['dna']['applications'].select{ |app, data| data['recipes'].detect{ |r| r == 'php' } }
