@@ -8,6 +8,14 @@ ey_cloud_report "processing php#{node["php"]["minor_version"]}" do
 end
 
 # Overwrite default php config
+directory "/etc/php/#{node["php"]["minor_version"]}/fpm" do
+  owner "root"
+  group "root"
+  recursive true
+  mode "0755"
+  action :create
+end
+
 cookbook_file "/etc/php/#{node["php"]["minor_version"]}/fpm/php.ini" do
   source "php.ini"
   owner "root"
@@ -116,6 +124,8 @@ template "/etc/systemd/system/php#{node["php"]["minor_version"]}-fpm.service" do
   })
   notifies :run, "execute[reload-systemd]", :immediately
 end
+
+package "php#{node["php"]["minor_version"]}-fpm"
 
 # get all applications with type PHP
 apps = node['dna']['applications'].select{ |app, data| data['recipes'].detect{ |r| r == 'php' } }
