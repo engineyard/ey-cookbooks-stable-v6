@@ -1,70 +1,36 @@
-## Basic stuff
+# Engine Yard Cloud v6 Chef Recipes
 
-Consult [Cooking V6 spreadsheet](https://docs.google.com/spreadsheets/d/1-21XaN8wVH1KAmeyv-jwfOIzZemYQU1a7ywgd6VgqfA/edit#gid=0) for the latest update on V6 cookbooks.
+- This codebase and its cookbooks represent the latest version of Engine Yard's **`stable-v6-1.0`** stack.
 
-Chef recipes' structure on V6 is identical to V5 one. The repository is divided into `cookbooks` and `custom-cookbooks` directories and custom recipes have to be included into `cookbooks/ey-custom/metadata.rb` and `cookbooks/ey-custom/recipes/after-main.rb`. There is a single chef run executing the main recipes and then the custom ones defined on files above.
+## Dependencies
 
-
-Consider the following before starting porting/QAing recipes:
-
-- Use account [EngineyardCookbooksQA](https://cloud.engineyard.com/admin/accounts/EngineyardCookbooksQA) for testing 
-- Use `US East (N. Virginia)` region.
-- Use `TODO` app. This app requires DB.
-- Use `stable-v6 1.0` stack, use latest stack release.
-
-
-*REMEMBER TO STOP/TERMINATE YOUR INSTANCES ONCE TESTING IS DONE*
-
-*Remember to log time spent on Cookbooks on a ZD ticket (internal) to keep your stats healthy*
-
-### Need to run chef with recipes modified locally on instance?
+To upload and run the recipes from the CLI, you need the `ey-core` gem.
 
 ```
-/opt/chef/embedded/bin/chef-solo -j /etc/chef/dna.json -c /etc/chef/solo.rb > /var/log/chef.manual.log 2>&1
+gem install ey-core
 ```
 
-## Ready to commit changes?
+## Usage
 
-Clone this repo:
+1. Create the `cookbooks/` directory at the root of your application. If you prefer to keep the infrastructure code separate from application code, you can create a new repository.
+2. For each custom cookbook that you want to use, do the following:
+	- Create or edit `cookbooks/ey-custom/recipes/after-main.rb` and add the line:
 
-```
-git clone https://github.com/engineyard/ey-cookbooks-dev-v6
-cd ey-cookbooks-dev-v6
-```
+	 ```
+	 include_recipe 'custom-<recipe>'
+	 ```
+	- Create or edit `cookbooks/ey-custom/metadata.rb` and add the line `depends 'custom-<recipe>'`
+		- prepend `name 'ey-custom'` to `cookbooks/ey-custom/metadata.rb` in case of a creation
+	- Download this repository and copy `custom-cookbooks/<recipe>/cookbooks/custom-<recipe>` to `cookbooks`. For example, to use memcached, copy `custom-cookbooks/memcached/cookbooks/custom-memcached ` to `cookbooks/custom-memcached`.
+3. Alternative to step #2 above: use [ey-v5-starterkit](https://github.com/engineyard/ey-v5-starterkit) to automate copying the recipe from the custom-cookbooks directory
+4. To upload and apply the recipes, run
 
-Create new branch and checkout:
+	```
+	ey-core recipes upload --environment <nameofenvironment> --apply
+	```
 
-```
-git branch <new-branch>
-git checkout <new-branch>
-```
+For more information about our V6 (Ubuntu 19.05) Stack, please see https://support.cloud.engineyard.com/hc/en-us/articles/360022162773-Engine-Yard-Stack-v6-Technology-Stack
 
-**STOP! Make changes to files before proceeding to next step**
+## Contributing/Development
 
-Push/commit/push:
-
-```
-git push -u origin <new-branch>
-git commit -a -m "helpful message" 
-git push
-```
-
-Create Pull Request:
-
-- This has to be done against `next-release` branch
-- Ping Dimitris to merge
-
-
- 
-
-## Info - Help
-For any issue you may encounter reach the following people:
-
-1. Dimitris Dalianis
-2. Johann Fueschl
-3. Christopher Rigor
-
-
-
-
- 
+Please read our [Contributions Guidelines](https://github.com/engineyard/ey-cookbooks-stable-v6/blob/next-release/CONTRIBUTING.md).
