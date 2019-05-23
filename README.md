@@ -34,3 +34,4 @@ For more information about our V6 (Ubuntu 19.05) Stack, please see https://suppo
 ## Contributing/Development
 
 Please read our [Contributions Guidelines](https://github.com/engineyard/ey-cookbooks-stable-v6/blob/next-release/CONTRIBUTING.md).
+=======

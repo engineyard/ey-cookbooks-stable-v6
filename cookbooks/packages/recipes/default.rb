@@ -3,7 +3,8 @@
 # Recipe:: default
 #
 
-node['packages']['keys'].each do |key|
+keys = node['packages']['keys'] || []
+keys.each do |key|
   execute "add key from #{key['url']}" do
     command "curl -sS #{key['url']} | apt-key add -"
     if key['fingerprint']
@@ -12,7 +13,8 @@ node['packages']['keys'].each do |key|
   end
 end
 
-node['packages']['apt_sources'].each do |apt_source|
+apt_sources = node['packages']['apt_sources'] || []
+apt_sources.each do |apt_source|
   file "apt source #{apt_source['name']}" do
     path "/etc/apt/sources.list.d/#{apt_source['name']}.list"
     content apt_source["content"]
@@ -20,7 +22,8 @@ node['packages']['apt_sources'].each do |apt_source|
   end
 end
 
-node['packages']['install'].each do |package|
+install = node['packages']['install'] || []
+install.each do |package|
 
   Chef::Log.info "PACKAGES: Installing #{package['name']}-#{package['version']}"
 

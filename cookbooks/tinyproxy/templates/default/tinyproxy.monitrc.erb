@@ -1,0 +1,4 @@
+check process tinyproxy
+with pidfile <%= @pid_file %>
+  start program = "/usr/sbin/tinyproxy -c <%= @config_file %>" user deploy
+  stop program = "/bin/kill <%= @pid_file %>"

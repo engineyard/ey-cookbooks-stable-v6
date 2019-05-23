@@ -1,10 +1,10 @@
 postgres_version = node['postgresql']['short_version']
 
 known_versions = %w[
-  9.5.16
-  9.6.12
-  10.3 10.6 10.7
-  11.2
+  9.5.17
+  9.6.13
+  10.3 10.8
+  11.3
 ]
 
 execute "dropping lock version file" do
@@ -54,6 +54,7 @@ end
 # this ruby block handles if the lock version file is set
 # It needs to be done like this since the file isn't present during the compile
 # phase on first runs on new instances booted from snapshots
+=begin # remove lock version feature for now
 ruby_block 'check lock version' do
   block do
     if File.exists?(node['lock_version_file'])
@@ -69,6 +70,7 @@ ruby_block 'check lock version' do
     end
   end
 end
+=end
 
 package "postgresql-#{postgres_version}" do
   notifies :run, "bash[delete-postgresql-service-from-package]", :immediately
