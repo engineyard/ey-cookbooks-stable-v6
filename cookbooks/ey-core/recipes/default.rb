@@ -10,6 +10,11 @@ execute "reload-monit" do
   action :nothing
 end
 
+execute "update-apt" do
+  command "apt-get update"
+  action :nothing
+end
+
 include_recipe 'sysctl::tune'
 include_recipe "ey-core::swap"
 
@@ -26,3 +31,5 @@ include_recipe 'logrotate'
 include_recipe 'run-one'
 
 include_recipe 'ey-hosts'
+include_recipe "ey-core::sshd"
+include_recipe "unattended-upgrades"

@@ -10,11 +10,6 @@ if node['resque']['is_resque_instance']
     source "resque"
   end
 
-  execute "install resque gem" do
-    command "gem install resque redis redis-namespace yajl-ruby -r"
-    not_if { "gem list | grep resque" }
-  end
-
   node['resque']['applications'].each do |app_name|
     template "/etc/monit.d/resque_#{app_name}.monitrc" do
       owner 'root'

@@ -38,8 +38,6 @@ port          = node['passenger5']['port']
 #   source "config.erb"
 #   action :create
 # end
-nginx_http_port = 8081
-nginx_https_port = 8082
 base_port = node['passenger5']['port'].to_i
 stepping = 200
 app_base_port = base_port
@@ -58,57 +56,6 @@ node.engineyard.apps.each_with_index do |app,index|
   memory_limit = metadata_app_get_with_default(app.name, :worker_memory_size, depreciated_memory_limit)
   memory_option = memory_limit ? "-l #{memory_limit}" : ""
   worker_count = get_pool_size
-
-  # Render the http Nginx vhost
-  template "/data/nginx/servers/#{app.name}.conf" do
-    owner ssh_username
-    group ssh_username
-    mode 0644
-    source "nginx_app.conf.erb"
-    cookbook "passenger5"
-    variables({
-      :vhost => app.vhosts.first,
-      :port => nginx_http_port,
-      :upstream_port => app_base_port,
-      :framework_env => framework_env
-    })
-    notifies :restart, resources(:service => "nginx"), :delayed
-  end
-
-  # Render proxy.conf
-  cookbook_file "/etc/nginx/common/proxy.conf" do
-    owner ssh_username
-    group ssh_username
-    mode 0644
-    source "proxy.conf"
-    action :create
-    notifies :restart, resources(:service => "nginx"), :delayed
-  end
-
-  # If certificates have been added, render the https Nginx vhost and custom config
-  if app.vhosts.first.https?
-    file "/data/nginx/servers/#{app.name}/custom.ssl.conf" do
-      action :create_if_missing
-      owner ssh_username
-      group ssh_username
-      mode 0644
-    end
-
-    template "/data/nginx/servers/#{app.name}.ssl.conf" do
-      owner ssh_username
-      group ssh_username
-      mode 0644
-      source "nginx_app.conf.erb"
-      variables({
-        :vhost => app.vhosts.first,
-        :ssl => true,
-        :port => nginx_https_port,
-        :upstream_port => app_base_port,
-        :framework_env => framework_env
-      })
-      notifies :restart, resources(:service => "nginx"), :delayed
-    end
-  end
 
   # Render app control script, this script calls the passenger enterprise binaries using the full path
   template "/engineyard/bin/app_#{app.name}" do
@@ -145,15 +92,6 @@ node.engineyard.apps.each_with_index do |app,index|
               :version => version)
     notifies :run, "execute[reload-monit]", :delayed
   end
-
-  cookbook_file "/data/#{app.name}/shared/config/env.custom" do
-    source "env.custom"
-    owner node["owner_name"]
-    group node["owner_name"]
-    mode 0644
-    backup 0
-    not_if { FileTest.exists?("/data/#{app.name}/shared/config/env.custom") }
-  end
 end
 
 # Render passenger_monitor script
@@ -164,4 +102,3 @@ cookbook_file "/engineyard/bin/passenger_monitor" do
   mode "0655"
   backup 0
 end
-

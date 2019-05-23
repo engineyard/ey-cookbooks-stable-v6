@@ -21,9 +21,9 @@ class Chef
       def roles
         case role
         when 'solo'
-          %w[db_master app lb]
+          %w[db_master app]
         when 'app','app_master'
-          %w[app lb]
+          %w[app]
         when 'db_slave'
           %w[db_replica]
         else

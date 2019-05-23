@@ -12,6 +12,9 @@ util_crons = node[:custom_crons].find_all {|c| c[:instance_name] == 'util' }
 # Find all cron jobs for app master only
 app_master_crons = node[:custom_crons].find_all {|c| c[:instance_name] == 'app_master' }
 
+# Find all cron jobs for solo only
+solo_crons = node[:custom_crons].find_all {|c| c[:instance_name] == 'solo' }
+
 # Find all cron jobs for application instances
 app_crons = node[:custom_crons].find_all {|c| c[:instance_name] == 'app' }
 
@@ -32,6 +35,10 @@ if  node['dna']['instance_role'] == 'app_master'
     crons = crons + app_master_crons
 end
 
+if  node['dna']['instance_role'] == 'solo'
+    crons = crons + solo_crons
+end
+
 if node['dna']['instance_role'] == 'app' || node['dna']['instance_role'] == 'app_master'
     crons = crons + app_crons
 end
@@ -40,8 +47,32 @@ if node['dna']['instance_role'] == 'db_master' || node['dna']['instance_role'] =
     crons = crons + db_crons
 end
 
+# get the existing cron jobs created by this cron recipe
+existing_crons_command = Mixlib::ShellOut.new("grep -E -o '\# Chef Name: custom_cron_(.*)' /var/spool/cron/crontabs/#{node['owner_name']}")
+existing_crons_command.run_command
+existing_cron_names = existing_crons_command.stdout
+existing_crons = []
+
+# get the existing cron names without the prefix custom_cron_
+existing_cron_names.each_line do |line|
+  existing_crons << line.chomp.gsub(/\# Chef Name: custom_cron_/,'')
+end
+Chef::Log.debug "current custom cron jobs #{existing_crons.inspect}"
+
+# get the cron jobs that don't exist on the custom-cron attributes
+deleted_crons = existing_crons - crons.map{|c| c[:name]}
+Chef::Log.debug "deleted custom cron jobs #{deleted_crons.inspect}"
+deleted_crons.each do |deleted_cron|
+  cron "custom_cron_#{deleted_cron}" do
+    user node['owner_name']
+    action :delete
+  end
+end
+
+# Add custom_cron_ prefix to the name
 crons.each do |cron|
-  cron cron[:name] do
+  custom_cron_name = "custom_cron_#{cron[:name]}"
+  cron custom_cron_name do
     user     node['owner_name']
     action   :create
     minute   cron[:time].split[0]

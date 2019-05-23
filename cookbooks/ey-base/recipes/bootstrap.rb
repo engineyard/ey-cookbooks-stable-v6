@@ -1,8 +1,4 @@
-#TODOv6 include_recipe 'ey-monitor' # stonith
 include_recipe "ec2" if ['solo', 'app', 'util', 'app_master','node'].include?(node['dna']['instance_role'])
-
-#TODOv6 include_recipe 'ey-dynamic::packages'
-
 include_recipe 'ephemeraldisk'
 
 # descriptive hostname
@@ -68,7 +64,7 @@ end
   end
 end
 
-cookbook_file '/etc/security/limits.conf' do
+cookbook_file '/etc/security/limits.d/90-ey-limits.conf' do
   owner 'root'
   group 'root'
   mode '0644'
@@ -105,9 +101,8 @@ include_recipe "ey-backup::setup"
 include_recipe "framework_env"
 include_recipe "sudo"
 include_recipe "ssh_keys"
-#TODOv6 include_recipe "efs"
+include_recipe "prompt"
+include_recipe "efs"
 
 # do not run the ruby recipes when we install Node.js and other languages.
 include_recipe "ruby" if node.engineyard.environment.ruby?
-
-include_recipe "motd" # educational message on login

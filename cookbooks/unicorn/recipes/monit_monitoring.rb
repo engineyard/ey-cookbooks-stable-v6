@@ -15,15 +15,6 @@ node.engineyard.apps.each do |app|
     source "env.erb"
   end
 
-  cookbook_file "/data/#{app.name}/shared/config/env.custom" do
-    source "env.custom"
-    owner node.engineyard.environment.ssh_username
-    group node.engineyard.environment.ssh_username
-    mode 0755
-    backup 0
-    not_if { FileTest.exists?("/data/#{app.name}/shared/config/env.custom") }
-  end
-
   template "/engineyard/bin/app_#{app.name}" do
     owner node.engineyard.environment.ssh_username
     group node.engineyard.environment.ssh_username

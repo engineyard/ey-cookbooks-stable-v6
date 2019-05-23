@@ -1,7 +1,9 @@
-Chef::EY::Application.all( node,
-                           ( node['dna']['removed_applications'] ? node['dna']['removed_applications'] : [] ) ).each do |app|
-  directory app.path do
-    action :delete
-    recursive true
+existing_apps = `ls /var/log/engineyard/apps/`.split
+
+existing_apps.each do |existing_app|
+  unless node['dna']['applications'].include? existing_app
+    execute 'Remove files of detached apps' do
+      command %Q{rm -rf /data/#{existing_app}}
+    end
   end
 end

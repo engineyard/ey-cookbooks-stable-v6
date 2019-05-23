@@ -1,6 +1,6 @@
 case node.engineyard.environment['db_stack_name']
 when /postgres/
-  #TODOv6 include_recipe "postgresql::default"
+  include_recipe "postgresql::default"
 when /mysql/
   include_recipe "mysql"
   #include_recipe "mysql::user_my.cnf"
@@ -13,4 +13,4 @@ when "no_db"
   #no-op
 end
 
-#TODOv6 include_recipe "db_admin_tools"
+include_recipe "db_admin_tools"
