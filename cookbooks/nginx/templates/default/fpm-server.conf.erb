@@ -1,27 +1,52 @@
-upstream upstream_<%= @app_name %> {
-  server unix:/var/run/engineyard/php-fpm_<%= @app_name %>.sock;
+<% if @ssl %>
+upstream upstream_<%= @vhost.app.name %>_ssl {
+<% else %>
+upstream upstream_<%= @vhost.app.name %> {
+<% end %>
+  server unix:/var/run/engineyard/php-fpm_<%= @vhost.app.name %>.sock;
 }
 
 # Include additional server blocks.  File copied in via deploy hooks
-include /etc/nginx/servers/<%= @app_name %>/additional_server_blocks.customer;
+include /etc/nginx/servers/<%= @vhost.app.name %>/additional_server_blocks.customer;
 
 server {
-  listen      <%= @http_bind_port %>;
-  server_name <%= @server_names ? @server_names.join(" ") : "_" %>;
+<% if @http2 %>
+  listen <%= @haproxy_nginx_port %> ssl http2 proxy_protocol;
+<% else %>
+  listen <%= @haproxy_nginx_port %> proxy_protocol;
+  listen <%= @xlb_nginx_port %> ;
+<% end %>
+
+<% unless @vhost.domain_name.nil? || @vhost.domain_name.empty? %>
+  server_name <%= @vhost.domain_name %>;
+<% else %>
+  server_name _;
+<% end %>
 
   port_in_redirect off;
 
-  root  <%= File.join('/data', @app_name, 'current', @webroot).sub(/\/$/,'') %>;
+  <% if @ssl %>
+  ssl on;
+  ssl_certificate /etc/nginx/ssl/<%= @vhost.app.name %>/<%= @vhost.app.name %>.crt;
+  ssl_certificate_key /etc/nginx/ssl/<%= @vhost.app.name %>/<%= @vhost.app.name %>.key;
+  <% end %>
+
+  root  <%= File.join('/data', @vhost.app.name, 'current', @webroot).sub(/\/$/,'') %>;
   index index.php index.html index.htm;
 
-  access_log /var/log/engineyard/nginx/<%= @app_name %>.access.log main;
-  error_log  /var/log/engineyard/nginx/<%= @app_name %>.error.log  notice;
+  <% if @ssl %>
+  access_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.ssl.access.log main;
+  error_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.ssl.error.log notice;
+  <% else %>
+  access_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.access.log main;
+  error_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.error.log notice;
+  <% end %>
 
   client_max_body_size 100M;
   error_page 404 /404.html;
   error_page 500 502 504 /500.html;
 
-  if (-f /data/<%= @app_name %>/current/public/system/maintenance.html) {
+  if (-f /data/<%= @vhost.app.name %>/current/public/system/maintenance.html) {
     return 503;
   }
 
@@ -31,7 +56,11 @@ server {
   }
 
 # Include additional location blocks.  File copied in via deploy hooks
-	include /etc/nginx/servers/<%= @app_name %>/additional_location_blocks.customer;
+<% if @ssl %>
+  include /etc/nginx/servers/<%= @vhost.app.name %>/additional_location_blocks.ssl.customer;
+<% else %>
+  include /etc/nginx/servers/<%= @vhost.app.name %>/additional_location_blocks.customer;
+<% end %>
 
   # Adding CORS Header to the font files.
   location ~* \.(eot|otf|ttf|woff|woff2|svg)$ {
@@ -47,13 +76,17 @@ server {
 
     include                     /etc/nginx/common/proxy.conf;
     include                     /etc/nginx/common/fcgi.conf;
-    fastcgi_pass                upstream_<%= @app_name %>;
+<% if @ssl %>
+    fastcgi_pass                upstream_<%= @vhost.app.name %>_ssl;
+<% else %>
+    fastcgi_pass                upstream_<%= @vhost.app.name %>;
+<% end %>
     fastcgi_index               index.php;
     fastcgi_intercept_errors    off;
     fastcgi_param               SCRIPT_FILENAME $document_root$fastcgi_script_name;
     fastcgi_param               SERVER_NAME $hostname;
     <% if  File.exists?("/etc/newrelic/newrelic.cfg") %>
-    fastcgi_param               PHP_VALUE "newrelic.appname=<%= @env_name %> / <%= @app_name %>";
+    fastcgi_param               PHP_VALUE "newrelic.appname=<%= @env_name %> / <%= @vhost.app.name %>";
     <% end %>
   }
 
@@ -73,18 +106,22 @@ server {
   <% end %>
   <% %w(404 500).each do |error| %>
   location = /<%= error %>.html {
-    root /data/<%= @app_name %>/current;
+    root /data/<%= @vhost.app.name %>/current;
   }
 
   <% end %>
   error_page 503 @maint;
   location @maint {
-    root /data/<%= @app_name %>/current/public/system;
+    root /data/<%= @vhost.app.name %>/current/public/system;
     if (!-f $request_filename) {
       rewrite ^(.*)$ /maintenance.html break;
     }
     return 200;
   }
 
-  include /etc/nginx/servers/<%= @app_name %>/custom.conf;
+  <% if @ssl %>
+  include /etc/nginx/servers/<%= @vhost.app.name %>/custom.ssl.conf;
+  <% else %>
+   include /etc/nginx/servers/<%= @vhost.app.name %>/custom.conf;
+  <% end %>
 }

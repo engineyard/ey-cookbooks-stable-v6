@@ -145,13 +145,13 @@ node.engineyard.apps.each_with_index do |app, index|
       mode 0644
       source "fpm-server.conf.erb"
       variables({
-        :application => app,
-        :app_name => app.name,
-        :http_bind_port => nginx_haproxy_http_port,
-        :server_names => app.vhosts.first.domain_name.empty? ? [] : [app.vhosts.first.domain_name],
         :webroot => php_webroot,
+        :vhost => app.vhosts.first,
         :env_name => node.engineyard.environment[:name],
-		    :http2 => node['nginx']['http2']
+        :haproxy_nginx_port => nginx_haproxy_http_port,
+        :xlb_nginx_port => nginx_xlb_http_port,
+		:http2 => false,
+        :ssl => false
       })
       notifies node['nginx']['action'], resources(:service => "nginx"), :delayed
     end
@@ -232,23 +232,62 @@ node.engineyard.apps.each_with_index do |app, index|
        mode 0644
      end
 
-     template "/data/nginx/servers/#{app.name}.ssl.conf" do
-       owner node['owner_name']
-       group node['owner_name']
-       mode 0644
-       source "nginx_app.conf.erb"
-       variables({
-           :unicorn => is_unicorn,
-           :passenger => is_passenger,
-           :puma => is_puma,
-           :ssl => true,
-           :vhost => app.vhosts.first,
-           :haproxy_nginx_port => nginx_haproxy_https_port,
-           :xlb_nginx_port => nginx_xlb_https_port,
-           :upstream_port => app_base_port,
-           :http2 => node['nginx']['http2']
-       })
-       notifies :restart, resources(:service => "nginx"), :delayed
+    if node.engineyard.environment.ruby?
+      template "/data/nginx/servers/#{app.name}.ssl.conf" do
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0644
+      source "nginx_app.conf.erb"
+      variables({
+         :unicorn => is_unicorn,
+         :passenger => is_passenger,
+         :puma => is_puma,
+         :ssl => true,
+         :vhost => app.vhosts.first,
+         :haproxy_nginx_port => nginx_haproxy_https_port,
+         :xlb_nginx_port => nginx_xlb_https_port,
+         :upstream_port => app_base_port,
+         :http2 => node['nginx']['http2']
+      })
+      notifies :restart, resources(:service => "nginx"), :delayed
+    end
+    elsif stack.match(php_fpm)
+      php_webroot = node.engineyard.environment.apps.first['components'].find {|component| component['key'] == 'app_metadata'}['php_webroot']
+      managed_template "/data/nginx/servers/#{app.name}.ssl.conf" do
+         owner node['owner_name']
+         group node['owner_name']
+         mode 0644
+         source "fpm-server.conf.erb"
+         variables({
+             :webroot => php_webroot,
+             :vhost => app.vhosts.first,
+             :env_name => node.engineyard.environment[:name],
+             :haproxy_nginx_port => nginx_haproxy_http_port,
+             :xlb_nginx_port => nginx_xlb_http_port,
+             :http2 => node['nginx']['http2'],
+             :ssl => true
+         })
+         notifies node['nginx']['action'], resources(:service => "nginx"), :delayed
+      end
+
+       managed_template "/etc/nginx/servers/#{app.name}/additional_server_blocks.ssl.customer" do
+         owner node['owner_name']
+         group node['owner_name']
+         mode 0644
+         variables({
+           :app_name   => app.name,
+           :server_name => (app.vhosts.first.domain_name.empty? or app.vhosts.first.domain_name == "_") ? "www.domain.com" : app.vhosts.first.domain_name,
+         })
+         source "additional_server_blocks.ssl.customer.erb"
+         not_if { File.exists?("/etc/nginx/servers/#{app.name}/additional_server_blocks.ssl.customer") }
+       end
+       managed_template "/etc/nginx/servers/#{app.name}/additional_location_blocks.ssl.customer" do
+         owner node['owner_name']
+         group node['owner_name']
+         mode 0644
+         source "additional_location_blocks.ssl.customer.erb"
+         not_if { File.exists?("/etc/nginx/servers/#{app.name}/additional_location_blocks.ssl.customer") }
+       end
      end
 
      template "/data/nginx/ssl/#{app.name}/#{app.name}.key" do
@@ -328,45 +367,6 @@ node.engineyard.apps.each_with_index do |app, index|
          :chain => app[:vhosts][1][:chain],
          :key => app[:vhosts][1][:key]
        )
-     end
-
-
-     # PHP SSL template
-     if stack.match(php_fpm)
-       managed_template "/data/nginx/servers/#{app.name}.ssl.conf" do
-         owner node['owner_name']
-         group node['owner_name']
-         mode 0644
-         source "fpm-ssl.conf.erb"
-         variables({
-           :application => app,
-           :app_name   => app.name,
-           :http_bind_port => nginx_haproxy_https_port,
-           :server_names =>  app[:vhosts][1][:name].empty? ? [] : [app[:vhosts][1][:name]],
-           :webroot => php_webroot,
-           :env_name => node.engineyard.environment[:name]
-         })
-         notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
-       end
-
-       managed_template "/etc/nginx/servers/#{app.name}/additional_server_blocks.ssl.customer" do
-         owner node['owner_name']
-         group node['owner_name']
-         mode 0644
-         variables({
-           :app_name   => app.name,
-           :server_name => (app.vhosts.first.domain_name.empty? or app.vhosts.first.domain_name == "_") ? "www.domain.com" : app.vhosts.first.domain_name,
-         })
-         source "additional_server_blocks.ssl.customer.erb"
-         not_if { File.exists?("/etc/nginx/servers/#{app.name}/additional_server_blocks.ssl.customer") }
-       end
-       managed_template "/etc/nginx/servers/#{app.name}/additional_location_blocks.ssl.customer" do
-         owner node['owner_name']
-         group node['owner_name']
-         mode 0644
-         source "additional_location_blocks.ssl.customer.erb"
-         not_if { File.exists?("/etc/nginx/servers/#{app.name}/additional_location_blocks.ssl.customer") }
-       end
      end
  end
 
