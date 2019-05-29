@@ -3,7 +3,7 @@ gem_bin_path = "/opt/chef/embedded/bin"
 bin_path = '/usr/local/bin'
 
 execute "install ey-snaplock" do
-  command "wget https://ey-primer-gems.s3.amazonaws.com/ey_snaplock-2.0.3.gem && #{gem_bin_path}/gem install /tmp/ey_snaplock-2.0.3.gem"
+  command "wget https://ey-primer-gems.s3.amazonaws.com/ey_snaplock-2.0.4.gem && #{gem_bin_path}/gem install /tmp/ey_snaplock-2.0.4.gem"
   cwd "/tmp"
   not_if { File.exists?("#{gem_bin_path}/ey-snaplock") }
 end
