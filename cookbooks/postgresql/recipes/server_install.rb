@@ -47,6 +47,8 @@ end
 # install postgresql dependencies
 package "postgresql-common"
 package "postgresql-client-common"
+package "libpq-dev"
+package "libpq5"
 
 # This ruby block handles if the lock version file is set
 # It needs to be done like this since the file isn't present during the compile
