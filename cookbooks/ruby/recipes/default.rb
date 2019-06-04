@@ -50,7 +50,7 @@ bash "install ruby" do
     else
       echo "Installing Ruby #{ruby_version}"
       mkdir -p /opt/rubies
-      chown #{node['owner_name']}:#{node['owner_name']} /opt/rubies
+      chown #{node['owner_name']}:#{node['owner_name']} /opt/rubies -R
       sudo -u #{node['owner_name']} ruby-install --no-install-deps -r /opt/rubies ruby #{ruby_version}
     fi
   EOH
