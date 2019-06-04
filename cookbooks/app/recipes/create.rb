@@ -70,5 +70,6 @@ end
 
 end
 
+include_recipe "env_vars"
 include_recipe "env_vars::cloud"
 include_recipe "cdn_distribution::default"
