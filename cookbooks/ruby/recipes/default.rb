@@ -50,14 +50,14 @@ bash "install ruby" do
     else
       echo "Installing Ruby #{ruby_version}"
       mkdir -p /opt/rubies
-      chown #{node['owner_name']}:#{node['owner_name']} /opt/rubies -R
+      chown -R #{node['owner_name']}:#{node['owner_name']} /opt/rubies
       sudo -u #{node['owner_name']} ruby-install --no-install-deps -r /opt/rubies ruby #{ruby_version}
     fi
   EOH
 end
 
 execute "chown /opt/rubies" do
-  command "chown #{node['owner_name']}:#{node['owner_name']} /opt/rubies -R"
+  command "chown -R #{node['owner_name']}:#{node['owner_name']} /opt/rubies"
 end
 
 ruby_block "add ruby path during chef run" do
