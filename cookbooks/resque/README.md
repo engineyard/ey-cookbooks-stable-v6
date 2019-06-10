@@ -1,6 +1,6 @@
 # Resque
 
-This recipe is used to run resque on the stable-v5 stack.
+This recipe is used to run resque on the stable-v6 stack.
 
 The resque recipe is managed by Engine Yard. You should not copy this recipe to your repository but instead copy custom-resque. Please check the [custom-resque readme](../../custom-cookbooks/resque/cookbooks/custom-resque) for the complete instructions.
 

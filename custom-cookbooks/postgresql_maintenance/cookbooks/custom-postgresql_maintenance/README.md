@@ -39,8 +39,8 @@ Yard.
   ```
   cd ~ # Change this to your preferred directory. Anywhere but inside the application
 
-  git clone https://github.com/engineyard/ey-cookbooks-stable-v5
-  cd ey-cookbooks-stable-v5
+  git clone https://github.com/engineyard/ey-cookbooks-stable-v6
+  cd ey-cookbooks-stable-v6
   cp custom-cookbooks/packages/cookbooks/custom-postgresql_maintenance /path/to/app/cookbooks/
   ```
 
@@ -56,7 +56,7 @@ VacuumDB
 
 Your database is configured by default with autovacuum but minimizes resources to this process to prevent it from negatively impacting application performance. Databases that see regular heavy load, or lots of writes and deletes may need regular manual vacuum operations globally or for specific tables.
 
-The default action for the recipe will set up a weekly vacuum of all databases on the server at midnight Saturday night/Sunday morning server time. 
+The default action for the recipe will set up a weekly vacuum of all databases on the server at midnight Saturday night/Sunday morning server time.
 
 Additional information on vacuum operation can be found in the PostgreSQL Manual: https://www.postgresql.org/docs/10/sql-vacuum.html.
 

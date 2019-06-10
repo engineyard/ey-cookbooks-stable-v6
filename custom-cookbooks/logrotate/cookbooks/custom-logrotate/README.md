@@ -25,8 +25,8 @@ Our main recipes have the `logrotate` recipe that defines the `logrotate` resour
     ```
     cd ~ # Change this to your preferred directory. Anywhere but inside the application
 
-    git clone https://github.com/engineyard/ey-cookbooks-stable-v5
-    cd ey-cookbooks-stable-v5
+    git clone https://github.com/engineyard/ey-cookbooks-stable-v6
+    cd ey-cookbooks-stable-v6
     cp custom-cookbooks/logrotate/cookbooks/custom-logrotate /path/to/app/cookbooks/
     ```
 

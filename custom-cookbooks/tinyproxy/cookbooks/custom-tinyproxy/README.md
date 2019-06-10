@@ -25,8 +25,8 @@ Our main recipes have the tinyproxy recipe but it is not included by default. To
   ```
   cd ~ # Change this to your preferred directory. Anywhere but inside the application
 
-  git clone https://github.com/engineyard/ey-cookbooks-stable-v5
-  cd ey-cookbooks-stable-v5
+  git clone https://github.com/engineyard/ey-cookbooks-stable-v6
+  cd ey-cookbooks-stable-v6
   cp custom-cookbooks/tinyproxy/cookbooks/custom-tinyproxy /path/to/app/cookbooks/
   ```
 
