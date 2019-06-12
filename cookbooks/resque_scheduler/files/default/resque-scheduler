@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Shamelessly stolen from the resque wrapper and modified for just scheduler.
 #
 # This script starts and stops the Resque daemon
@@ -131,16 +131,17 @@ if [ -d $APP_ROOT ]; then
       logger -t "monit-resquescheduler[$$]:" "Stopping Resque worker $WORKER_REF"
       if [ -f $PID_FILE ]; then
         kill -TERM `cat $PID_FILE` && sleep 30
-          SLEEP_COUNT=0
-          while [ -e /proc/$child ]; do
-            sleep 15
-            let "SLEEP_COUNT+=15"
-            if(( "$SLEEP_COUNT" > 30 )); then
-              kill -9 `cat $PID_FILE` 2>/dev/null; true
-              logger -t "monit-resquescheduler[$$]:" "Murdering Resque worker with $PID for $WORKER_REF"
-              break
-            fi
-          done
+        SLEEP_COUNT=0
+        PID=`cat $PID_FILE`
+        while [ -e /proc/$PID ]; do
+          sleep 15
+          let "SLEEP_COUNT+=15"
+          if(( "$SLEEP_COUNT" > 30 )); then
+            kill -9 `cat $PID_FILE` 2>/dev/null; true
+            logger -t "monit-resquescheduler[$$]:" "Murdering Resque worker with $PID for $WORKER_REF"
+            break
+          fi
+        done
       fi
       [ -e "$PID_FILE" -a ! -d /proc/$PID ] && rm -f $PID_FILE
       rm $LOCK_FILE
