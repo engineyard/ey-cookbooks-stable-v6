@@ -28,7 +28,7 @@ remote_file "/tmp/src/ruby-install-0.7.0.tar.gz" do
   notifies :run, "execute[extract-ruby-install]", :immediately
 end
 
-env_var_ruby = fetch_env_var(node, "EY_RUBY")
+env_var_ruby = fetch_env_var(node, "EY_RUBY_VERSION")
 ruby_version = env_var_ruby.nil? ? node[:ruby][:version] : env_var_ruby
 log "Setting Ruby version to #{ruby_version}"
 
