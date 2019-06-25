@@ -42,9 +42,7 @@ include_recipe "ruby::dependencies"
 
 bash "install ruby" do
   code <<-EOH
-    source /usr/local/share/chruby/chruby.sh
-    chruby #{ruby_version}
-    if [ "$(ruby -v | grep #{ruby_version})" ]
+    if [ -e /opt/rubies/ruby-#{ruby_version}/bin/ruby ]
     then
       echo "Ruby #{ruby_version} is already installed. Skipping Ruby installation"
     else
