@@ -112,10 +112,10 @@ if node['redis']['is_redis_instance']
     action :nothing
   end
 
-  # check if redis is running
+  # check if redis is installed
   # if it is, restart it when redis-server.service changes
   # without the check, "notifies :restart" fails when redis-server isn't installed yet
-  is_redis_running = Mixlib::ShellOut.new("systemctl status redis-server").run_command.exitstatus == 0
+  is_redis_installed = Mixlib::ShellOut.new("[ -e #{redis_bin_path} ]").run_command.exitstatus == 0
   template "/etc/systemd/system/redis-server.service" do
     owner 'root'
     group 'root'
@@ -128,7 +128,7 @@ if node['redis']['is_redis_instance']
     })
     notifies :run, "execute[reload-systemd]", :immediately
     notifies :enable, "service[redis-server]", :immediately
-    notifies :restart, "service[redis-server]", :immediately if is_redis_running
+    notifies :restart, "service[redis-server]", :immediately if is_redis_installed
   end
 
   if run_installer
