@@ -46,14 +46,6 @@ if node['redis']['is_redis_instance']
     end
   end
 
-  if run_installer
-    if node['redis']['install_from_source']
-      include_recipe 'redis::install_from_source'
-    else
-      include_recipe 'redis::install_from_package'
-    end
-  end
-
   execute "create redis user" do
     command "adduser --system --home /var/lib/redis --group redis"
     not_if "getent passwd redis"
@@ -120,6 +112,10 @@ if node['redis']['is_redis_instance']
     action :nothing
   end
 
+  # check if redis is running
+  # if it is, restart it when redis-server.service changes
+  # without the check, "notifies :restart" fails when redis-server isn't installed yet
+  is_redis_running = Mixlib::ShellOut.new("systemctl status redis-server").run_command.exitstatus == 0
   template "/etc/systemd/system/redis-server.service" do
     owner 'root'
     group 'root'
@@ -132,6 +128,20 @@ if node['redis']['is_redis_instance']
     })
     notifies :run, "execute[reload-systemd]", :immediately
     notifies :enable, "service[redis-server]", :immediately
-    notifies :restart, "service[redis-server]", :immediately
+    notifies :restart, "service[redis-server]", :immediately if is_redis_running
+  end
+
+  if run_installer
+    if node['redis']['install_from_source']
+      include_recipe 'redis::install_from_source'
+    else
+      include_recipe 'redis::install_from_package'
+    end
+  end
+
+  service "start redis-server" do
+    service_name "redis-server"
+    provider Chef::Provider::Service::Systemd
+    action :start
   end
 end
