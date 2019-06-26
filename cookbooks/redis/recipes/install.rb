@@ -17,6 +17,12 @@ redis_base_directory = node['redis']['basedir']
 
 run_installer = !FileTest.exists?(redis_base_directory) || node['redis']['force_upgrade']
 
+# check if redis-server exists
+if (node['redis']['install_from_source'] && !File.exist?("/usr/local/bin/redis-server")) ||
+    ((node['redis']['install_from_source'] == false) && !File.exist?("/usr/bin/redis-server"))
+  run_installer = true
+end
+
 if node['redis']['is_redis_instance']
 
   sysctl "Enable Overcommit Memory" do
