@@ -1,0 +1,5 @@
+/snap
+/run/user
+/proc
+/sys
+/sys/fs/cgroup

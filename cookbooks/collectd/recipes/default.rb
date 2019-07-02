@@ -122,6 +122,14 @@ cookbook_file "/etc/engineyard/fs_type_check_ignore" do
   not_if { File.exist?('/etc/engineyard/fs_type_check_ignore')}
 end
 
+cookbook_file "/etc/engineyard/mounts_ro_ignore" do
+  source "mounts_ro_ignore"
+  owner node["owner_name"]
+  group node["owner_name"]
+  mode 0755
+  not_if { File.exist?('/etc/engineyard/mounts_ro_ignore')}
+end
+
 cookbook_file "/etc/systemd/system/collectd.service" do
   source "collectd.service"
   owner "root"
