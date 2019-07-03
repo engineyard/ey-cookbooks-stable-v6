@@ -128,7 +128,7 @@ backend egress_80
 <% else -%>
   option httpchk HEAD / HTTP/1.1\r\nHost:\ _
 <% end -%>
-  http-check expect rstatus ((2|3)[0-9][0-9]|503)
+  http-check expect rstatus ((2|3)[0-9][0-9]|503|401)
 
 <% if @backends.any? %>
   <% @backends.each_with_index do |instance, i| %>
@@ -143,7 +143,7 @@ backend egress_443
   mode tcp
 <% if @httpchk_path -%>
   option httpchk HEAD <%= @httpchk_path %><% if @httpchk_host %> HTTP/1.1\r\nHost:\ <%= @httpchk_host %><% end %>
-  http-check expect rstatus ((2|3)[0-9][0-9]|503)
+  http-check expect rstatus ((2|3)[0-9][0-9]|503|401)
 <% else -%>
   option tcp-check
 <% end -%>
