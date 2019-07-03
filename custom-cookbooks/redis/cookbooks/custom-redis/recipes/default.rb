@@ -1,6 +1,1 @@
-#
-# Cookbook Name:: redis
-#
-
-include_recipe 'redis::install'
-include_recipe 'redis::configure'
+include_recipe 'redis'
