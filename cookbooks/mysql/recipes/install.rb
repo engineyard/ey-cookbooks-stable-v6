@@ -5,11 +5,14 @@ db_running = %x{mysql -N -e "select 1;" 2> /dev/null}.strip == '1'
 
 known_versions = {
   # mysql 5.7
+  '5.7.26' => 'https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.26-29/binary/debian/bionic/x86_64/Percona-Server-5.7.26-29-r11ad961-bionic-x86_64-bundle.tar',
+  '5.7.25' => 'https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.25-28/binary/debian/bionic/x86_64/Percona-Server-5.7.25-28-rc335905-bionic-x86_64-bundle.tar',
   '5.7.24' => 'https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.24-27/binary/debian/bionic/x86_64/Percona-Server-5.7.24-27-rbd42700-bionic-x86_64-bundle.tar',
   '5.7.23' => 'https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.23-25/binary/debian/bionic/x86_64/Percona-Server-5.7.23-25-r7e2732e-bionic-x86_64-bundle.tar',
   '5.7.22' => 'https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.22-22/binary/debian/bionic/x86_64/Percona-Server-5.7.22-22-rf62d93c-bionic-x86_64-bundle.tar',
   '5.7.21' => 'https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.21-21/binary/debian/bionic/x86_64/Percona-Server-5.7.21-21-r2a37e4e-bionic-x86_64-bundle.tar',
   # mysql 5.6
+  '5.6.44' => 'https://www.percona.com/downloads/Percona-Server-5.6/Percona-Server-5.6.44-86.0/binary/debian/bionic/x86_64/Percona-Server-5.6.44-86.0-reba1b3f-bionic-x86_64-bundle.tar',
   '5.6.43' => 'https://www.percona.com/downloads/Percona-Server-5.6/Percona-Server-5.6.43-84.3/binary/debian/bionic/x86_64/Percona-Server-5.6.43-84.3-r71967c9-bionic-x86_64-bundle.tar',
   '5.6.42' => 'https://www.percona.com/downloads/Percona-Server-5.6/Percona-Server-5.6.42-84.2/binary/debian/bionic/x86_64/Percona-Server-5.6.42-84.2-r6b2b987-bionic-x86_64-bundle.tar',
   '5.6.41' => 'https://www.percona.com/downloads/Percona-Server-5.6/Percona-Server-5.6.41-84.1/binary/debian/bionic/x86_64/Percona-Server-5.6.41-84.1-rb308619-bionic-x86_64-bundle.tar',
