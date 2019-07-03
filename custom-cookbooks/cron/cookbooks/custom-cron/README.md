@@ -1,7 +1,7 @@
 # custom-cron
 
 This is a wrapper cookbook around Engine Yard's cron cookbook.  It automates the
-addition of cron jobs  for the application user (`deploy`)on the 
+addition of cron jobs  for the application user (`deploy`)on the
 instance name or type specified for each cron job. All cron jobs are specified in the
 attributes file of the cron cookbook.
 
@@ -38,8 +38,8 @@ Yard.
   ```
   cd ~ # Change this to your preferred directory. Anywhere but inside the application
 
-  git clone https://github.com/engineyard/ey-cookbooks-stable-v5
-  cd ey-cookbooks-stable-v5
+  git clone https://github.com/engineyard/ey-cookbooks-stable-v6
+  cd ey-cookbooks-stable-v6
   cp custom-cookbooks/packages/cookbooks/custom-packages /path/to/app/cookbooks/
   ```
 

@@ -25,8 +25,8 @@ Our main recipes have the `rails_secrets` recipe but it is not included by defau
       ```
       cd ~ # Change this to your preferred directory. Anywhere but inside the application
 
-      git clone https://github.com/engineyard/ey-cookbooks-stable-v5
-      cd ey-cookbooks-stable-v5
+      git clone https://github.com/engineyard/ey-cookbooks-stable-v6
+      cd ey-cookbooks-stable-v6
       cp custom-cookbooks/rails_secrets/cookbooks/custom-rails_secrets /path/to/app/cookbooks/
       ```
 4. For each application in the environment, create `/path/to/app/cookbooks/custom-rails_secrets/templates/default/secrets.yml.#{app_name}.erb`

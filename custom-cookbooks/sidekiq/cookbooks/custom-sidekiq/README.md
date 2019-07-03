@@ -30,8 +30,8 @@ this is managed by Engine Yard.
     cd ~ # Change this to your preferred directory. Anywhere but inside the
          # application
 
-    git clone https://github.com/engineyard/ey-cookbooks-stable-v5
-    cd ey-cookbooks-stable-v5
+    git clone https://github.com/engineyard/ey-cookbooks-stable-v6
+    cd ey-cookbooks-stable-v6
     cp custom-cookbooks/sidekiq/cookbooks/custom-sidekiq /path/to/app/cookbooks/
 
 	If you do not have `cookbooks/ey-custom` on your app repository, you can copy
@@ -55,7 +55,7 @@ Sidekiq.configure_client do |config|
 end
 ```
 
-The above code parses `config/redis.yml` to determine the Redis host. If you're using the [Redis recipe](https://github.com/engineyard/ey-cookbooks-stable-v5/tree/next-release/custom-cookbooks/redis), it creates a `/data/<app_name>/shared/config/redis.yml` for you. 
+The above code parses `config/redis.yml` to determine the Redis host. If you're using the [Redis recipe](https://github.com/engineyard/ey-cookbooks-stable-v6/tree/next-release/custom-cookbooks/redis), it creates a `/data/<app_name>/shared/config/redis.yml` for you.
 
 During deployment, the file `/data/<app_name>/current/config/redis.yml` is automatically symlinked to `/data/<app_name>/shared/config/redis.yml`.
 
@@ -66,7 +66,7 @@ All customizations go to `cookbooks/custom_sidekiq/attributes/default.rb`.
 ### Choose the instances that run the recipe
 
 By default, the sidekiq recipe runs on all instances. You can change this
-using `node['dna']['instance_role']` and `node['dna']['name'] `. 
+using `node['dna']['instance_role']` and `node['dna']['name'] `.
 
     # this is the default
     default['sidekiq']['is_sidekiq_instance'] = true
@@ -76,8 +76,8 @@ using `node['dna']['instance_role']` and `node['dna']['name'] `.
 
     # run the recipe on a solo instance
     default['sidekiq']['is_sidekiq_instance'] = (node['dna']['instance_role'] == 'solo')
-    
-    
+
+
 ### Specify the Redis instance
 
 In a clustered environment you need to tell Sidekiq where to find Redis. You can do this by enabling the Redis recipe and adding a Sidekiq initializer in `config/initializers/sidekiq.rb` with the following information:
@@ -90,12 +90,12 @@ end
 Sidekiq.configure_client do |config|
   config.redis = { :url => "redis://redis-instance", :namespace => 'sidekiq' }
 end
-``` 
+```
 
 The reference to the Redis instance works because the Redis recipe adds a `redis-instance` entry in `/etc/hosts`.
 
-More information on setting the location of your server can be found at: 
-https://github.com/mperham/sidekiq/wiki/Advanced-Options 
+More information on setting the location of your server can be found at:
+https://github.com/mperham/sidekiq/wiki/Advanced-Options
 
 ### Choose the number of Sidekiq processes
 
