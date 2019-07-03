@@ -29,8 +29,35 @@ alert ()
   echo "${severity}" > "${status_file}"
 }
 
-# check for readonly volumes  
-for device in $(awk 'NR>1{print $2}' /proc/mounts); do
-  severity=$(awk "\$2==\"${device}\"{if(\$4~/(^|,)ro($|,)/){s=\"FAILURE\"}else{s=\"OKAY\"}};END{print s}" /proc/mounts)
-  alert "${device}" "${severity}"
+# ignore certain mounts from the check
+ignorefile='/etc/engineyard/mounts_ro_ignore'
+ignore_mountpoints="$(cat $ignorefile)"
+should_ignore_mountpoint ()
+{
+  local mountpoint="${1}"
+  local ignore_code=1
+  IFS=$'\n'
+  for imp in $ignore_mountpoints; do
+    if [[ ! -z "$imp" ]] && [[ "$mountpoint" =~ "$imp" ]]; then
+      ignore_code=0
+      break
+    fi
+  done
+  return $ignore_code
+}
+
+# check for readonly volumes
+IFS=$'\n'
+for mount_info in $(findmnt --list -n -o TARGET,OPTIONS); do
+  IFS=' '
+  mount_info=($mount_info)
+  mountpoint=${mount_info[0]}
+  mount_options=${mount_info[1]}
+  if ! should_ignore_mountpoint "$mountpoint"; then
+    if [[ "$mount_options" =~ (^|,)ro($|,) ]]; then
+      alert "${mountpoint}" "FAILURE"
+    else
+      alert "${mountpoint}" "OKAY"
+    fi
+  fi
 done
