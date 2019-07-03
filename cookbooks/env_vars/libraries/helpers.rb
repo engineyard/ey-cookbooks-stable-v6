@@ -20,6 +20,17 @@ module EnvVars
       end
     end
 
+    def fetch_env_var(node, name)
+      app_data = node['dna']['engineyard']['environment']['apps'].first
+      environment_variables = fetch_environment_variables(app_data)
+      arr = environment_variables.select{|v| v[:name] == name}
+      if arr.empty?
+        nil
+      else
+        arr.first[:value]
+      end
+    end
+
     # Escapes the value of variable to be correctly enclosed in double quotes. Enclosing characters
     # in double quotes (") preserves the literal value of all characters within the quotes, with the
     # exception of $, `, \, and, when history expansion is enabled, !.
