@@ -50,6 +50,12 @@ package "postgresql-client-common"
 package "libpq-dev"
 package "libpq5"
 
+if postgres_version == "11"
+  package "libllvm6.0"
+  package "clang-6.0"
+  package "llvm-6.0-dev"
+end
+
 # This ruby block handles if the lock version file is set
 # It needs to be done like this since the file isn't present during the compile
 # phase on first runs on new instances booted from snapshots
