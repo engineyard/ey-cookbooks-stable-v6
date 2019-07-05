@@ -1,8 +1,37 @@
 #!/bin/bash
 
 mkdir -p /tmp/src/postgresql
+<% packages = ["libpq5", "libpq-dev"] %>
+<% packages.each do |package| %>
+installed=$(apt-cache policy <%= package %> | grep -E "Installed.*<%= @package_version %>-" > /dev/null)
+if [ $? -ne 0 ]; then
+  echo "Installing <%= package %>"
+  cd /tmp/src/postgresql
+  <% if @postgres_version.to_i == 11 %>
+    <%# https://apt.postgresql.org/pub/repos/apt/pool/main/p/postgresql-11/libpq5_11.4-1.pgdg18.04%2b1_amd64.deb %>
+    url=https://apt.postgresql.org/pub/repos/apt/pool/main/p/postgresql-<%= @postgres_version %>/<%= package %>_<%= @package_version %>-1.pgdg18.04+1_amd64.deb
+  <% elsif [9, 10].include?(@postgres_version.to_i) %>
+    <%# https://apt.postgresql.org/pub/repos/apt/pool/10/p/postgresql-10/libpq5_10.9-1.pgdg18.04%2b1_amd64.deb %>
+    url=https://apt.postgresql.org/pub/repos/apt/pool/<%= @postgres_version %>/p/postgresql-<%= @postgres_version %>/<%= package %>_<%= @package_version %>-1.pgdg18.04+1_amd64.deb
+  <% end %>
+  available=$(curl -s -I $url | head -n 1 | grep 200)
+  if [ $? -eq 0 ]; then
+    curl -s -O $url
+  fi
 
-<% packages = ["libpq5", "libpq-dev", "postgresql-client-#{@postgres_version}", "postgresql-#{@postgres_version}", "postgresql-server-dev-#{@postgres_version}"] %>
+  available=$(curl -s -I https://atalia.postgresql.org/morgue/p/postgresql-<%= @postgres_version %>/<%= package %>_<%= @package_version %>-1.pgdg18.04+1_amd64.deb | head -n 1 | grep 200)
+  if [ $? -eq 0 ]; then
+    curl -s -O https://atalia.postgresql.org/morgue/p/postgresql-<%= @postgres_version %>/<%= package %>_<%= @package_version %>-1.pgdg18.04+1_amd64.deb
+  fi
+
+  DEBIAN_FRONTEND=noninteractive dpkg -i /tmp/src/postgresql/<%= package %>_<%= @package_version %>-1.pgdg18.04+1_amd64.deb
+else
+  echo '<%= package %> <%= @package_version %> is already installed'
+fi
+
+<% end %>
+
+<% packages = ["postgresql-client-#{@postgres_version}", "postgresql-#{@postgres_version}", "postgresql-server-dev-#{@postgres_version}"] %>
 <% packages.each do |package| %>
 installed=$(apt-cache policy <%= package %> | grep -E "Installed.*<%= @package_version %>-" > /dev/null)
 if [ $? -ne 0 ]; then
