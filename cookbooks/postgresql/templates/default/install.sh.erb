@@ -1,7 +1,8 @@
 #!/bin/bash
 
 mkdir -p /tmp/src/postgresql
-<% packages = ["postgresql-client-#{@postgres_version}", "postgresql-#{@postgres_version}", "postgresql-server-dev-#{@postgres_version}"] %>
+
+<% packages = ["libpq5", "libpq-dev", "postgresql-client-#{@postgres_version}", "postgresql-#{@postgres_version}", "postgresql-server-dev-#{@postgres_version}"] %>
 <% packages.each do |package| %>
 installed=$(apt-cache policy <%= package %> | grep -E "Installed.*<%= @package_version %>-" > /dev/null)
 if [ $? -ne 0 ]; then

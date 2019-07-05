@@ -47,8 +47,6 @@ end
 # install postgresql dependencies
 package "postgresql-common"
 package "postgresql-client-common"
-package "libpq-dev"
-package "libpq5"
 
 if postgres_version == "11"
   package "libllvm6.0"
