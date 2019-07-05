@@ -6,10 +6,10 @@ when "postgres9_6"
   default['postgresql']['latest_version'] = '9.6.13'
   default['postgresql']['short_version'] = '9.6'
 when "postgres10"
-  default['postgresql']['latest_version'] = '10.8'
+  default['postgresql']['latest_version'] = '10.9'
   default['postgresql']['short_version'] = '10'
 when "postgres11"
-  default['postgresql']['latest_version'] = '11.3'
+  default['postgresql']['latest_version'] = '11.4'
   default['postgresql']['short_version'] = '11'
 end
 default['postgresql']['datadir'] = "/db/postgresql/#{node['postgresql']['short_version']}/data/"
