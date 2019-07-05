@@ -2,10 +2,11 @@ resin_path = "/usr/local/ey_resin/ruby/bin"
 gem_bin_path = "/opt/chef/embedded/bin"
 bin_path = '/usr/local/bin'
 
+snaplock_version = "2.0.4"
 execute "install ey-snaplock" do
-  command "wget https://ey-primer-gems.s3.amazonaws.com/ey_snaplock-2.0.4.gem && #{gem_bin_path}/gem install /tmp/ey_snaplock-2.0.4.gem"
+  command "wget https://ey-primer-gems.s3.amazonaws.com/ey_snaplock-#{snaplock_version}.gem && #{gem_bin_path}/gem install /tmp/ey_snaplock-#{snaplock_version}.gem"
   cwd "/tmp"
-  not_if { File.exists?("#{gem_bin_path}/ey-snaplock") }
+  not_if "#{gem_bin_path}/gem list ey_snaplock | grep #{snaplock_version}"
 end
 
 chef_gem "ey_cloud_server" do
