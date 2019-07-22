@@ -20,7 +20,7 @@ fallback_nodejs_version = case version
                           when 'nodejs_4'
                             '4.9.1'
                           else
-                            '8.12.0'
+                            '10.16.0'
                           end
 
 default['nodejs']['version'] = node.engineyard.environment.metadata('nodejs_version', fallback_nodejs_version)
