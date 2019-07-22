@@ -1,8 +1,8 @@
 postgres_version = node['postgresql']['short_version']
 install_version = node['postgresql']['latest_version']
 known_versions = %w[
-  9.5.17
-  9.6.13
+  9.5.17 9.5.18
+  9.6.13 9.6.14
   10.7 10.8 10.9
   11.3 11.4
 ]
