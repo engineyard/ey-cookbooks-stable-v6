@@ -17,9 +17,15 @@ redis_base_directory = node['redis']['basedir']
 
 run_installer = !FileTest.exists?(redis_base_directory) || node['redis']['force_upgrade']
 
+if node['redis']['install_from_source']
+  redis_bin_path = '/usr/local/bin/redis-server'
+else
+  redis_bin_path = '/usr/bin/redis-server'
+end
+
 # check if redis-server exists
-if (node['redis']['install_from_source'] && !File.exist?("/usr/local/bin/redis-server")) ||
-    ((node['redis']['install_from_source'] == false) && !File.exist?("/usr/bin/redis-server"))
+if (node['redis']['install_from_source'] && !File.exist?(redis_bin_path)) ||
+    ((node['redis']['install_from_source'] == false) && !File.exist?(redis_bin_path))
   run_installer = true
 end
 
@@ -99,12 +105,6 @@ if node['redis']['is_redis_instance']
     mode 0644
     source redis_config_template
     variables redis_config_variables
-  end
-
-  if node['redis']['install_from_source']
-    redis_bin_path = '/usr/local/bin/redis-server'
-  else
-    redis_bin_path = '/usr/bin/redis-server'
   end
 
   service "redis-server" do
