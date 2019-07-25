@@ -3,8 +3,8 @@ install_version = node['postgresql']['latest_version']
 known_versions = %w[
   9.5.17
   9.6.13
-  10.7 10.8
-  11.3
+  10.7 10.8 10.9
+  11.3 11.4
 ]
 package_version = known_versions.detect {|v| v =~ /^#{install_version}/}
 
@@ -43,12 +43,6 @@ directory "/tmp/src/postgresql" do
   action :create
   recursive true
 end
-
-# install postgresql dependencies
-package "postgresql-common"
-package "postgresql-client-common"
-package "libpq-dev"
-package "libpq5"
 
 # This ruby block handles if the lock version file is set
 # It needs to be done like this since the file isn't present during the compile
