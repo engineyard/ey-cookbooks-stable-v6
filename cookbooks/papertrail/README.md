@@ -1,6 +1,6 @@
 # papertrail
 
-This cookbook is used to run Papertrail on the stable-v5 stack.
+This cookbook is used to run Papertrail on the stable-v6 stack.
 
 The papertrail cookbook is managed by Engine Yard. You should not copy this
 recipe to your repository but instead copy custom-papertrail. Please check the
