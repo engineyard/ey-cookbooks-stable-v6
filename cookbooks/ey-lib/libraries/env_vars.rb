@@ -21,9 +21,13 @@ module EnvVars
     end
 
     def fetch_env_var(node, name)
-      app_data = node['dna']['engineyard']['environment']['apps'].first
-      environment_variables = fetch_environment_variables(app_data)
-      arr = environment_variables.select{|v| v[:name] == name}
+      apps = node['dna']['engineyard']['environment']['apps']
+      arr = []
+      apps.each do |app_data|
+        environment_variables = fetch_environment_variables(app_data)
+        arr << environment_variables.select{|v| v[:name] == name}
+      end
+      arr.flatten!
       if arr.empty?
         nil
       else
