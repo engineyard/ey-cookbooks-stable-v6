@@ -4,7 +4,5 @@ require 'pp'
 # Recipe:: default
 #
 
-if node['memcached']['perform_install']
-  include_recipe "memcached::install"
-  include_recipe "memcached::configure"
-end
+include_recipe "memcached::install"
+include_recipe "memcached::configure"

@@ -19,9 +19,10 @@ default['memcached'].tap do |memcached|
   # Install memcached on a utility instance named 'memcached'
   #memcached['install_type'] = 'NAMED_UTILS'
   memcached['utility_name'] = 'memcached'
+  memcached['install_type'] = 'NAMED_UTILS'
 
   # Install memcached on all app instances, or on a solo instance
-  memcached['install_type'] = 'ALL_APP_INSTANCES'
+  # memcached['install_type'] = 'ALL_APP_INSTANCES'
 
   # Amount of memory in MB to be used by memcached
   memcached['memusage'] = 1024
