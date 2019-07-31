@@ -138,5 +138,6 @@ module EnvVars
   end
 end
 
+Chef::Node.send(:include, EnvVars::Helper)
 Chef::Recipe.send(:include, EnvVars::Helper)
 Chef::Resource.send(:include, EnvVars::Helper)
