@@ -28,13 +28,13 @@ if node['redis']['is_redis_instance']
   end
 
   thp_filename = '/sys/kernel/mm/transparent_hugepage/enabled'
+  transparent_hugepage_command = "echo never > #{thp_filename}"
   if ::File.exists?(thp_filename)
     execute 'disable transparent huge pages when present' do
-      command "echo never > #{thp_filename}"
+      command transparent_hugepage_command
     end
 
-    transparent_hugepage_command = "echo never > /sys/kernel/mm/transparent_hugepage/enabled"
-    execute "set /sys/kernel/mm/transparent_hugepage/enabled on boot" do
+    execute "set #{thp_filename} on boot" do
       command "sed -i '1a #{transparent_hugepage_command}' /etc/rc.local"
       not_if "grep -e '#{transparent_hugepage_command}' /etc/rc.local"
     end
