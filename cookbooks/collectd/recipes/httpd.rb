@@ -30,7 +30,7 @@ service 'fcgiwrap' do
 end
 
 package 'fcgiwrap' do
-  version '1.1.0-10'
+  version '1.1.0'
 end
 
 directory "/etc/systemd/system/fcgiwrap.service.d" do

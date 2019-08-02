@@ -22,7 +22,7 @@ class Chef
                      :version_file => "#{graph_path}/version",
                      :graphs_tarball_name => "graphs_v#{graph_version}.tgz",
                      :version => graph_version },
-          :version => '5.1.0-r3',
+          :version => '5.7.2',
           :load => load_defaults }
       end
 
