@@ -29,9 +29,7 @@ service 'fcgiwrap' do
   action :nothing
 end
 
-package 'fcgiwrap' do
-  version '1.1.0'
-end
+package 'fcgiwrap'
 
 directory "/etc/systemd/system/fcgiwrap.service.d" do
   owner "root"

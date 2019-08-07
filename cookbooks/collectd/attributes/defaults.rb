@@ -3,4 +3,4 @@ default['collectd'] = (default_collectd(size))
 default['swap_warn_threshold'] = "0.50"
 default['swap_crit_threshold'] = "0.70"
 
-default['collectd']['version'] = "5.7.2"
+default['collectd']['version'] = "5.7*"
