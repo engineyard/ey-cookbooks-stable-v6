@@ -64,4 +64,9 @@ ruby_block "add ruby path during chef run" do
   block { ENV['PATH'] = "/opt/rubies/ruby-#{ruby_version}/bin:#{ENV['PATH']}" }
 end
 
+# Add gemrc for the root user
+cookbook_file "/root/.gemrc" do
+  source "gemrc"
+end
+
 include_recipe "ruby::rubygems"

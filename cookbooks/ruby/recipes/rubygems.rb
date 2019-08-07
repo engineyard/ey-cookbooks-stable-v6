@@ -22,7 +22,7 @@ def ensure_rubygems_version
     end
 
     execute "install rubygems #{rubygems}" do
-      command "gem install rubygems-update -v #{rubygems} --no-ri --no-rdoc"
+      command "gem install rubygems-update -v #{rubygems}"
     end
 
     bash "update rubygems to >= #{rubygems}" do
