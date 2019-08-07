@@ -30,6 +30,7 @@ install.each do |package|
   package package['name'] do
     version package['version']
     action :install
+    options '--allow-downgrades' if package['allow_downgrades']
   end
 
 end

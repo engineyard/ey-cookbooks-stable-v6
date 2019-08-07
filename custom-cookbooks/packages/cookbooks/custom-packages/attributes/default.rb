@@ -7,6 +7,11 @@ default['packages'].tap do |packages|
   packages['install'] = [
     {'name' => "sphinxsearch", 'version' => "2.2.11-2"},
     {'name' => "wkhtmltopdf"}
+
+    # if you want to install an older version of a package, use allow_downgrades
+    # in most cases, we recommend you skip the version to install the latest version
+    # install an older version of a package only if you really need that specific version
+    # {'name' => 'imagemagick', 'version' => '8:6.9.7.4+dfsg-16ubuntu6', 'allow_downgrades' => true}
   ]
 end
 
