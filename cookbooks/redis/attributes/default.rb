@@ -1,6 +1,6 @@
 default['redis'].tap do |redis|
   # Installing from APT is the recommended approach.
-  redis['version'] = '5:4.0.9-1'
+  redis['version'] = '5:4.0*'
 
   # Set install_from_source to true if you need a version that's not available from the
   # portage tree.
