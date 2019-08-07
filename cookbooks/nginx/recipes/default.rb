@@ -7,7 +7,6 @@ nginx_version = node['nginx']['version']
 Chef::Log.info "Nginx version: #{nginx_version}"
 
 include_recipe 'nginx::install'
-tlsv12_available  = node.openssl.version =~ /1\.0\.1/
 
 Chef::Log.info "instance role: #{node['dna']['instance_role']}"
 service "nginx" do
@@ -257,7 +256,6 @@ node.engineyard.apps.each_with_index do |app, index|
          backup 3
          variables(
            :app_name => app.name,
-           :tlsv12_available => tlsv12_available,
            :dhparam_available => dhparam_available
          )
          notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
