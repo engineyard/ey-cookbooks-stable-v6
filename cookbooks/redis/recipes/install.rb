@@ -17,6 +17,18 @@ redis_base_directory = node['redis']['basedir']
 
 run_installer = !FileTest.exists?(redis_base_directory) || node['redis']['force_upgrade']
 
+if node['redis']['install_from_source']
+  redis_bin_path = '/usr/local/bin/redis-server'
+else
+  redis_bin_path = '/usr/bin/redis-server'
+end
+
+# check if redis-server exists
+if (node['redis']['install_from_source'] && !File.exist?(redis_bin_path)) ||
+    ((node['redis']['install_from_source'] == false) && !File.exist?(redis_bin_path))
+  run_installer = true
+end
+
 if node['redis']['is_redis_instance']
 
   sysctl "Enable Overcommit Memory" do
@@ -37,14 +49,6 @@ if node['redis']['is_redis_instance']
     execute "set /sys/kernel/mm/transparent_hugepage/enabled on boot" do
       command "sed -i '1a #{transparent_hugepage_command}' /etc/rc.local"
       not_if "grep -e '#{transparent_hugepage_command}' /etc/rc.local"
-    end
-  end
-
-  if run_installer
-    if node['redis']['install_from_source']
-      include_recipe 'redis::install_from_source'
-    else
-      include_recipe 'redis::install_from_package'
     end
   end
 
@@ -103,12 +107,6 @@ if node['redis']['is_redis_instance']
     variables redis_config_variables
   end
 
-  if node['redis']['install_from_source']
-    redis_bin_path = '/usr/local/bin/redis-server'
-  else
-    redis_bin_path = '/usr/bin/redis-server'
-  end
-
   service "redis-server" do
     provider Chef::Provider::Service::Systemd
     action :nothing
@@ -126,6 +124,20 @@ if node['redis']['is_redis_instance']
     })
     notifies :run, "execute[reload-systemd]", :immediately
     notifies :enable, "service[redis-server]", :immediately
-    notifies :restart, "service[redis-server]", :immediately
+    notifies :restart, "service[redis-server]" # restart after installing redis
+  end
+
+  if run_installer
+    if node['redis']['install_from_source']
+      include_recipe 'redis::install_from_source'
+    else
+      include_recipe 'redis::install_from_package'
+    end
+  end
+
+  service "start redis-server" do
+    service_name "redis-server"
+    provider Chef::Provider::Service::Systemd
+    action :start
   end
 end

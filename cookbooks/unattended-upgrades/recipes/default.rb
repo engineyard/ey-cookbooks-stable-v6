@@ -1,14 +1,7 @@
-unattended_flag = 0
-
-node['dna']['engineyard']['environment']['apps'].each do |app_data|
-
-  environment_variables = fetch_environment_variables(app_data)
-
-  environment_variables.each do |variable|
-    if variable[:name] == 'EY_ENABLE_UNATTENDED_UPGRADES' && variable[:value] == 'true'
-      unattended_flag = 1
-    end
-  end
+if fetch_env_var(node, 'EY_ENABLE_UNATTENDED_UPGRADES') == 'true'
+  unattended_flag = 1
+else
+  unattended_flag = 0
 end
 
 template "/etc/apt/apt.conf.d/20auto-upgrades" do
