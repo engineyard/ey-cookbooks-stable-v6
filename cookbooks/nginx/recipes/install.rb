@@ -1,5 +1,4 @@
-nginx_version = node['nginx']['version']
-
+# TODO (jf): what is the rationale behind that?
 execute "upgrade_nginx" do
   action :nothing
   user 'root'
@@ -28,9 +27,7 @@ else
   end
 end
 
-package "nginx" do
-  version nginx_version
-end
+package "nginx"
 
 directory "/var/log/engineyard/nginx" do
   owner 'root'
@@ -86,13 +83,14 @@ logrotate "nginx" do
   SH
 end
 
+# TODO (jf): what is the rationale behind that?
 managed_template "/data/nginx/nginx_version.conf" do
   owner node.engineyard.environment.ssh_username
   group node.engineyard.environment.ssh_username
   mode 0644
   source "nginx_version.conf.erb"
   variables(
-    :version => nginx_version
+    :version => '1.14' # TODO (jf): this is the Ubuntu 18.04 default. Ok?
   )
   notifies :run, resources(:execute => "upgrade_nginx"), :delayed
 end

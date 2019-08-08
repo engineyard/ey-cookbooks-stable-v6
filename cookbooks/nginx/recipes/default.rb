@@ -3,8 +3,6 @@ stack = node.engineyard.environment['stack_name']
 php_fpm = /nginx_fpm/
 
 Chef::Log.debug "Nginx action: #{node['nginx'][:action]}"
-nginx_version = node['nginx']['version']
-Chef::Log.info "Nginx version: #{nginx_version}"
 
 include_recipe 'nginx::install'
 
