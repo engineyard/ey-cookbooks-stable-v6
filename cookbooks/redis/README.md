@@ -32,11 +32,17 @@ A large portion of the defaults of this recipe have been moved to a attribute fi
 
 ## Choosing a different Redis version
 
-This recipe installs Redis 3.2.0 by default.
+This recipe installs Redis 4.0.9, which is the Ubuntu 18.04 default version.
 
-To install a different version of Redis, override the `:version` attribute. You can do this with a new file in `cooobooks/redis/attributes` such as `overrides.rb` which sets the attribute like so:
+To install a different version of Redis, set `:install_from_source` to true,
+override the `:version` attribute, and set the correct `:download_url`.
+You can do this with a new file in `cooobooks/redis/attributes` such as `overrides.rb` which sets the attribute like so:
 
-  node['redis']['version'] = "1.0"
+```
+  node['redis']['install_from_source'] = true
+  node['redis']['version'] = '5.0-r6'
+  node['redis']['download_url'] = "https://github.com/antirez/redis/archive/#{node['redis']['version']}.tar.gz"
+```
 
 ## Notes
 

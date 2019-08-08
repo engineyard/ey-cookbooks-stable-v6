@@ -1,13 +1,11 @@
 default['redis'].tap do |redis|
-  # Installing from APT is the recommended approach.
-  redis['version'] = '5:4.0*'
-
-  # Set install_from_source to true if you need a version that's not available from the
-  # portage tree.
+  # Installing from APT (the default) is the recommended approach.
+  # Set install_from_source to true if you need a version
+  # that's different from the one offered by Ubuntu 18.04.
   redis['install_from_source'] = false
 
   # If you're installing from source, see http://download.redis.io/releases/ for the available versions
-  # Beta versions will also work, e.g. 5.0-rc4. Make sure you set the download_url correctly.
+  # Beta versions will also work, e.g. 5.0-rc6. Make sure you set the download_url correctly.
   # redis['install_from_source'] = true
   # redis['version'] = '4.0.11'
   # redis['download_url'] = "http://download.redis.io/releases/redis-#{redis['version']}.tar.gz"
@@ -15,8 +13,8 @@ default['redis'].tap do |redis|
   # Redis Beta, if you really have to
   # Make sure you also set redis['install_from_source'] to true
   # redis['install_from_source'] = true
-  # redis['version'] = '5.0-rc4'
-  # redis['download_url'] = 'https://github.com/antirez/redis/archive/5.0-rc4.tar.gz'
+  # redis['version'] = '5.0-rc6'
+  # redis['download_url'] = "https://github.com/antirez/redis/archive/#{redis['version']}.tar.gz"
 
   redis['force_upgrade'] = false
 
