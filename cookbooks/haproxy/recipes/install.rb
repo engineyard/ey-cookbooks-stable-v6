@@ -2,12 +2,8 @@
 #
 
 # Update HAProxy
-haproxy_version = node.engineyard.metadata("haproxy_version", node['haproxy']['version'])
-
-Chef::Log.info "HAProxy Version: #{haproxy_version}"
 
 package 'haproxy' do
-  version haproxy_version
   action :upgrade
 end
 
