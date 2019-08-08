@@ -4,7 +4,6 @@ require 'pp'
 # Recipe:: install
 #
 
-memcached_version = node['memcached']['version']
 memcached_download_url = node['memcached']['download_url']
 memcached_installer_directory = '/opt/memcached-installer'
 
