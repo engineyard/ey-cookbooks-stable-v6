@@ -1,8 +1,4 @@
 default['tinyproxy'].tap do |tinyproxy|
-  # What version to install
-  # Currently only 1.8.4-5 is available on V6
-  # Please open a Support ticket if you need a newer version
-  tinyproxy['version'] = '1.8*'
 
   # Port to listen on
   tinyproxy['port'] = '8888'
