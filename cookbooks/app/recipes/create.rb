@@ -70,10 +70,6 @@ end
 
 end
 
-<<<<<<< HEAD
 include_recipe "env_vars::init"
-=======
-include_recipe "env_vars"
->>>>>>> e9e0ae0548935374e355d877e0f7793ec1c45dae
 include_recipe "env_vars::cloud"
 include_recipe "cdn_distribution::default"
