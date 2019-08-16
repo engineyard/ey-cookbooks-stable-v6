@@ -115,8 +115,14 @@ end
 
 node.engineyard.apps.each_with_index do |app, index|
 
-    app_base_port = base_port + ( stepping * index )
-    dhparam_available = app.metadata('dh_key',nil)
+  app_base_port = base_port + ( stepping * index )
+  dhparam_available = app.metadata('dh_key',nil)
+
+  directory "/data/nginx/servers/#{app.name}" do
+    owner node['owner_name']
+    group node['owner_name']
+    mode 0775
+  end
 
   if node.engineyard.environment.ruby?
     template "/data/nginx/servers/#{app.name}.conf" do
@@ -155,15 +161,29 @@ node.engineyard.apps.each_with_index do |app, index|
       })
       notifies node['nginx']['action'], resources(:service => "nginx"), :delayed
     end
+
+    managed_template "/etc/nginx/servers/#{app.name}/additional_server_blocks.customer" do
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0644
+      variables({
+        :app_name   => app.name,
+        :server_name => (app.vhosts.first.domain_name.empty? or app.vhosts.first.domain_name == "_") ? "www.domain.com" : app.vhosts.first.domain_name,
+      })
+      source "additional_server_blocks.customer.erb"
+      not_if { File.exists?("/etc/nginx/servers/#{app.name}/additional_server_blocks.customer") }
+    end
+
+    managed_template "/etc/nginx/servers/#{app.name}/additional_location_blocks.customer" do
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0644
+      source "additional_location_blocks.customer.erb"
+      not_if { File.exists?("/etc/nginx/servers/#{app.name}/additional_location_blocks.customer") }
+    end
   end
 
   directory "/data/nginx/ssl/#{app.name}" do
-    owner node['owner_name']
-    group node['owner_name']
-    mode 0775
-  end
-
-  directory "/data/nginx/servers/#{app.name}" do
     owner node['owner_name']
     group node['owner_name']
     mode 0775
