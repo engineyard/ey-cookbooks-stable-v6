@@ -23,9 +23,7 @@ template "/engineyard/bin/ey-alert.rb" do
   })
 end
 
-package 'collectd' do
- version node['collectd']['version']
-end
+package 'collectd'
 
 service 'collectd' do
   provider Chef::Provider::Service::Systemd

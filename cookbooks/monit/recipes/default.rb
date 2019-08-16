@@ -7,15 +7,11 @@
 # All rights reserved - Do Not Redistribute
 #
 
-monit_version = node.engineyard.metadata("monit_version", node['monit']['version'])
-Chef::Log.info "Monit Version: #{monit_version}"
-
 ey_cloud_report "monit" do
   message "processing monit"
 end
 
 package 'monit' do
-  version monit_version
   action :install
 end
 

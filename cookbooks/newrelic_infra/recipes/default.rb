@@ -31,6 +31,5 @@ cookbook_file "/etc/apt/sources.list.d/newrelic-infra.list" do
 end
 
 package "newrelic-infra" do
-  version node['newrelic_infra']['package_version']
   action :install
 end

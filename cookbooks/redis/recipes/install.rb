@@ -9,10 +9,18 @@
 # Create the redis basedir if the redis basedir does not exist
 #
 
-redis_version = node['redis']['version']
-# we call split(':') because Ubuntu versions include an epoch number e.g. 5:4.0.9-1
-redis_config_file_version = redis_version.split(':').last[0..2]
-redis_download_url = node['redis']['download_url']
+redis_version = (node['redis']['version'] || '4.0.9') # The Ubuntu 18.04 version is 4.0.9
+# Deduce the redis_config_file_version from the full Redis version string
+#   1. remove possible -RCx in version
+#   2. split into major, minor, and (optionally) patch version components
+#   3. use major.minor as redis_config_file_version
+version_regex = /(\d+)\.(\d+)(\.\d+)?(-rc\d+)?/i
+if vmatch = version_regex.match(redis_version)
+  redis_config_file_version = "#{vmatch[1]}.#{vmatch[2]}"
+else
+  Chef::Log.fatal "Invalid Redis version."
+  exit(1)
+end
 redis_base_directory = node['redis']['basedir']
 
 run_installer = !FileTest.exists?(redis_base_directory) || node['redis']['force_upgrade']

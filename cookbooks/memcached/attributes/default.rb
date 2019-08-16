@@ -13,8 +13,10 @@ default['memcached'].tap do |memcached|
   # but not all versions are available
   memcached['install_from_source'] = false
 
-  memcached['version'] = '1.5.6-0ubuntu1'
-  memcached['download_url'] = 'http://www.memcached.org/files/memcached-1.5.6.tar.gz'
+  # If install_from_source is enabled.
+  # Otherwise the default Ubuntu 18.04 memcached package will be installed.
+  memcached['version'] = '1.5.12'
+  memcached['download_url'] = "http://www.memcached.org/files/memcached-#{memcached['version']}.tar.gz"
 
   # Install memcached on a utility instance named 'memcached'
   #memcached['install_type'] = 'NAMED_UTILS'

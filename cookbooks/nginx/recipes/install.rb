@@ -1,15 +1,3 @@
-nginx_version = node['nginx']['version']
-
-execute "upgrade_nginx" do
-  action :nothing
-  user 'root'
-  command '/etc/init.d/nginx upgrade'
-  only_if %Q{
-    [[ -f /var/run/nginx.pid && "$(readlink -m /proc/$(cat /var/run/nginx.pid)/exe)" =~ '/usr/sbin/nginx' ]]
-  }
-  guard_interpreter :bash
-end
-
 ey_cloud_report "nginx" do
   message "processing nginx"
 end
@@ -28,9 +16,7 @@ else
   end
 end
 
-package "nginx" do
-  version nginx_version
-end
+package "nginx"
 
 directory "/var/log/engineyard/nginx" do
   owner 'root'
@@ -84,15 +70,4 @@ logrotate "nginx" do
   restart_command <<-SH
 [ ! -f /var/run/nginx.pid ] || kill -USR1 `cat /var/run/nginx.pid`
   SH
-end
-
-managed_template "/data/nginx/nginx_version.conf" do
-  owner node.engineyard.environment.ssh_username
-  group node.engineyard.environment.ssh_username
-  mode 0644
-  source "nginx_version.conf.erb"
-  variables(
-    :version => nginx_version
-  )
-  notifies :run, resources(:execute => "upgrade_nginx"), :delayed
 end

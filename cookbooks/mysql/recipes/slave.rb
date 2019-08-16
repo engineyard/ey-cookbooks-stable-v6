@@ -17,7 +17,7 @@ end
 # Only run the mysql_slave recipes if it isn't already a slave
 updating = false
 
-resources_collection = Chef::VERSION == '0.6.0.2' ? collection : run_context.resource_collection
+resources_collection = run_context.resource_collection
 
 resources_collection.each do |r|
   updating = true if r.to_s == "execute[start-of-mysql-slave]"
