@@ -11,4 +11,7 @@ execute "add repository" do
 end
 
 package "php#{version}"
+package "apache2" do
+  action :remove
+end
 package "php#{version}-mbstring"
