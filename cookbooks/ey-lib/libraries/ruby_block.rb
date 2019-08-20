@@ -2,16 +2,9 @@
 class Chef
   class Resource
     class RubyBlock < Chef::Resource
-      if Chef::VERSION == '0.6.0.2'
-        def initialize(name, collection=nil, node = nil)
-          super(name, collection, node)
-          init
-        end
-      else
-        def initialize(name, run_context=nil)
-          super(name, run_context)
-          init
-        end
+      def initialize(name, run_context=nil)
+        super(name, run_context)
+        init
       end
 
       def init

@@ -5,6 +5,5 @@ end
 
 package "syslog-ng" do
   action :install
-  version node['syslog-ng']['version']
   notifies :restart, 'service[syslog-ng]'
 end

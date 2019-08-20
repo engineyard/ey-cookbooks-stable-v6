@@ -9,7 +9,6 @@ if (node['tinyproxy']['install_type'] == 'APP_MASTER' && node['dna']['instance_r
      
   # Install the tinyproxy package
   package "tinyproxy" do
-    version node['tinyproxy']['version']
     action :install
   end
 

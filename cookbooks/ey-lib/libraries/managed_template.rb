@@ -7,16 +7,9 @@
 class Chef
   class Resource
     class ManagedTemplate < Template
-      if Chef::VERSION == '0.6.0.2'
-        def initialize(name, collection = nil, node = nil)
-          super(name, collection, node)
-          not_if { ::File.exists?(name.sub(/(.*)(\/)/, '\1/keep.')) }
-        end
-      else
-        def initialize(name, run_context=nil)
-          super(name, run_context)
-          not_if { ::File.exists?(name.sub(/(.*)(\/)/, '\1/keep.')) }
-        end
+      def initialize(name, run_context=nil)
+        super(name, run_context)
+        not_if { ::File.exists?(name.sub(/(.*)(\/)/, '\1/keep.')) }
       end
     end
   end

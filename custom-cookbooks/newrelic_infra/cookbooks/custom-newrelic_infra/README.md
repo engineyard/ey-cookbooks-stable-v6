@@ -56,11 +56,7 @@ default['newrelic_infra']['use_newrelic_addon'] = true
 
 ### Package Version
 
-The recipe installs the newrelic-infra package from New Relic's APT repository using the version specified in `attributes/default.rb`. Please update the version number as necessary:
-
-```ruby
-default['newrelic_infra']['package_version'] = "1.3.3"
-```
+The recipe installs the newrelic-infra package from New Relic's APT repository.
 
 ### Display Name
 
