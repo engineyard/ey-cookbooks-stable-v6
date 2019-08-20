@@ -22,6 +22,13 @@ if node.engineyard.environment.ruby?
   RACK_ENV="#{node.engineyard.environment['framework_env']}"
   # end-ey-cron-header This is a delimeter. DO NOT DELETE
   CRON
+elsif node.engineyard.environment['stack_name'].match /nginx_fpm/
+  cron_header = <<-CRON
+  # begin-ey-cron-header This is a delimeter. DO NOT DELETE
+
+  PHP_ENV="#{node.engineyard.environment['framework_env']}"
+  # end-ey-cron-header This is a delimeter. DO NOT DELETE
+  CRON
 end
 
 file "/tmp/cron_header" do
