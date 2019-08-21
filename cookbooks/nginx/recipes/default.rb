@@ -186,12 +186,6 @@ node.engineyard.apps.each_with_index do |app, index|
     mode 0775
   end
 
-  directory "/data/nginx/ssl/#{app.name}" do
-    owner node['owner_name']
-    group node['owner_name']
-    mode 0775
-  end
-
   file "/data/nginx/servers/#{app.name}/custom.conf" do
     action :create_if_missing
     owner node.engineyard.environment.ssh_username
@@ -236,12 +230,6 @@ node.engineyard.apps.each_with_index do |app, index|
 
   # if there is an ssl vhost
   if app.https?
-
-    # Can be removed when no one is on nodejs-v2 stack
-    file "/data/nginx/servers/#{app.name}.custom.ssl.conf" do
-      action :delete
-    end
-
     file "/data/nginx/servers/#{app.name}/custom.ssl.conf" do
       action :create_if_missing
       owner node.engineyard.environment.ssh_username
