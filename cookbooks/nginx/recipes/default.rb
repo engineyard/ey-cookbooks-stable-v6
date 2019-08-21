@@ -279,8 +279,8 @@ node.engineyard.apps.each_with_index do |app, index|
              :webroot => php_webroot,
              :vhost => app.vhosts.first,
              :env_name => node.engineyard.environment[:name],
-             :haproxy_nginx_port => nginx_haproxy_http_port,
-             :xlb_nginx_port => nginx_xlb_http_port,
+             :haproxy_nginx_port => nginx_haproxy_https_port,
+             :xlb_nginx_port => nginx_xlb_https_port,
              :http2 => node['nginx']['http2'],
              :ssl => true
          })
