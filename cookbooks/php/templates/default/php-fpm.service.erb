@@ -5,7 +5,7 @@ After=network.target
 
 [Service]
 Type=notify
-PIDFile=/run/php/php<%= @version %>-fpm.pid
+PIDFile=/var/run/engineyard/php-fpm.pid
 ExecStart=/usr/sbin/php-fpm<%= @version %> --nodaemonize --fpm-config /etc/php-fpm.conf
 ExecReload=/bin/kill -USR2 $MAINPID
 User=<%= @user %>
