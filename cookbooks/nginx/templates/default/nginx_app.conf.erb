@@ -90,12 +90,6 @@ server {
   error_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.error.log notice;
   <% end %>
 
-<% domain =  @vhost.domain_name %>
-<% domain = domain.split(" ") %>
-<% domain = domain.first %>
-
-  rewrite ^/public/(.*) http://api.<%= domain %>/$1 permanent;
-
   # Adding CORS Header to the font files.
   location ~* \.(eot|otf|ttf|woff|woff2|svg)$ {
     add_header Access-Control-Allow-Origin *;
