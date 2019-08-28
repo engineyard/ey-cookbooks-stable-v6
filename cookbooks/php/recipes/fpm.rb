@@ -84,15 +84,6 @@ app_fpm_count = 1 unless app_fpm_count >= 1
 ssh_username = node.engineyard.environment.ssh_username
 # generate an fpm pool for each php app
 app_names.each do |app_name|
-  cookbook_file "/data/#{app_name}/shared/config/env.custom" do
-    source "env.custom"
-    owner node.engineyard.environment.ssh_username
-    group node.engineyard.environment.ssh_username
-    mode 0755
-    backup 0
-    not_if { FileTest.exists?("/data/#{app_name}/shared/config/env.custom") }
-  end
-
   mc_hostnames = node.engineyard.environment.instances.map{|i| i['private_hostname'] if i['role'][/^app|solo/]}.compact.map {|i| "#{i}:11211"}
 
   template "/data/#{app_name}/shared/config/fpm-pool.conf" do
