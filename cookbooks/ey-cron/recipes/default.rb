@@ -70,6 +70,11 @@ directory "/etc/systemd/system/cron.service.d" do
   recursive true
 end
 
+file "/var/spool/cron/crontabs/#{node['owner_name']}" do
+    owner "#{node['owner_name']}"
+    group "crontab"
+end
+
 cookbook_file "/etc/systemd/system/cron.service.d/override.conf" do
   source "cron_override.conf"
   owner "root"
