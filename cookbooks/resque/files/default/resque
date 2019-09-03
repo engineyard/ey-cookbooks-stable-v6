@@ -4,7 +4,9 @@
 
 original_path="$PWD"
 
-PATH=/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
+ruby_loc="$(which ruby |sed -e 's/\(\/ruby\)*$//g')"
+
+PATH=/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$ruby_loc:$PATH
 
 usage() {
   echo -e "
