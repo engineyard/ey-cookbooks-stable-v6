@@ -48,6 +48,11 @@ cookbook_file "/etc/systemd/system/fcgiwrap.service.d/override.conf" do
   notifies :restart, "service[fcgiwrap]", :delayed
 end
 
+service 'fcgiwrap.socket' do
+  provider Chef::Provider::Service::Systemd
+  action :enable
+end
+
 service "collectd-httpd" do
   provider Chef::Provider::Service::Systemd
   action :nothing
