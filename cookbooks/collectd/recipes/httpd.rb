@@ -31,6 +31,8 @@ end
 
 package 'fcgiwrap'
 
+execute "systemctl enable fcgiwrap.socket"
+
 directory "/etc/systemd/system/fcgiwrap.service.d" do
   owner "root"
   group "root"
