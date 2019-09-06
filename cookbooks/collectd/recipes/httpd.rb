@@ -63,6 +63,12 @@ cookbook_file "/etc/systemd/system/collectd-httpd.service" do
   notifies :start, "service[collectd-httpd]", :immediately
 end
 
+service "start collectd-httpd" do
+  service_name "collectd-httpd"
+  provider Chef::Provider::Service::Systemd
+  action :start
+end
+
 package "apache2-utils"
 
 # Setup HTTP auth so AWSM can get at the graphs
