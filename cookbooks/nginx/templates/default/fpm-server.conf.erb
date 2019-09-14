@@ -1,0 +1,127 @@
+<% if @ssl %>
+upstream upstream_<%= @vhost.app.name %>_ssl {
+<% else %>
+upstream upstream_<%= @vhost.app.name %> {
+<% end %>
+  server unix:/var/run/engineyard/php-fpm_<%= @vhost.app.name %>.sock;
+}
+
+# Include additional server blocks.  File copied in via deploy hooks
+include /etc/nginx/servers/<%= @vhost.app.name %>/additional_server_blocks.customer;
+
+server {
+<% if @http2 %>
+  listen <%= @haproxy_nginx_port %> ssl http2 proxy_protocol;
+<% else %>
+  listen <%= @haproxy_nginx_port %> proxy_protocol;
+  listen <%= @xlb_nginx_port %> ;
+<% end %>
+
+<% unless @vhost.domain_name.nil? || @vhost.domain_name.empty? %>
+  server_name <%= @vhost.domain_name %>;
+<% else %>
+  server_name _;
+<% end %>
+
+  port_in_redirect off;
+
+  <% if @ssl %>
+  ssl on;
+  ssl_certificate /etc/nginx/ssl/<%= @vhost.app.name %>/<%= @vhost.app.name %>.crt;
+  ssl_certificate_key /etc/nginx/ssl/<%= @vhost.app.name %>/<%= @vhost.app.name %>.key;
+  <% end %>
+
+  root  <%= File.join('/data', @vhost.app.name, 'current', @webroot).sub(/\/$/,'') %>;
+  index index.php index.html index.htm;
+
+  <% if @ssl %>
+  access_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.ssl.access.log main;
+  error_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.ssl.error.log notice;
+  <% else %>
+  access_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.access.log main;
+  error_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.error.log notice;
+  <% end %>
+
+  client_max_body_size 100M;
+  error_page 404 /404.html;
+  error_page 500 502 504 /500.html;
+
+  if (-f /data/<%= @vhost.app.name %>/current/public/system/maintenance.html) {
+    return 503;
+  }
+
+  location = /favicon.ico {
+    access_log     off;
+    log_not_found  off;
+  }
+
+# Include additional location blocks.  File copied in via deploy hooks
+<% if @ssl %>
+  include /etc/nginx/servers/<%= @vhost.app.name %>/additional_location_blocks.ssl.customer;
+<% else %>
+  include /etc/nginx/servers/<%= @vhost.app.name %>/additional_location_blocks.customer;
+<% end %>
+
+  # Adding CORS Header to the font files.
+  location ~* \.(eot|otf|ttf|woff|woff2|svg)$ {
+    add_header Access-Control-Allow-Origin *;
+  }
+
+  location / {
+    try_files $uri $uri/ /index.php$is_args$args;
+  }
+
+  location ~ \.php$ {
+    try_files $uri =404;
+
+    include                     /etc/nginx/common/proxy.conf;
+    include                     /etc/nginx/common/fcgi.conf;
+<% if @ssl %>
+    fastcgi_pass                upstream_<%= @vhost.app.name %>_ssl;
+<% else %>
+    fastcgi_pass                upstream_<%= @vhost.app.name %>;
+<% end %>
+    fastcgi_index               index.php;
+    fastcgi_intercept_errors    off;
+    fastcgi_param               SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param               SERVER_NAME $hostname;
+    <% if  File.exists?("/etc/newrelic/newrelic.cfg") %>
+    fastcgi_param               PHP_VALUE "newrelic.appname=<%= @env_name %> / <%= @vhost.app.name %>";
+    <% end %>
+  }
+
+  location ~* ^.+\.(jpg|js|jpeg|png|ico|gif|txt|js|css|swf|zip|rar|avi|exe|mpg|mp3|wav|mpeg|asf|wmv)$ {
+    try_files $uri /index.php$is_args$args;
+    expires 24h;
+  }
+
+  <% if @webroot == '/' %>
+  location ~* ^/(tmp|log|config)(/.*|$) {
+    try_files /index.php$is_args$args =404;
+  }
+  location = nginx.conf {
+    try_files /index.php$is_args$args =404;
+  }
+
+  <% end %>
+  <% %w(404 500).each do |error| %>
+  location = /<%= error %>.html {
+    root /data/<%= @vhost.app.name %>/current;
+  }
+
+  <% end %>
+  error_page 503 @maint;
+  location @maint {
+    root /data/<%= @vhost.app.name %>/current/public/system;
+    if (!-f $request_filename) {
+      rewrite ^(.*)$ /maintenance.html break;
+    }
+    return 200;
+  }
+
+  <% if @ssl %>
+  include /etc/nginx/servers/<%= @vhost.app.name %>/custom.ssl.conf;
+  <% else %>
+   include /etc/nginx/servers/<%= @vhost.app.name %>/custom.conf;
+  <% end %>
+}

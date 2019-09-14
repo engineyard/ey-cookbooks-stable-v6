@@ -12,14 +12,24 @@ ey_cloud_report "cron" do
   only_if node['dna']['crons'].empty?
 end
 
-cron_header = <<-CRON
-# begin-ey-cron-header This is a delimeter. DO NOT DELETE
+cron_header = ""
+if node.engineyard.environment.ruby?
+  cron_header = <<-CRON
+# begin-ey-cron-header This is a delimiter. DO NOT DELETE
 
 PATH=/opt/rubies/ruby-#{node['ruby']['version']}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 RAILS_ENV="#{node.engineyard.environment['framework_env']}"
 RACK_ENV="#{node.engineyard.environment['framework_env']}"
-# end-ey-cron-header This is a delimeter. DO NOT DELETE
-CRON
+# end-ey-cron-header This is a delimiter. DO NOT DELETE
+  CRON
+elsif node.engineyard.environment['stack_name'].match /nginx_fpm/
+  cron_header = <<-CRON
+# begin-ey-cron-header This is a delimiter. DO NOT DELETE
+
+PHP_ENV="#{node.engineyard.environment['framework_env']}"
+# end-ey-cron-header This is a delimiter. DO NOT DELETE
+  CRON
+end
 
 file "/tmp/cron_header" do
   content cron_header

@@ -30,15 +30,15 @@ is_puma = false
 
 
 if stack.match(/nginx_passenger5/)
-    is_passenger = true
+  is_passenger = true
 end
 
 if stack.match(/nginx_unicorn/)
-    is_unicorn = true
+  is_unicorn = true
 end
 
 if stack.match(/puma/)
-    is_puma = true
+  is_puma = true
 end
 
 managed_template "/data/nginx/nginx.conf" do
@@ -102,11 +102,26 @@ end
   end
 end
 
+managed_template "/data/nginx/common/fcgi.conf" do
+  owner node['owner_name']
+  group node['owner_name']
+  mode 0644
+  source "common.fcgi.conf.erb"
+  notifies node['nginx']['action'], resources(:service => "nginx"), :delayed
+end
+
 node.engineyard.apps.each_with_index do |app, index|
 
-    app_base_port = base_port + ( stepping * index )
-    dhparam_available = app.metadata('dh_key',nil)
+  app_base_port = base_port + ( stepping * index )
+  dhparam_available = app.metadata('dh_key',nil)
 
+  directory "/data/nginx/servers/#{app.name}" do
+    owner node['owner_name']
+    group node['owner_name']
+    mode 0775
+  end
+
+  if node.engineyard.environment.ruby?
     template "/data/nginx/servers/#{app.name}.conf" do
       owner node['owner_name']
       group node['owner_name']
@@ -125,17 +140,44 @@ node.engineyard.apps.each_with_index do |app, index|
       })
       notifies :restart, resources(:service => "nginx"), :delayed
     end
+  elsif stack.match(php_fpm)
+    php_webroot = node.engineyard.environment.apps.first['components'].find {|component| component['key'] == 'app_metadata'}['php_webroot']
+    managed_template "/data/nginx/servers/#{app.name}.conf" do
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0644
+      source "fpm-server.conf.erb"
+      variables({
+        :webroot => php_webroot,
+        :vhost => app.vhosts.first,
+        :env_name => node.engineyard.environment[:name],
+        :haproxy_nginx_port => nginx_haproxy_http_port,
+        :xlb_nginx_port => nginx_xlb_http_port,
+        :http2 => false,
+        :ssl => false
+      })
+      notifies node['nginx']['action'], resources(:service => "nginx"), :delayed
+    end
 
-  directory "/data/nginx/ssl/#{app.name}" do
-    owner node['owner_name']
-    group node['owner_name']
-    mode 0775
-  end
+    managed_template "/etc/nginx/servers/#{app.name}/additional_server_blocks.customer" do
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0644
+      variables({
+        :app_name   => app.name,
+        :server_name => (app.vhosts.first.domain_name.empty? or app.vhosts.first.domain_name == "_") ? "www.domain.com" : app.vhosts.first.domain_name,
+      })
+      source "additional_server_blocks.customer.erb"
+      not_if { File.exists?("/etc/nginx/servers/#{app.name}/additional_server_blocks.customer") }
+    end
 
-  directory "/data/nginx/servers/#{app.name}" do
-    owner node['owner_name']
-    group node['owner_name']
-    mode 0775
+    managed_template "/etc/nginx/servers/#{app.name}/additional_location_blocks.customer" do
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0644
+      source "additional_location_blocks.customer.erb"
+      not_if { File.exists?("/etc/nginx/servers/#{app.name}/additional_location_blocks.customer") }
+    end
   end
 
   directory "/data/nginx/ssl/#{app.name}" do
@@ -153,14 +195,14 @@ node.engineyard.apps.each_with_index do |app, index|
 
   if dhparam_available
     managed_template "/data/nginx/ssl/#{app.name}/dhparam.#{app.name}.pem" do
-       owner node['owner_name']
-       group node['owner_name']
-       mode 0600
-       source "dhparam.erb"
-       variables ({
-         :dhparam => app.metadata('dh_key')
-       })
-       notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0600
+      source "dhparam.erb"
+      variables ({
+        :dhparam => app.metadata('dh_key')
+      })
+      notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
     end
   end
 
@@ -181,167 +223,156 @@ node.engineyard.apps.each_with_index do |app, index|
     mode 0644
     source "listen-http.erb"
     variables({
-        :http_bind_port => nginx_haproxy_http_port,
+      :http_bind_port => nginx_haproxy_http_port,
     })
     notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
   end
 
   # if there is an ssl vhost
-   if app.https?
+  if app.https?
+    file "/data/nginx/servers/#{app.name}/custom.ssl.conf" do
+      action :create_if_missing
+      owner node.engineyard.environment.ssh_username
+      group node.engineyard.environment.ssh_username
+      mode 0644
+    end
 
-     # Can be removed when no one is on nodejs-v2 stack
-     file "/data/nginx/servers/#{app.name}.custom.ssl.conf" do
-       action :delete
-     end
+    if node.engineyard.environment.ruby?
+      template "/data/nginx/servers/#{app.name}.ssl.conf" do
+        owner node['owner_name']
+        group node['owner_name']
+        mode 0644
+        source "nginx_app.conf.erb"
+        variables({
+          :unicorn => is_unicorn,
+          :passenger => is_passenger,
+          :puma => is_puma,
+          :ssl => true,
+          :vhost => app.vhosts.first,
+          :haproxy_nginx_port => nginx_haproxy_https_port,
+          :xlb_nginx_port => nginx_xlb_https_port,
+          :upstream_port => app_base_port,
+          :http2 => node['nginx']['http2']
+        })
+        notifies :restart, resources(:service => "nginx"), :delayed
+      end
+    elsif stack.match(php_fpm)
+      php_webroot = node.engineyard.environment.apps.first['components'].find {|component| component['key'] == 'app_metadata'}['php_webroot']
+      managed_template "/data/nginx/servers/#{app.name}.ssl.conf" do
+        owner node['owner_name']
+        group node['owner_name']
+        mode 0644
+        source "fpm-server.conf.erb"
+        variables({
+          :webroot => php_webroot,
+          :vhost => app.vhosts.first,
+          :env_name => node.engineyard.environment[:name],
+          :haproxy_nginx_port => nginx_haproxy_https_port,
+          :xlb_nginx_port => nginx_xlb_https_port,
+          :http2 => node['nginx']['http2'],
+          :ssl => true
+        })
+        notifies node['nginx']['action'], resources(:service => "nginx"), :delayed
+      end
 
-     file "/data/nginx/servers/#{app.name}/custom.ssl.conf" do
-       action :create_if_missing
-       owner node.engineyard.environment.ssh_username
-       group node.engineyard.environment.ssh_username
-       mode 0644
-     end
+      managed_template "/etc/nginx/servers/#{app.name}/additional_server_blocks.ssl.customer" do
+        owner node['owner_name']
+        group node['owner_name']
+        mode 0644
+        variables({
+          :app_name   => app.name,
+          :server_name => (app.vhosts.first.domain_name.empty? or app.vhosts.first.domain_name == "_") ? "www.domain.com" : app.vhosts.first.domain_name,
+        })
+        source "additional_server_blocks.ssl.customer.erb"
+        not_if { File.exists?("/etc/nginx/servers/#{app.name}/additional_server_blocks.ssl.customer") }
+      end
+      managed_template "/etc/nginx/servers/#{app.name}/additional_location_blocks.ssl.customer" do
+        owner node['owner_name']
+        group node['owner_name']
+        mode 0644
+        source "additional_location_blocks.ssl.customer.erb"
+        not_if { File.exists?("/etc/nginx/servers/#{app.name}/additional_location_blocks.ssl.customer") }
+      end
+    end
 
-     template "/data/nginx/servers/#{app.name}.ssl.conf" do
-       owner node['owner_name']
-       group node['owner_name']
-       mode 0644
-       source "nginx_app.conf.erb"
-       variables({
-           :unicorn => is_unicorn,
-           :passenger => is_passenger,
-           :puma => is_puma,
-           :ssl => true,
-           :vhost => app.vhosts.first,
-           :haproxy_nginx_port => nginx_haproxy_https_port,
-           :xlb_nginx_port => nginx_xlb_https_port,
-           :upstream_port => app_base_port,
-           :http2 => node['nginx']['http2']
-       })
-       notifies :restart, resources(:service => "nginx"), :delayed
-     end
+    template "/data/nginx/ssl/#{app.name}/#{app.name}.key" do
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0644
+      source "sslkey.erb"
+      backup 0
+      variables(
+        :key => app[:vhosts][1][:key]
+      )
+      notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
+    end
 
-     template "/data/nginx/ssl/#{app.name}/#{app.name}.key" do
-       owner node['owner_name']
-       group node['owner_name']
-       mode 0644
-       source "sslkey.erb"
-       backup 0
-       variables(
-         :key => app[:vhosts][1][:key]
-       )
-       notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
-     end
+    template "/data/nginx/ssl/#{app.name}/#{app.name}.crt" do
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0644
+      source "sslcrt.erb"
+      backup 0
+      variables(
+        :crt => app[:vhosts][1][:crt],
+        :chain => app[:vhosts][1][:chain]
+      )
+      notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
+    end
 
-     template "/data/nginx/ssl/#{app.name}/#{app.name}.crt" do
-       owner node['owner_name']
-       group node['owner_name']
-       mode 0644
-       source "sslcrt.erb"
-       backup 0
-       variables(
-         :crt => app[:vhosts][1][:crt],
-         :chain => app[:vhosts][1][:chain]
-       )
-       notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
-     end
+    # Add Cipher chain
+    template "/data/nginx/ssl/#{app.name}/default.ssl_cipher" do
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0644
+      source "default_ssl_cipher.erb"
+      backup 3
+      variables(
+        :app_name => app.name,
+        :dhparam_available => dhparam_available
+      )
+      notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
+    end
 
-       # Add Cipher chain
-       template "/data/nginx/ssl/#{app.name}/default.ssl_cipher" do
-         owner node['owner_name']
-         group node['owner_name']
-         mode 0644
-         source "default_ssl_cipher.erb"
-         backup 3
-         variables(
-           :app_name => app.name,
-           :dhparam_available => dhparam_available
-         )
-         notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
-       end
+    # Chain files are create if missing and do not reload Nginx
 
-     # Chain files are create if missing and do not reload Nginx
+    # Add Cipher chain
+    template "/data/nginx/ssl/#{app.name}/customer.ssl_cipher" do
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0644
+      source "customer_ssl_cipher.erb"
+      action :create_if_missing
+      variables(
+        :app_name => app.name
+      )
+    end
 
-     # Add Cipher chain
-     template "/data/nginx/ssl/#{app.name}/customer.ssl_cipher" do
-       owner node['owner_name']
-       group node['owner_name']
-       mode 0644
-       source "customer_ssl_cipher.erb"
-       action :create_if_missing
-       variables(
-         :app_name => app.name
-       )
-     end
+    # Add Cipher chain
+    template "/data/nginx/ssl/#{app.name}/ssl_cipher" do
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0644
+      source "main_ssl_cipher.erb"
+      action :create_if_missing
+      variables(
+        :app_name => app.name
+      )
+    end
 
-     # Add Cipher chain
-     template "/data/nginx/ssl/#{app.name}/ssl_cipher" do
-       owner node['owner_name']
-       group node['owner_name']
-       mode 0644
-       source "main_ssl_cipher.erb"
-       action :create_if_missing
-       variables(
-         :app_name => app.name
-       )
-     end
-
-     template "/data/nginx/ssl/#{app.name}/#{app.name}.pem" do
-       owner node['owner_name']
-       group node['owner_name']
-       mode 0644
-       source "sslpem.erb"
-       backup 0
-       variables(
-         :crt => app[:vhosts][1][:crt],
-         :chain => app[:vhosts][1][:chain],
-         :key => app[:vhosts][1][:key]
-       )
-     end
-
-
-     # PHP SSL template
-     if stack.match(php_fpm)
-       managed_template "/data/nginx/servers/#{app.name}.ssl.conf" do
-         owner node['owner_name']
-         group node['owner_name']
-         mode 0644
-         source "fpm-ssl.conf.erb"
-         variables({
-           :application => app,
-           :app_name   => app.name,
-           :http_bind_port => nginx_haproxy_https_port,
-           :server_names =>  app[:vhosts][1][:name].empty? ? [] : [app[:vhosts][1][:name]],
-           :webroot => php_webroot,
-           :env_name => node.engineyard.environment[:name]
-         })
-         notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
-       end
-
-       managed_template "/etc/nginx/servers/#{app.name}/additional_server_blocks.ssl.customer" do
-         owner node['owner_name']
-         group node['owner_name']
-         mode 0644
-         variables({
-           :app_name   => app.name,
-           :server_name => (app.vhosts.first.domain_name.empty? or app.vhosts.first.domain_name == "_") ? "www.domain.com" : app.vhosts.first.domain_name,
-         })
-         source "additional_server_blocks.ssl.customer.erb"
-         not_if { File.exists?("/etc/nginx/servers/#{app.name}/additional_server_blocks.ssl.customer") }
-       end
-       managed_template "/etc/nginx/servers/#{app.name}/additional_location_blocks.ssl.customer" do
-         owner node['owner_name']
-         group node['owner_name']
-         mode 0644
-         source "additional_location_blocks.ssl.customer.erb"
-         not_if { File.exists?("/etc/nginx/servers/#{app.name}/additional_location_blocks.ssl.customer") }
-       end
-     end
- end
-
-  # CC-260: Chef 10 could not handle two managed template blocks using the same
-  # name with different ifs, so since this can be determined during compile
-  # time values, we can use just a regular if statement
-
+    template "/data/nginx/ssl/#{app.name}/#{app.name}.pem" do
+      owner node['owner_name']
+      group node['owner_name']
+      mode 0644
+      source "sslpem.erb"
+      backup 0
+      variables(
+        :crt => app[:vhosts][1][:crt],
+        :chain => app[:vhosts][1][:chain],
+        :key => app[:vhosts][1][:key]
+      )
+    end
+  end
 end
 
 existing_apps = `cd /data/nginx/servers && ls -d */  |rev | cut -c 2- | rev`.split
