@@ -2,6 +2,7 @@
 
 case node['dna']['instance_role']
 when 'app', 'app_master'
+  include_recipe 'ey-stonith'
   include_recipe 'haproxy'
 when 'util'
 when /^db/

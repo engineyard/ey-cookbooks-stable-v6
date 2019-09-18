@@ -19,6 +19,11 @@ chef_gem "ey_services_setup" do
   compile_time false
 end
 
+chef_gem "ey_stonith" do
+  version "0.4.3.pre1"
+  compile_time false
+end
+
 ["eybackup", "eyrestore", "ey-snapshots", "ey-snaplock"].each do |executable|
   link "#{bin_path}/#{executable}" do
     to "#{gem_bin_path}/#{executable}"
