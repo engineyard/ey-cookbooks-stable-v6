@@ -7,7 +7,7 @@ if ["app_master", "app"].include?(node['dna']['instance_role'])
   end
 
   logrotate "ey-stonith" do
-    files "/var/log/stonith.log /var/log/stonith-cron.log"
+    files "/var/log/stonith.log"
     copy_then_truncate true
   end
 end
