@@ -11,7 +11,8 @@ default['fail2ban']['pidfile'] = '/var/run/fail2ban/fail2ban.pid'
 # global config
 # Available versions for v6 are:
 # - 0.10.2-2
-default['fail2ban']['version'] = '0.10.2-2'
+#default['fail2ban']['version'] = '0.10.2-2'
+#removed version specific and gives control to ubuntu package manager
 
 # jail.local
 default['fail2ban']['jails'] = {

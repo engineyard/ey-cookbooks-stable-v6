@@ -10,7 +10,6 @@ ey_cloud_report "Fail2Ban" do
 end
 
 package 'fail2ban' do
-  version node['fail2ban']['version']
   action :install
 end
 
