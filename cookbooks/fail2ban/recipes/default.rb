@@ -17,7 +17,7 @@ template "/etc/fail2ban/fail2ban.conf" do
   owner 'root'
   group 'root'
   mode 0644
-  source "fail2ban.conf-#{node['fail2ban']['version']}.erb"
+  source "fail2ban.conf.erb"
   variables({
     loglevel: node['fail2ban']['loglevel'],
     logtarget: node['fail2ban']['logtarget'],
