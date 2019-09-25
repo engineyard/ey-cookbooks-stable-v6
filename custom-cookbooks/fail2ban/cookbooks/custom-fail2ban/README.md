@@ -50,15 +50,6 @@ If you need email alerting, you need to use the [custom-packages recipe](../../c
 
 All customizations go to `cookbooks/custom-fail2ban/attributes/default.rb`.
 
-### Specify the fail2ban version
-
-```
-default['fail2ban']['version'] = '0.10.2-2'
-```
-
-The available versions under the v6 stack are:
-
-- 0.10.2-2
 
 ### Specify the log level
 
