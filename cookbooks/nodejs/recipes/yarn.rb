@@ -11,5 +11,5 @@ end
 
 package "yarn" do
   action :install
-  options '--no-install-recommends'
+  options '--no-install-recommends --allow-downgrades'
 end
