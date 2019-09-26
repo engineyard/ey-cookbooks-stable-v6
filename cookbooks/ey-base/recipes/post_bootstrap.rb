@@ -1,6 +1,7 @@
 include_recipe "monit"
 include_recipe "collectd"
 include_recipe "nodejs::common"
+include_recipe "nodejs::yarn"
 include_recipe "reboot"
 
 file "/etc/engineyard/recipe-revision.txt" do
