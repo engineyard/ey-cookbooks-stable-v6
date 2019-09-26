@@ -1,5 +1,10 @@
 # ey-init::integrate runs after adding or removing an instance
 
+execute "reload-systemd" do
+  command "systemctl daemon-reload"
+  action :nothing
+end
+
 case node['dna']['instance_role']
 when 'app', 'app_master'
   include_recipe 'ey-stonith'
