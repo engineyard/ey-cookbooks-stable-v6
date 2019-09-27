@@ -57,56 +57,6 @@ default['fail2ban']['jails'] = {
         'maxretry'   => '3'
       }
     },
-#        'apache'  => {
-#     'comment'   => 'apache http',
-#     'options'   => {
-#       'enabled'   => 'false',
-#       'port'      => 'http,https',
-#       'filter'    => 'apache-auth',
-#       'logpath'   => '/var/log/apache*/*error.log',
-#       'maxretry'   => '5'
-#     }
-#        },
-#        'apache-multiport'  => {
-#            'comment'   => '',
-#            'options'   => {
-#       'enabled'   => 'false',
-#       'port'      => 'http,https',
-#       'filter'    => 'apache-auth',
-#       'logpath'   => '/var/log/apache*/*error.log',
-#       'maxretry'   => '5'
-#            }
-#        },
-#   'apache-overflows'  => {
-#     'comment'   => '',
-#     'options'   => {
-#       'enabled'   => 'false',
-#       'port'      => 'http,https',
-#       'filter'    => 'apache-overflows',
-#       'logpath'   => '/var/log/apache*/*error.log',
-#       'maxretry'   => '2'
-#     }
-#   },
-#   'apache-noscript'  => {
-#     'comment'   => '',
-#     'options'   => {
-#       'enabled'   => 'false',
-#       'port'      => 'http,https',
-#       'filter'    => 'apache-noscript',
-#       'logpath'   => '/var/log/apache*/*error.log',
-#       'maxretry'   => '5'
-#     }
-#   },
-#   'apache-w00tw00t'  => {
-#     'comment'   => '',
-#     'options'   => {
-#       'enabled'   => 'false',
-#       'port'      => 'http,https',
-#       'filter'    => 'apache-w00tw00t',
-#       'logpath'   => '/var/log/apache*/*access.log',
-#       'maxretry'   => '1'
-#     }
-#   },
 #        'vsftpd'  => {
 #            'comment'   => 'FTP servers',
 #            'options'   => {
