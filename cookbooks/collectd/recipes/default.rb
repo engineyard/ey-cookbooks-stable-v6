@@ -162,3 +162,14 @@ execute "cleanup_original_collectd_conf" do
   }
   only_if { File.exist?('/etc/collectd/collectd.conf') }
 end
+
+#FB1220 - RRD data is inherited from AMI. This will remove folders other than the one with private hostname as name
+instance = node.dna.engineyard.environment.instances.detect { |i| i['id'] == node.dna.engineyard['this'] }
+private_hostname=instance["private_hostname"]
+
+Dir['/var/lib/collectd/rrd/*'].reject{ |f| f["#{private_hostname}"] }.each do |path|
+  directory path do
+    recursive true
+    action :delete
+  end
+end
