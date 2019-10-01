@@ -106,7 +106,7 @@ function check_replication {
     
     query_db "show slave status\G"
     SLAVE_STATUS="${res}"
-    read SLAVE_IO_RUNNING SLAVE_SQL_RUNNING SECONDS_BEHIND_MASTER <<<$(echo "${SLAVE_STATUS}" | grep -v WARNING | egrep "Slave_IO_Running:|Slave_SQL_Running:|Seconds_Behind_Master:" | awk '{print $2}' 2>&1)
+    read -d '' SLAVE_IO_RUNNING SLAVE_SQL_RUNNING SECONDS_BEHIND_MASTER <<<$(echo "${SLAVE_STATUS}" | grep -v WARNING | egrep "Slave_IO_Running:|Slave_SQL_Running:|Seconds_Behind_Master:" | awk '{print $2}' 2>&1)
     
     if [ "${SLAVE_SQL_RUNNING}" != "Yes" ]
     then
