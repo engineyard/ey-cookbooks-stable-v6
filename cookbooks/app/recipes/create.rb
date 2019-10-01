@@ -65,6 +65,8 @@ end
   # the recipes are monit, nginx, and depending on the stack passenger5, puma, or unicorn
   app.recipes.each do |recipe|
     next if recipe == "memcached"
+    #skipping node::tcp recipe run. This acts as a workaround for nodejs apps till EYPP-11098 is fixed
+    next if recipe == "node::tcp"
     include_recipe recipe
   end
 
