@@ -7,7 +7,7 @@ apps = node['shared_db']['apps']
 parent_app = node['shared_db']['parent_app']
 parent_app_path = "/data/#{parent_app}/shared/config/database.yml"
 
-if apps && parent_app
+if ['solo','app_master','app','util'].include?(node['dna']['instance_role'])
   for app in apps
     file "/data/#{app}/shared/config/keep.database.yml" do
       owner 'root'
