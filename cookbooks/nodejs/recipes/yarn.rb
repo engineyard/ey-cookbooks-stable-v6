@@ -1,6 +1,7 @@
 apt_repository 'yarn' do
   uri 'https://dl.yarnpkg.com/debian/'
-  components ['main', 'stable']
+  distribution 'stable'
+  components ['main']
   key 'https://dl.yarnpkg.com/debian/pubkey.gpg'
   action :add
 end
