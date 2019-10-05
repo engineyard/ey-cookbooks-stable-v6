@@ -95,14 +95,14 @@ cookbook_file '/root/.profile' do
 end
 
 # all roles get these recipes
-include_recipe 'ey-cron'
-include_recipe "ey-env"
+#include_recipe 'ey-cron'
+#include_recipe "ey-env"
 include_recipe "ey-backup::setup"
-include_recipe "framework_env"
+#include_recipe "framework_env"
 include_recipe "sudo"
 include_recipe "ssh_keys"
 include_recipe "prompt"
 include_recipe "efs"
 
 # do not run the ruby recipes when we install Node.js and other languages.
-include_recipe "ruby" if node.engineyard.environment.ruby?
+#include_recipe "ruby" if node.engineyard.environment.ruby?
