@@ -101,7 +101,7 @@ include_recipe "ey-backup::setup"
 #include_recipe "framework_env"
 include_recipe "sudo"
 include_recipe "ssh_keys"
-include_recipe "prompt"
+#include_recipe "prompt"
 include_recipe "efs"
 
 # do not run the ruby recipes when we install Node.js and other languages.
