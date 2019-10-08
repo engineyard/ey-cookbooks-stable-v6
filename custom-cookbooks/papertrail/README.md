@@ -1,4 +1,4 @@
-# Redis
+# Papertrail
 
 This example contains a complete cookbooks/ that you can use on the stable-v6 stack.
 
