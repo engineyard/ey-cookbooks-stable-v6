@@ -1,18 +1,14 @@
 # custom-papertrail
 
-The papertrail Cookbook downloads and setups papertrail in your instances. This
-cookbook shows how to wrap the cookbook to customize it.
+The papertrail cookbook downloads and setups papertrail in your instances. This cookbook shows how to wrap the cookbook to customize it.
 
 ## Installation
 
-For simplicity, we recommend that you create the `cookbooks/` directory at the
-root of your application. If you prefer to keep the infrastructure code separate
-from application code, you can create a new repository.
+For simplicity, we recommend that you create the `cookbooks/` directory at the root of your application. If you prefer to keep the infrastructure code separate from application code, you can create a new repository.
 
-Our main recipes have the `papertrail` Cookbook but it is not included by default.
-To use the `papertrail` cookbook, you should copy this cookbook
-`custom-papertrail`. You should not copy the actual `papertrail` recipe as
-That is managed by Engine Yard.
+Our main recipes have the `papertrail` Cookbook but it is not included by default. To use the `papertrail` cookbook, you should copy this cookbook `custom-papertrail`.
+
+You should not copy the actual `papertrail` recipe as that is managed by Engine Yard.
 
 1. Edit `cookbooks/ey-custom/recipes/after-main.rb` and add
 
@@ -22,7 +18,7 @@ That is managed by Engine Yard.
 
         depends 'custom-papertrail'
 
-3. Copy `custom-cookbooks/sidekiq/cookbooks/custom-papertrail` to `cookbooks/`
+3. Copy `custom-cookbooks/papertrail/cookbooks/custom-papertrail` to `cookbooks/`
 
         cd ~ # Change this to your preferred directory. Anywhere but inside the
              # application
