@@ -12,6 +12,18 @@ gem install ey-core
 
 ## Usage
 
+### Environment Variables Settings
+
+Many features in an Engine Yard Cloud stable-v6 environment can now be enabled
+and configured via [environment variables](https://support.cloud.engineyard.com/hc/en-us/articles/360007661794).
+
+This makes working with the Engine Yard Cloud platform much easier and 
+removes the need for custom Chef recipes in many cases.
+
+More details can be found [here](./EnvironmentVariables.md).
+
+### Custom Chef
+
 1. Create the `cookbooks/` directory at the root of your application. If you prefer to keep the infrastructure code separate from application code, you can create a new repository.
 2. For each custom cookbook that you want to use, do the following:
 	- Create or edit `cookbooks/ey-custom/recipes/after-main.rb` and add the line:
