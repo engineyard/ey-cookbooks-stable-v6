@@ -32,7 +32,7 @@ else
 end
 
 # check if redis-server exists
-run_installer = not File.exist?(redis_bin_path)
+run_installer = !File.exist?(redis_bin_path)
 
 if node['redis']['is_redis_instance']
 
