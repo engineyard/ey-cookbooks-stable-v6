@@ -16,6 +16,15 @@ default['redis'].tap do |redis|
   # redis['version'] = '5.0-rc6'
   # redis['download_url'] = "https://github.com/antirez/redis/archive/#{redis['version']}.tar.gz"
 
+  # If EY_REDIS_VERSION is set, install (from source) that particular version
+  ey_redis_version = fetch_env_var(node, "EY_REDIS_VERSION")
+  if ey_redis_version
+    ey_redis_version.strip!
+    redis['install_from_source'] = true
+    redis['version'] = ey_redis_version
+    redis['download_url'] = "https://github.com/antirez/redis/archive/#{redis['version']}.tar.gz"
+  end
+
   redis['force_upgrade'] = false
 
   redis['port'] = '6379'
@@ -25,8 +34,8 @@ default['redis'].tap do |redis|
   redis_instances = []
 
   # Configure a Redis slave instance
-  #redis['slave_name'] = 'redis_slave'
-  #redis_instances << redis['slave_name']
+  # redis['slave_name'] = 'redis_slave'
+  # redis_instances << redis['slave_name']
 
   # Run Redis on a named util instance
   # This is the default
@@ -39,7 +48,7 @@ default['redis'].tap do |redis|
 
   # Run redis on a solo instance
   # Not recommended for production environments
-#  redis['is_redis_instance'] = (node['dna']['instance_role'] == 'solo')
+  # redis['is_redis_instance'] = (node['dna']['instance_role'] == 'solo')
 
   # Log level options:
   # - debug
