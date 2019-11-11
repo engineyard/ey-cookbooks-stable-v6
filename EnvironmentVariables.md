@@ -11,12 +11,13 @@ If you are missing a setting, please request it by [opening a GitHub issue](http
 
 ## Supported Settings
 
-| Environment Variable            | Default Value | Description                                                                                   |
-| ------------------------------- | ------------- | --------------------------------------------------------------------------------------------- |
-| `EY_RUBY_VERSION`               | N/A           | Sets the exact version of Ruby. (e.g. "2.7.0-preview1")                                       |
-| `EY_ENABLE_UNATTENDED_UPGRADES` | `false`       | Enables periodic security upgrades via Ubuntu's unattended-upgrades.                          |
-| `EY_REDIS_ENABLED`              | `false`       | Sets up Redis. [More details here](./cookbooks/redis/README.md#environment-variables)         |
-| `EY_MEMCACHED_ENABLED`          | `false`       | Sets up Memcached. [More details here](./cookbooks/memcached/README.md#environment-variables) |
+| Environment Variable            | Default Value | Description                                                                                                                                                                                                 |
+| ------------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `EY_RUBY_VERSION`               | N/A           | Sets the exact version of Ruby. (e.g. "2.7.0-preview1")                                                                                                                                                     |
+| `EY_RUBY_JEMALLOC`              | `false`       | Activates Ruby with jemalloc as allocator. Check this [article](https://support.cloud.engineyard.com/hc/en-us/articles/360026434894-Engine-Yard-Cloud-Support-for-Ruby-with-jemalloc) for more information. |
+| `EY_ENABLE_UNATTENDED_UPGRADES` | `false`       | Enables periodic security upgrades via Ubuntu's unattended-upgrades.                                                                                                                                        |
+| `EY_REDIS_ENABLED`              | `false`       | Sets up Redis. [More details here](./cookbooks/redis/README.md#environment-variables)                                                                                                                       |
+| `EY_MEMCACHED_ENABLED`          | `false`       | Sets up Memcached. [More details here](./cookbooks/memcached/README.md#environment-variables)                                                                                                               |
 
 ## Contribution Guidelines
 
