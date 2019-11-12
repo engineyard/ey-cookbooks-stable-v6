@@ -1,0 +1,10 @@
+[Unit]
+Description=Stonith initates a takeover if haproxy on the app master is not responding
+
+[Service]
+Type=simple
+ExecStart=/opt/chef/embedded/bin/stonith-cron
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

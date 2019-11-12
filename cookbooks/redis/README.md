@@ -10,7 +10,13 @@ This cookbook provides a method to host a dedicated redis instance.  This recipe
 
 ## Installation
 
-Since this is an optional recipe, it should be installed by simply including it via a `depends` in your `ey-custom/metadata.rb` file and an `include_recipe` in the appropriate hook file. For more details on optional recipes see the [redis example]. (Yes, how convenient that the example is for the exact recipe you wanted)
+### Environment Variables
+
+When the environment variable `EY_REDIS_ENABLED` is set to "true", this recipe will be enabled and setup up Redis on a utility instance named `redis` by default.
+
+### Custom Chef
+
+Since this is an optional recipe, it can be installed by simply including it via a `depends` in your `ey-custom/metadata.rb` file and an `include_recipe` in the appropriate hook file. For more details on optional recipes see the [redis example]. (Yes, how convenient that the example is for the exact recipe you wanted)
 
 This recipe will only activate on instances with the exact name `redis`.
 
