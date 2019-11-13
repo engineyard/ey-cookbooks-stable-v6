@@ -8,19 +8,19 @@ version = begin
 
 fallback_nodejs_version = case version
                           when 'nodejs_10'
-                            '10.16.0'
+                            '10.17.0'
                           when 'nodejs_9'
                             '9.11.2'
                           when 'nodejs_8'
-                            '8.12.0'
+                            '8.16.2'
                           when 'nodejs_6'
-                            '6.14.4'
+                            '6.17.1'
                           when 'nodejs_5'
                             '5.12.0'
                           when 'nodejs_4'
                             '4.9.1'
                           else
-                            '10.16.0'
+                            '10.17.0'
                           end
 
 default['nodejs']['version'] = node.engineyard.environment.metadata('nodejs_version', fallback_nodejs_version)
