@@ -136,7 +136,8 @@ node.engineyard.apps.each_with_index do |app, index|
         :haproxy_nginx_port => nginx_haproxy_http_port,
         :xlb_nginx_port => nginx_xlb_http_port,
         :upstream_port => app_base_port,
-        :http2 => false
+        :http2 => false,
+        :syslog_enabled => node['nginx']['syslog']
       })
       notifies :restart, resources(:service => "nginx"), :delayed
     end

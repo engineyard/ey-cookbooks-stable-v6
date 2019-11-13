@@ -7,3 +7,4 @@ default['nginx']['systemd_mask'] = if %w(app_master app solo).include?(node['dna
                                      # Mask nginx on non-app instances
                                      true
                                    end
+default['nginx']['syslog'] = false

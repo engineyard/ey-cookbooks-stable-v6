@@ -82,12 +82,18 @@ server {
   #
   # Log files are stored within the /var/log/engineyard/nginx/ directory.
   #
+  <% log_prefix = if @syslog_enabled
+       'syslog:server=unix:'
+       else
+       ''
+       end
+  %>
   <% if @ssl %>
-  access_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.ssl.access.log main;
-  error_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.ssl.error.log notice;
+  access_log <%=log_prefix%>/var/log/engineyard/nginx/<%= @vhost.app.name %>.ssl.access.log main;
+  error_log <%=log_prefix%>/var/log/engineyard/nginx/<%= @vhost.app.name %>.ssl.error.log notice;
   <% else %>
-  access_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.access.log main;
-  error_log /var/log/engineyard/nginx/<%= @vhost.app.name %>.error.log notice;
+  access_log <%=log_prefix%>/var/log/engineyard/nginx/<%= @vhost.app.name %>.access.log main;
+  error_log <%=log_prefix%>/var/log/engineyard/nginx/<%= @vhost.app.name %>.error.log notice;
   <% end %>
 
   # Adding CORS Header to the font files.
