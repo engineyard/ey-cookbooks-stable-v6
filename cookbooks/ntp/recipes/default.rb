@@ -27,7 +27,7 @@ template "/etc/ntp.conf" do
   group 'root'
   mode 0644
   source "ntp.conf.erb"
-  variables({ 
+  variables({
     :servers => servers,
     :driftfile => "/var/lib/ntp/ntp.drift",
   })
@@ -50,6 +50,10 @@ service "ntp" do
   supports :status => true, :restart => true, :start => true, :stop => true
   subscribes :restart, 'package[ntp]'
   subscribes :restart, 'template[/etc/ntp.conf]'
+end
+
+service "ntp" do
+    action :start
 end
 
 # Script to check stale ntp endpoints -- cron for this is in ntp::cronjobs,
