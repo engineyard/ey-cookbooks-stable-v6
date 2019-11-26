@@ -8,3 +8,4 @@ default['nginx']['systemd_mask'] = if %w(app_master app solo).include?(node['dna
                                      true
                                    end
 default['nginx']['syslog'] = false
+default['nginx']['syslog_path'] = 'syslog:server=unix:/var/log/nginx.sock'
