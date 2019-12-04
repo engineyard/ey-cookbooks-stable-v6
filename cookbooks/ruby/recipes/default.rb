@@ -53,7 +53,8 @@ bash "install ruby" do
       echo "Installing Ruby #{ruby}"
       mkdir -p /opt/rubies
       chown -R #{node['owner_name']}:#{node['owner_name']} /opt/rubies
-      DEBIAN_FRONTEND=noninteractive sudo -Eu #{node['owner_name']} ruby-install -r /opt/rubies #{ruby_name} #{ruby_version}
+      DEBIAN_FRONTEND=noninteractive sudo -Eu #{node['owner_name']} \
+        ruby-install --no-install-deps -r /opt/rubies #{ruby_name} #{ruby_version}
     fi
   EOH
 end
