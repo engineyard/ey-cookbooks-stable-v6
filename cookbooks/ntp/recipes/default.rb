@@ -53,7 +53,8 @@ service "ntp" do
 end
 
 service "ntp" do
-    action :start
+    provider Chef::Provider::Service::Systemd
+    action [:start, :enable]
 end
 
 # Script to check stale ntp endpoints -- cron for this is in ntp::cronjobs,
