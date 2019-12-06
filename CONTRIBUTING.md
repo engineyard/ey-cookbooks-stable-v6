@@ -29,6 +29,9 @@ Estimated risk
 Components involved
 -------------
 
+Dependencies
+-------------
+
 Description of testing done
 -------------
 
@@ -38,7 +41,11 @@ QA Instructions
 
 _Notes:_
 For "Estimated risk", specify low, medium or high, and justify your selection.
-"Components involved" should list not the files changed, but the area of work (i.e.: a region specific change, customers on ruby 1.8.7, all node customers, etc)
+"Components involved" should list not the files changed, but the area of work (i.e.: a region specific change, customers on ruby 1.8.7, all node customers, etc).
+"Dependencies" should state if this PR depends on another one, which must be merged first.
+If for example, the PR was created by branching off of another feature branch (not master), 
+then the PR depends on that branch and needs to state that clearly.
+PRs that depend on others will only be considered if the parent PR is ready for review and testing.
 
 ## Steps after submitting your Pull Request
 

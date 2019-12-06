@@ -10,7 +10,7 @@ node.engineyard.apps.each do |app|
       :type => app.app_type,
       :app_type => app.app_type,
       :framework_env => node['dna']['environment']['framework_env'],
-      :ruby_bin_path => "/opt/rubies/ruby-#{node[:ruby][:version]}/bin"
+      :ruby_bin_path => "/opt/rubies/#{node[:ruby][:name]}-#{node[:ruby][:version]}/bin"
     })
     source "env.erb"
   end
