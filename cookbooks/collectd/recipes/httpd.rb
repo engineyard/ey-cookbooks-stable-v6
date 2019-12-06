@@ -57,6 +57,11 @@ cookbook_file "/etc/systemd/system/collectd-httpd.service" do
   notifies :restart, "service[collectd-httpd]", :immediately
 end
 
+service 'fcgiwrap.socket' do
+  provider Chef::Provider::Service::Systemd
+  action :enable
+end
+
 service "collectd-httpd" do
   provider Chef::Provider::Service::Systemd
   action [:start, :enable]
