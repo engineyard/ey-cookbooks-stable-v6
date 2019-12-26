@@ -153,7 +153,7 @@ legacy_fix() {
       then kill -9 $pid 2> /dev/null
       fi
 
-      if [[ -f "${pidfile}" ]] 
+      if [[ -f "${pidfile}" ]]
       then rm "$pidfile"
       fi
 
@@ -163,8 +163,8 @@ legacy_fix() {
 }
 
 if (( UID ))
-then 
-  logger -t $(basename $0) -s "Must be run as root, not as $USER" 
+then
+  logger -t $(basename $0) -s "Must be run as root, not as $USER"
   exit 1
 fi
 
@@ -179,9 +179,18 @@ config_path="${shared_path}/config"
 queue_parameters=()
 extra_options=() # somewhere to store extra env vars set in resque_x.conf files
 
+custom_env="/data/${application}/shared/config/env.custom"
+cloud_env="/data/${application}/shared/config/env.cloud"
+
+# Load the custom env if it exists
+[[ -f "${custom_env}" ]] && source "${custom_env}"
+
+# Load the cloud env if it exists
+[[ -f "${cloud_env}" ]] && source "${cloud_env}"
+
 if (( $# < 4 ))
 then
-  usage 
+  usage
   exit 1
 fi
 
@@ -195,8 +204,8 @@ if [[ -e "${config_path}/${config_file}" ]]
 then
   source "${config_path}/${config_file}"
 
-  # Resque supports both QUEUE and QUEUES variables for specifying queues to 
-  # operate on, for more information please read 
+  # Resque supports both QUEUE and QUEUES variables for specifying queues to
+  # operate on, for more information please read
   # https://github.com/defunkt/resque/#priorities-and-queue-lists
   if [[ -n "${QUEUE}" ]]
   then queue_parameters+=("QUEUE='${QUEUE}'")
