@@ -32,8 +32,7 @@ else
 end
 
 # check if redis-server exists
-if (node['redis']['install_from_source'] && !File.exist?(redis_bin_path)) ||
-    ((node['redis']['install_from_source'] == false) && !File.exist?(redis_bin_path))
+if !File.exist?(redis_bin_path)
   run_installer = true
 end
 

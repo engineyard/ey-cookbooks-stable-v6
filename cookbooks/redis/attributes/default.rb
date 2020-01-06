@@ -25,8 +25,8 @@ default['redis'].tap do |redis|
   redis_instances = []
 
   # Configure a Redis slave instance
-  #redis['slave_name'] = 'redis_slave'
-  #redis_instances << redis['slave_name']
+  # redis['slave_name'] = 'redis_slave'
+  # redis_instances << redis['slave_name']
 
   # Run Redis on a named util instance
   # This is the default
