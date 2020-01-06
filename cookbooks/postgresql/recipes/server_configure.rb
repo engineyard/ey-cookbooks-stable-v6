@@ -285,3 +285,15 @@ ruby_block 'process extensions.json' do
   end
   only_if { ::File.exist?(node[:pg_extensions_file]) }
 end
+
+ruby_block "writing initial lock version file" do
+  block do
+    while running_pg_version.empty?
+      sleep 1
+    end
+    File.open(node['lock_version_file'], "w") do |f|     
+      f.write(running_pg_version)   
+    end
+  end
+  only_if { lock_db_version and not File.exists?(node['lock_version_file']) and pg_running }
+end

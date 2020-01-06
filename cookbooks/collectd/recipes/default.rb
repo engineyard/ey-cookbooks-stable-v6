@@ -23,7 +23,9 @@ template "/engineyard/bin/ey-alert.rb" do
   })
 end
 
-package 'collectd'
+package 'collectd' do
+  notifies :stop, "service[collectd]", :immediately
+end
 
 service 'collectd' do
   provider Chef::Provider::Service::Systemd
@@ -67,6 +69,41 @@ when "no_db"
 end
 
 include_recipe "collectd::perl"
+
+# Handle duplicated RRD data directories
+# 1. If the instance RRD data directory does not exist, but some others,
+#    copy the directory with the latest mtime to the instance RRD data directory
+# 2. Remove all other RRD data directories
+instance = node.dna.engineyard.environment.instances.detect { |i| i['id'] == node.dna.engineyard['this'] }
+private_hostname=instance["private_hostname"]
+rrd_basedir = File.expand_path('/var/lib/collectd/rrd')
+rrd_datadir = File.expand_path(File.join(rrd_basedir, private_hostname))
+existing_rrd_datadirs = Dir[File.join(rrd_basedir, '*')]
+  .map { |f| [f, File.mtime(f)] }
+  .sort_by { |fm| fm[1] }
+  .map { |fm| fm[0] }
+if existing_rrd_datadirs.length == 0
+  latest_rrd_datadir = nil
+else
+  latest_rrd_datadir = File.expand_path(existing_rrd_datadirs[-1])
+end
+if !File.exist?(rrd_datadir) and latest_rrd_datadir
+  # copy the dir with the latest mtime to rrd_datadir
+  bash "copy the latest modified RRD data dir #{latest_rrd_datadir} to the new RRD data dir #{rrd_datadir}" do
+    code <<-EOC
+    cp -a #{latest_rrd_datadir} #{rrd_datadir}
+    EOC
+  end
+end
+# delete everything other than rrd_datadir
+existing_rrd_datadirs.each do |dir|
+  if File.expand_path(dir) != rrd_datadir
+    directory dir do
+      recursive true
+      action :delete
+    end
+  end
+end
 
 memcached = node['memcached'] && node['memcached']['perform_install']
 managed_template "/etc/engineyard/collectd.conf" do
@@ -161,15 +198,4 @@ execute "cleanup_original_collectd_conf" do
     rm /etc/collectd/collectd.conf
   }
   only_if { File.exist?('/etc/collectd/collectd.conf') }
-end
-
-#FB1220 - RRD data is inherited from AMI. This will remove folders other than the one with private hostname as name
-instance = node.dna.engineyard.environment.instances.detect { |i| i['id'] == node.dna.engineyard['this'] }
-private_hostname=instance["private_hostname"]
-
-Dir['/var/lib/collectd/rrd/*'].reject{ |f| f["#{private_hostname}"] }.each do |path|
-  directory path do
-    recursive true
-    action :delete
-  end
 end

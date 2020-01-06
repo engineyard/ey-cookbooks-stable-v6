@@ -17,7 +17,7 @@ if node.engineyard.environment.ruby?
   cron_header = <<-CRON
 # begin-ey-cron-header This is a delimiter. DO NOT DELETE
 
-PATH=/opt/rubies/ruby-#{node['ruby']['version']}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PATH=/opt/rubies/#{node[:ruby][:name]}-#{node[:ruby][:version]}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 RAILS_ENV="#{node.engineyard.environment['framework_env']}"
 RACK_ENV="#{node.engineyard.environment['framework_env']}"
 # end-ey-cron-header This is a delimiter. DO NOT DELETE
