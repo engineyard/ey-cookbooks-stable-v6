@@ -48,6 +48,15 @@ cookbook_file "/etc/systemd/system/fcgiwrap.service.d/override.conf" do
   notifies :restart, "service[fcgiwrap]", :delayed
 end
 
+cookbook_file "/etc/systemd/system/collectd-httpd.service" do
+  source 'collectd-httpd.service'
+  owner 'root'
+  group 'root'
+  mode 0644
+  notifies :run, "execute[reload-systemd]", :immediately
+  notifies :restart, "service[collectd-httpd]", :immediately
+end
+
 service 'fcgiwrap.socket' do
   provider Chef::Provider::Service::Systemd
   action :enable
@@ -55,17 +64,7 @@ end
 
 service "collectd-httpd" do
   provider Chef::Provider::Service::Systemd
-  action :nothing
-end
-
-cookbook_file "/etc/systemd/system/collectd-httpd.service" do
-  source 'collectd-httpd.service'
-  owner 'root'
-  group 'root'
-  mode 0644
-  notifies :run, "execute[reload-systemd]", :immediately
-  notifies :enable, "service[collectd-httpd]", :immediately
-  notifies :start, "service[collectd-httpd]", :immediately
+  action [:start, :enable]
 end
 
 package "apache2-utils"
