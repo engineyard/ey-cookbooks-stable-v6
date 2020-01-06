@@ -14,6 +14,10 @@ This cookbook provides a method to host a dedicated redis instance.  This recipe
 
 When the environment variable `EY_REDIS_ENABLED` is set to "true", this recipe will be enabled and setup up Redis on a utility instance named `redis` by default.
 
+To install a version of Redis other than the default on Ubuntu 18.04 (4.0.9),
+the environment variable `EY_REDIS_VERSION` allows setting a custom version
+(available from [https://github.com/antirez/redis/releases](https://github.com/antirez/redis/releases)).
+
 ### Custom Chef
 
 Since this is an optional recipe, it can be installed by simply including it via a `depends` in your `ey-custom/metadata.rb` file and an `include_recipe` in the appropriate hook file. For more details on optional recipes see the [redis example]. (Yes, how convenient that the example is for the exact recipe you wanted)
