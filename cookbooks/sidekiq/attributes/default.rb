@@ -9,35 +9,52 @@ default['sidekiq'].tap do |sidekiq|
   # unless a utility name is set, in which case, Sidekiq will
   # only be installed on to a utility instance that matches
   # the name
-  sidekiq['is_sidekiq_instance'] = true
+  role_pattern = fetch_env_var(node, 'EY_SIDEKIQ_INSTANCES_ROLE')
+  does_role_match = true
+  if role_pattern
+    role_pattern = Regexp.new(role_pattern)
+    does_role_match = ! role_pattern.match(node['dna']['instance_role']).nil?
+  end
+  name_pattern = fetch_env_var(node, 'EY_SIDEKIQ_INSTANCES_NAME')
+  does_name_match = true
+  if name_pattern
+    name_pattern = Regexp.new(name_pattern)
+    does_name_match = ! name_pattern.match(node['dna']['name']).nil?
+  end
+  sidekiq['is_sidekiq_instance'] = (does_role_match && does_name_match)
 
   # Number of workers (not threads)
-  sidekiq['workers'] = 1
+  sidekiq['workers'] = fetch_env_var(node, 'EY_SIDEKIQ_NUM_WORKERS', 1).to_i
 
   # Concurrency
-  sidekiq['concurrency'] = 25
+  sidekiq['concurrency'] = fetch_env_var(node, 'EY_SIDEKIQ_CONCURRENCY', 25).to_i
 
   # Queues
   sidekiq['queues'] = {
     # :queue_name => priority
     :default => 1
   }
+  fetch_env_var_patterns(node, /^EY_SIDEKIQ_QUEUE_PRIORITY_([a-zA-Z0-9_]+)$/).each do |queue_var|
+    queue_name = queue_var[:match][1].to_sym
+    queue_priority = queue_var[:value].to_i
+    sidekiq['queues'][queue_name] = queue_priority
+  end
 
   # Memory limit
-  sidekiq['worker_memory'] = 400 # MB
+  sidekiq['worker_memory'] = fetch_env_var(node, 'EY_SIDEKIQ_WORKER_MEMORY_MB', 400).to_i # MB
 
   # Verbose
-  sidekiq['verbose'] = false
+  sidekiq['verbose'] = fetch_env_var(node, 'EY_SIDEKIQ_VERBOSE', false).to_s == "true"
 
   # Setting this to true installs a cron job that
   # regularly terminates sidekiq workers that aren't being monitored by monit,
   # and terminates those workers
   #
   # default: false
-  sidekiq['orphan_monitor_enabled'] = false
+  sidekiq['orphan_monitor_enabled'] = fetch_env_var(node, 'EY_SIDEKIQ_ORPHAN_MONITORING_ENABLED', false).to_s == "true"
 
   # sidekiq_orphan_monitor cron schedule
   #
   # default: every 5 minutes
-  sidekiq['orphan_monitor_cron_schedule'] = "*/5 * * * *"
+  sidekiq['orphan_monitor_cron_schedule'] = fetch_env_var(node, 'EY_SIDEKIQ_ORPHAN_MONITORING_SCHEDULE', "*/5 * * * *")
 end

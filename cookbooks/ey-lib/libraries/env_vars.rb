@@ -46,7 +46,7 @@ module EnvVars
           end
         end
       end
-      matchin_vars.values
+      matching_vars.values
     end
 
     # Escapes the value of variable to be correctly enclosed in double quotes. Enclosing characters
