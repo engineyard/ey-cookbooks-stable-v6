@@ -11,7 +11,7 @@ module EnvVars
       end
     end
 
-    def fetch_env_var(node, name)
+    def fetch_env_var(node, name, default = nil)
       apps = node['dna']['engineyard']['environment']['apps']
       arr = []
       apps.each do |app_data|
@@ -20,10 +20,33 @@ module EnvVars
       end
       arr.flatten!
       if arr.empty?
-        nil
+        default
       else
         arr.first[:value]
       end
+    end
+
+    def fetch_env_var_patterns(node, pattern)
+      # return a unique (by env var name) list of matching env vars of the form:
+      #   { :name, :match, :value }
+      if not pattern.is_a? Regexp
+        pattern = Regexp.new pattern
+      end
+      apps = node['dna']['engineyard']['environment']['apps']
+      matching_vars = {}
+      apps.each do |app_data|
+        fetch_environment_variables(app_data).each do |env_var|
+          name_match = pattern.match(env_var[:name])
+          if name_match
+            matching_vars[env_var[:name]] = {
+              :name => env_var[:name],
+              :match => name_match,
+              :value => env_var[:value]
+            }
+          end
+        end
+      end
+      matchin_vars.values
     end
 
     # Escapes the value of variable to be correctly enclosed in double quotes. Enclosing characters
