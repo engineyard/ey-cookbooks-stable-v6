@@ -1,0 +1,5 @@
+#!/bin/bash
+# This hook script is invoked during the `after_restart` phase of a deployment.
+# It restarts the sidekiq workers on this instance.
+
+sudo monit -g <%= @sidekiq_group %> restart all

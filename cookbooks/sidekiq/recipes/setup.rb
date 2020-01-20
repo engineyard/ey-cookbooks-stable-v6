@@ -38,6 +38,23 @@ if node['sidekiq']['is_sidekiq_instance']
       notifies :run, "execute[restart-sidekiq-for-#{app_name}]"
     end
 
+    directory "/data/#{app_name}/shared/hooks/sidekiq" do
+      owner node["owner_name"]
+      group node["owner_name"]
+      mode 0755
+      recursive true
+    end
+
+    # after_restart hook
+    template "/data/#{app_name}/shared/hooks/sidekiq/after_restart" do
+      mode 0755
+      source "after_restart.erb"
+      backup false
+      variables({
+        :sidekiq_group => "#{app_name}_sidekiq"
+      })
+    end
+
     # database.yml
     execute "update-database-yml-pg-pool-for-#{app_name}" do
       db_yaml_file = "/data/#{app_name}/shared/config/database.yml"
