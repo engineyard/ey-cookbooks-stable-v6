@@ -17,8 +17,9 @@ If you are missing a setting, please request it by [opening a GitHub issue](http
 | `EY_RUBY_JEMALLOC`              | `false`       | Activates Ruby with jemalloc as allocator. Check this [article](https://support.cloud.engineyard.com/hc/en-us/articles/360026434894-Engine-Yard-Cloud-Support-for-Ruby-with-jemalloc) for more information. |
 | `EY_ENABLE_UNATTENDED_UPGRADES` | `false`       | Enables periodic security upgrades via Ubuntu's unattended-upgrades.                                                                                                                                        |
 | `EY_REDIS_ENABLED`              | `false`       | Sets up Redis. [More details here](./cookbooks/redis/README.md#environment-variables)                                                                                                                       |
-| `EY_REDIS_VERSION`              | N/A           | Sets a custom version for Redis. [More details here](./cookbooks/redis/README.md#environment-variables) |
+| `EY_REDIS_VERSION`              | N/A           | Sets a custom version for Redis. [More details here](./cookbooks/redis/README.md#environment-variables)                                                                                                     |
 | `EY_MEMCACHED_ENABLED`          | `false`       | Sets up Memcached. [More details here](./cookbooks/memcached/README.md#environment-variables)                                                                                                               |
+| `EY_SIDEKIQ_*`                  | N/A           | Sets up Sidekiq. [More details here](./cookbooks/sidekiq/readme.md#environment-variables)                                                                                                                   |
 
 ## Contribution Guidelines
 
