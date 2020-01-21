@@ -33,3 +33,9 @@ We accept contributions for changes that can be used by all customers.
 **: The name of this environment variable is dynamic and contains 
     the name of the queue (`<queue_name>`) at the end.
     The value is the numeric priority for that queue.
+
+### Restart after Deployments
+
+If Sidekiq is configured via environment variables, as documented above,
+a hook is automatically created which restarts the Sidekiq workers automatically
+after each deployment.
