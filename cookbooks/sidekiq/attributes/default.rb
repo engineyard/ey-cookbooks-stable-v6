@@ -23,6 +23,12 @@ default['sidekiq'].tap do |sidekiq|
   end
   sidekiq['is_sidekiq_instance'] = (does_role_match && does_name_match)
 
+  # We create an on-instance `after_restart` hook only 
+  # when the recipe was enabled via environment variables.
+  # Otherwise the behaviour for custom-cookbooks would change
+  # which is undesirable.
+  sidekiq['create_restart_hook'] = (fetch_env_var(node, 'EY_SIDEKIQ_ENABLED', 'false') =~ /^TRUE$/i)
+
   # Number of workers (not threads)
   sidekiq['workers'] = fetch_env_var(node, 'EY_SIDEKIQ_NUM_WORKERS', 1).to_i
 
