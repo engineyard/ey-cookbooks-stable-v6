@@ -38,25 +38,6 @@ if node['sidekiq']['is_sidekiq_instance']
       notifies :run, "execute[restart-sidekiq-for-#{app_name}]"
     end
 
-    if node['sidekiq']['create_restart_hook']
-      directory "/data/#{app_name}/shared/hooks/sidekiq" do
-        owner node["owner_name"]
-        group node["owner_name"]
-        mode 0755
-        recursive true
-      end
-
-      # after_restart hook
-      template "/data/#{app_name}/shared/hooks/sidekiq/after_restart" do
-        mode 0755
-        source "after_restart.erb"
-        backup false
-        variables({
-          :sidekiq_group => "#{app_name}_sidekiq"
-        })
-      end
-    end
-
     # database.yml
     execute "update-database-yml-pg-pool-for-#{app_name}" do
       db_yaml_file = "/data/#{app_name}/shared/config/database.yml"
@@ -109,6 +90,29 @@ if node['sidekiq']['is_sidekiq_instance']
         weekday node[:sidekiq][:orphan_monitor_cron_schedule].split[4]
         command "/engineyard/bin/sidekiq_orphan_monitor #{app_name}"
       end
+    end
+  end
+end
+
+if node['sidekiq']['create_restart_hook']
+  # loop through applications
+  node['dna']['applications'].each do |app_name, _|
+    directory "/data/#{app_name}/shared/hooks/sidekiq" do
+      owner node["owner_name"]
+      group node["owner_name"]
+      mode 0755
+      recursive true
+    end
+
+    # after_restart hook
+    template "/data/#{app_name}/shared/hooks/sidekiq/after_restart" do
+      mode 0755
+      source "after_restart.erb"
+      backup false
+      variables({
+        :sidekiq_group       => "#{app_name}_sidekiq",
+        :is_sidekiq_instance => node['sidekiq']['is_sidekiq_instance']
+      })
     end
   end
 end
