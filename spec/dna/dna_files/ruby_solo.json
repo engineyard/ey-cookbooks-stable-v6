@@ -1,0 +1,242 @@
+{
+  "run_list": [
+    "recipe[ey-init::main]"
+  ],
+  "dna": {
+    "alert_email": "alerter@engineyard.com",
+    "aws_secret_key": "U***Z",
+    "aws_secret_id": "AKIA***Q",
+    "backup_interval": 24,
+    "backup_window": 10,
+    "admin_ssh_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCdyhzvoQGxERy6qJeyH+kKgTHqROaztF8/gMDg1MayzEWTpcsWGBPcMFdlJXm2Oy/J690F8KRfvUkVHg/26NnkVBpDz8kuOPIGmYmgb82Mz3VoOSP0ipGaZCY/y/XC2ZixKaHDwK/pQQNAeSnIjeZIgMyd6bD571uS3dcOg2C9+D5M2wH9puLL7aWunOmYmFX6T6Xaju8vofI/lo/qHIlm+3H+Us969LM8W9j/EulmLT41YeFnCbf+EJTSaiC24WgMoZGSApph6XvfDRhx3HJ5qyabYwZ8QXn81v5dAHmXk9urk+AAQ7nU2p5wO9Wjlhm/4v7MgJadIUEWUpZwz/4wzufw8/nVz8tnP8DWTh/KDO0+mAQW+ssWA9DRhW9ZJtKtt7j4BI/S3WKi6X3/1EE1yp8qRozII3RrS+X8SUIbSHW2GTTSm5KarR4jEmwwOXNp5cJ4Z8cxqAEe65tQYsRWW6CBCezXisyCLsu72MkKBgN5e4DuTLjfxPEE5+M3lLAycBX12R4ngmW0l+o/iL6g+Lii/u1D+s1kfkoVwOgHAn3aEqSCg0AuESQcCdKS3uiT13Xr0Cul4WLi2j0/pzcN1NfULRaFz3bI4TfR9wjfTZMadS0XnrEcbn8on7yt9azWvxNSK== ey_platform_key",
+    "mailserver": "smtp.engineyard.com",
+    "internal_ssh_public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCi/YlCcZwqYdycv2MTlayzA4Et6YlptqS7O/hZrNsSOz6ouILF4hM+CklKnbrREEzrqHtcgWI+NJbjKOTVagxWWyboYLr93qVYpdLxEiajcTMNIMlQJg5xA/2MFxKnr83DmFTEH3Z92eHEjYkA5k1EOQ1sWU2DQejXrr18clA1v2I3y2q409sItRLIHIJAV0qCmkAchPkOL71BFUJsyvNPTFerRxe8MfPgfqqJaNE6fO/z+ez1xwXuS+xmbcbjX6TXkddlMBZFNki1gpO1fjzwVucB9Vk/vXlAEsG+NSX+AEpnqMZ7iU1evwHVChAGwQgcOsvv2rabxUoGQs28HXLZ ey_environment_internal_key",
+    "internal_ssh_private_key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAov2JQnGcKmHcnL9jE5WsswOBLemJabakuzv4WazbEjs+qLiC\nxeITPgpJSp260RBM66h7XIFiPjSW4yjk1WoMVlsm6GC6/d6lWKXS8RImo3EzDSDJ\nUCYOcQP9jBcSp6/Nw5hUxB92fdnhxI2JAOZNRDkNbFlNg0Ho1669fHJQNb9iN8tq\nuNPbCLUSyByCQFdKgppAHIT5Di+9QRVCbMrzT0xXq0cXvDHz4H6qiWjROnzv8/ns\n9ccF7kvsZm3G41+k15HXZTAWRTZItYKTtX488FbnAfVZP715QBLBvjUl/gBKZ6jG\ne4lNXr8B1QoQBsEIHDrL79q2m8VKBkLNvB1y2QIDAQABAoIBAEKbVaJfhzASufMc\ni0KPofmt7vZyP4OB7iPNyBntd8ElkN+mN1rinnZ2AamKd7PD84tCWNde0GUXXKoM\nJifIpK4NpgLEtOXWPL/TVDbL8hpMwk4VHe+w/anVtaGwNCFuyKmr8MgNC4E2rvqB\nBeh6dR6yTOhALE0kSpxzs/vQCQ845u7n9I/99+yaM1BwXTVvnMWXuuVPlNxGjY3s\ncMl3DSlBKrSRsrFY8iajNlUd2E96rmKW4duVnq773WCAsSr715T3EA86Yur1P6Uf\n7uJAlzkCgYEA0bCWtbDUJWVOKUI/5R3OSBLeNyKiWzwnD8Y67dWKMBpPl0SCDqEh\nu/ava9Yaz2+iETs+x+hECXuT5w90fvjB44EiJvVmlALWUnkek7bOUD+WTh/mHhYF\nDyQZhbsbLMc7ryVBYC26/2856+jno04lI9Foqa66m/AHZNwnrQ5LvOsCgYEAxvyp\niLf3jybKlwEQddIlBrlLh9eo2bERFTTAz8JIVjosc/v4UnJAdCn7vvGqTA0Yyh1u\nvObya/kcxRl1EaTx43g7HKZczl3fBGW0BK300UEQ2iIKktMy52h8tsysOfiDNRp5\njoqam9BVk13hwQMx8CzvLq2JE3NmxZQ/1TO4zksCgYEAv8nKLqhrgUClOqtzkXWv\nhNBtGvS8lsHv4EepAnt7hv+pqGtqoULTff3k+La9ktlB3IzZoTJZeGrlHkNOhAu2\nGwWzXPq7NclaidhqFSTwkwl1ykL20LHHMtAL3/sAofYgKtPidbud+5+Z1KITq5P/\n+EDCf+BmodXqjV+nkmsu7r0CgYAjXcTEB+54Auz+6bGDP1ZVW5mRC0N3bYEbw8SB\nKIayzKQZ+S6peKT8AHo99bXOzoUZZyHHcUSk7CGw5lVoTWiwhS38aZUVGJoKrgjQ\nzBo3Ftln66T1c5QYjPmdg8MYipLHXW09aGUSTHTpPEZjh63YgiQAp9c1Hc2mUDMI\nMaknAQKBgQCRPfHncflA7jPOGi5cCGtKTpO2opd3xeJidw3eOJgS1RwiRQ/iD4q4\ncT59hgbgc9iLkAxGCqDgM9nuhCOgmNz9OI6OwTyusyllb1PJqjsmbR0eP0Igyck0\nXkREGZudxHHvOVhjTbHAWCA57D0Ufx07AKK2e+N93G4kQf4OvKirhg==\n-----END RSA PRIVATE KEY-----\n",
+    "ruby_version": "Ruby 2.6",
+    "db_host": "ec2-18-213-220-47.compute-1.amazonaws.com",
+    "db_slaves": [],
+    "user_ssh_key": [
+      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCrzbLs3ZMbC+MXzxqoMTITtycW1MqJ7wcOHBrkP6K0i5WGCL2A/VsKZ5KB2Ixwu0DV6q8MombJRI2ZFkZLHXX96Y5V3wgxcp9W3yO3flfUuXGIxQ3CkWADIsstlGRXZbjy+0o20pEjkQYR0tueOPOwNsjiulrm2QrQxI3JN6HT7VUP0Y+3C4O4rjfWOQyaKJlZQFOj3chh5OUGQCXitkCo06KFvpk/PHDwOnGJ5aCW2GGyb5I2jKW6PxlWOZC+fRgUvruzJsXe3Dfasdfasdf utest@engineyard"
+    ],
+    "utility_instances": [],
+    "environment": {
+      "name": "unit_test_ruby_solo",
+      "framework_env": "production",
+      "stack": "nginx_unicorn"
+    },
+    "haproxy": {
+      "username": "deploy",
+      "password": "asdfasf123"
+    },
+    "users": [
+      {
+        "username": "deploy",
+        "password": "asdfadsf123",
+        "gid": "1000",
+        "uid": "1000",
+        "comment": ""
+      }
+    ],
+    "packages_to_install": [],
+    "gems_to_install": [],
+    "applications": {
+      "jf_todo": {
+        "deploy_key": "-----BEGIN RSA PRIVATE KEY-----\neh+rYG8ixLF6EQzq40QgDRIQEcMQHWF6DCKa5dz5pE1Ei6KLAFqnkvaBMSyGNb+Q\nvJk4/crrr6kk5AYKG0BLH9rzjaCAGEuz2Kg3Eh8ROtFT+97eXt8ZK+2dbECaEe9A\n7OchyBYUmCPm2ZYMqajftZvnrt3nzBG9jE3pENoVP0AkBGQ7qcYCTY/VvscUzPNM\n8+tlMrvgbzWRUv8pnVJub+zKTMJGBylBIdGxprtyehXDtABYN5Xu9OnEf72q8H4A\nKcYVSUmKvi0/b8oUB7Ztn3nt9FKrGnss+n8JJwIDAQABAoIBAGnV7iDn/J1nMRMo\nbYbUuYHi8JMV3PF/HVl8lRnCY5dc6aLMz9cAJX1wkpd2Gm5o6hIvmyrTVv+ddblv\nQRK/BewHoF5LWYUAHIqbzRolhTl8B0emm/itYyLp/r2Xe9JM/BGeNkkchnCZ4aGJ\n4XAZ3b0XwJkOtR4GeiqJZba9C0Jwf/N6zRx+UGljcH9Nl6ZUztlOupTyrMYFlIlI\nYOy22fdRQSahW8zJrt3MNzGjWvhcaqzMZOYmXABo3gGLVuaAGQw0uc3Cnu/4tmmy\nRPAIz1ingY6lXnWAEu3BMSyU1jhs7AzadeLdcQf4Rc98v8W5ZZi/5wuhAKq2wMX2\nw76FIPECgYEA9ZsaNKMp959LpgQD2O+kbxHNf1clpCViLET8ks+7d7QjChBswrMm\nRzU63j6q+KqeVPCknhO/zTAj+2CLGYdnqo/5/L8qutQDcfX163c1b2fiugt1wQnN\n9hN3QrQUB84pwA7E90oEvOWKQMUYvL0XkkUstBm/0eDsK7a32FAoF3UCgYEA18yA\nSSoP9ZLuFliZOS3+eX6g4/h0sRvELvN5xWtgfm10mzkTlFCDLDnF/KFIUYzV+Hk8\npuDwqaP01z0VmJfWR+zbM9piggLAJ7Dadghm7U76gkD/yzKHiP2u16xNdJST7d0S\nrVnuF/4y/ugFN97XCaMTJeU2dmYF3oTSrT/MJqsCgYAK4Rb1E/Es9dJtBSqCdoML\nJHe810hkj/9cRKYHfsooEEOpE3ct3K+qYdI8u/voze37hzlTgz5wwVwmq20d8WCH\nLp99MZ6b7f5FEwcUqhAk4i4p3Y4Wwe9sogobW0yz188DoePZrF6vW1+XZOOmoJ2l\nrgi/5ZAYpOTxPsPAAjT0bQKBgQCsDQy+yH1e4p1WTZ8kGoqIHTBzcZS/3A5nDJGq\nl7igM+5DD5ePqT1b1lgG2iPJeQrjhu2Xc0INTn4X2UjNl0ktoScHSXc+hqjjPDqA\n3qQJUe2iSeZnAEtVKkTrCSHb79WdUKPieA+/K1lHKH94kv9JXK4YiY4Jib/mMGmz\n3WiL7wKBgFcu1Bty6z33Qq4QnGbPhtLTltwImnLBmt6w8/GjZrmUjM12tQ07c/W5\npzJuHxAUIHMW29C5LY1p4FG8xfErD0348IEDVIMDVpJFpST6eB8/Qd1C1iZiRcH1\nyOIVQMHC2MYQV4jNKJSupPXfIxSEHs7Wh67yPWOfQiPWwp4BAeMd\n-----END RSA PRIVATE KEY-----\n",
+        "repository_name": "git://github.com/engineyard/todo.git",
+        "type": "rack",
+        "branch": "HEAD",
+        "deploy_action": "deploy",
+        "migration_command": "rake db:migrate --trace",
+        "revision": "",
+        "run_deploy": false,
+        "run_migrations": true,
+        "newrelic": false,
+        "vhosts": [
+          {
+            "role": "unit_test_ruby_solo",
+            "name": "_"
+          }
+        ],
+        "recipes": [
+          "memcached",
+          "monit",
+          "nginx",
+          "unicorn"
+        ],
+        "http_bind_port": 80,
+        "https_bind_port": 443,
+        "auth": {
+          "active": false
+        },
+        "services": [
+          {
+            "resource": "mongrel",
+            "mongrel_base_port": 5000,
+            "mongrel_mem_limit": 150,
+            "mongrel_instance_count": 3
+          },
+          {
+            "resource": "memcached",
+            "base_port": 11211,
+            "mem_limit": 128
+          }
+        ]
+      }
+    },
+    "crons": [],
+    "engineyard": {
+      "environment": {
+        "alert_email": "alerter@engineyard.com",
+        "aws_secret_key": "U***Z",
+        "aws_secret_id": "AKIA***Q",
+        "backup_interval": 24,
+        "backup_window": 10,
+        "admin_ssh_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCdyhzvoQGxEJmAsVpi2NGWuQ== ey_platform_key",
+        "mailserver": "smtp.engineyard.com",
+        "stonith_endpoint": "https://cloud.engineyard.com/stonith",
+        "internal_ssh_public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCi/YlCcZwqYdycv2MTlayzA4Et6YlptqS7O/hZrNsSOz6ouILF4hM+CklKnbrREEzrqHtcgWI+NJbjKOTVagxWWyboYLr93qVYpdLxEiajcTMNIMlQJg5xA/2MFxKnr83DmFTEH3Z92eHEjYkA5k1EOQ1sWU2DQejXrr18clA1v2I3y2q409sItRLIHIJAV0qCmkAchPkOL71BFUJsyvNPTFerRxe8MfPgfqqJaNE6fO/z+ez1xwXuS+xmbcbjX6TXkddlMBZFNki1gpO1fjzwVucB9Vk/vXlAEsG+NSX+AEpnqMZ7iU1evwHVChAGwQgcOsvv2rabxUoGQs28HXLZ ey_environment_internal_key",
+        "internal_ssh_private_key": "-----BEGIN RSA PRIVATE KEY-----\nuNPbCLUSyByCQFdKgppAHIT5Di+9QRVCbMrzT0xXq0cXvDHz4H6qiWjROnzv8/ns\n9ccF7kvsZm3G41+k15HXZTAWRTZItYKTtX488FbnAfVZP715QBLBvjUl/gBKZ6jG\ne4lNXr8B1QoQBsEIHDrL79q2m8VKBkLNvB1y2QIDAQABAoIBAEKbVaJfhzASufMc\ni0KPofmt7vZyP4OB7iPNyBntd8ElkN+mN1rinnZ2AamKd7PD84tCWNde0GUXXKoM\nJifIpK4NpgLEtOXWPL/TVDbL8hpMwk4VHe+w/anVtaGwNCFuyKmr8MgNC4E2rvqB\n1IEXnG/K2N90RybiomKxuCHJHVo46snBQiSakA/QWjCGtXI2ycCujTcNYEcQp5vO\nBeh6dR6yTOhALE0kSpxzs/vQCQ845u7n9I/99+yaM1BwXTVvnMWXuuVPlNxGjY3s\ncMl3DSlBKrSRsrFY8iajNlUd2E96rmKW4duVnq773WCAsSr715T3EA86Yur1P6Uf\n7uJAlzkCgYEA0bCWtbDUJWVOKUI/5R3OSBLeNyKiWzwnD8Y67dWKMBpPl0SCDqEh\nu/ava9Yaz2+iETs+x+hECXuT5w90fvjB44EiJvVmlALWUnkek7bOUD+WTh/mHhYF\nDyQZhbsbLMc7ryVBYC26/2856+jno04lI9Foqa66m/AHZNwnrQ5LvOsCgYEAxvyp\niLf3jybKlwEQddIlBrlLh9eo2bERFTTAz8JIVjosc/v4UnJAdCn7vvGqTA0Yyh1u\nvObya/kcxRl1EaTx43g7HKZczl3fBGW0BK300UEQ2iIKktMy52h8tsysOfiDNRp5\njoqam9BVk13hwQMx8CzvLq2JE3NmxZQ/1TO4zksCgYEAv8nKLqhrgUClOqtzkXWv\nhNBtGvS8lsHv4EepAnt7hv+pqGtqoULTff3k+La9ktlB3IzZoTJZeGrlHkNOhAu2\nGwWzXPq7NclaidhqFSTwkwl1ykL20LHHMtAL3/sAofYgKtPidbud+5+Z1KITq5P/\n+EDCf+BmodXqjV+nkmsu7r0CgYAjXcTEB+54Auz+6bGDP1ZVW5mRC0N3bYEbw8SB\nKIayzKQZ+S6peKT8AHo99bXOzoUZZyHHcUSk7CGw5lVoTWiwhS38aZUVGJoKrgjQ\nzBo3Ftln66T1c5QYjPmdg8MYipLHXW09aGUSTHTpPEZjh63YgiQAp9c1Hc2mUDMI\nMaknAQKBgQCRPfHncflA7jPOGi5cCGtKTpO2opd3xeJidw3eOJgS1RwiRQ/iD4q4\ncT59hgbgc9iLkAxGCqDgM9nuhCOgmNz9OI6OwTyusyllb1PJqjsmbR0eP0Igyck0\nXkREGZudxHHvOVhjTbHAWCA57D0Ufx07AKK2e+N93G4kQf4OvKirhg==\n-----END RSA PRIVATE KEY-----\n",
+        "newrelic_key": null,
+        "ruby_version": null,
+        "timezone": "",
+        "stack_name": "nginx_unicorn",
+        "name": "unit_test_ruby_solo",
+        "framework_env": "production",
+        "stats_password": "asdfasdf123",
+        "ssh_username": "deploy",
+        "ssh_password": "asdfasdf123",
+        "db_admin_username": "postgres",
+        "db_admin_password": "asdfasdf123",
+        "db_cluster_endpoint": null,
+        "db_reader_endpoint": null,
+        "ssh_keys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABasdfasdf utest@engineyard"
+        ],
+        "db_stack_name": "postgres11",
+        "db_provider_name": "engine_yard",
+        "monitoring": "monit",
+        "region": "us-east-1",
+        "backup_bucket": "ey-backup-10f3c91d2bde",
+        "components": [
+          {
+            "key": "ruby_260"
+          },
+          {
+            "key": "rubygems",
+            "version": null
+          },
+          {
+            "key": "lock_db_version",
+            "value": true
+          },
+          {
+            "key": "ext4",
+            "value": true
+          },
+          {
+            "snapshot_minute": "28",
+            "snapshot_hour": "9",
+            "backup_minute": "48",
+            "backup_hour": "9",
+            "key": "snapshot_intervals"
+          },
+          {
+            "key": "environment_metadata",
+            "appfirst": "false",
+            "eydr_private_key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAxPKT1B/yOzg4F0V3Zo14JSu6OFgQq/NEY6QhUZnaCEVfPe2r\nFxSY1kG9O0fiKg+NVrjv8Xf76D7Jagm85+AuzrRzsESs8Xxun2+kZUPVUL7eDn57\nBoDDX21z3b5dT78eOfTwhvui1z2YNlWsk0bRfQIDAQABAoIBAQC+tLX4ncaNGW8W\n+akYoLxKIgF8NapPFoyOf4vT3EqH38TNzqoTgeOWkvJIdo2ry39RAIRKc6ktPecA\nfURs4glKOB28VsVfU7OVb4mh1rNo+fqt/lIcy9T0ullKHw4xv1Myh5gk/xdZ90A3\nMRXUTu49UYeKHsBrgHr0e/CXy3x7ccjv3Hhq0MaOBZT+DMLqqpLzsd8wxy6ZR3om\nYAvNZMqiM7jktIMvT6U/7ayQ5flSbQoxd1S+xlyvFpKVQr22V0H98CRis8vhOeaP\nYhRk6Hyu2D2vt2VmY8eo225NdoGE0XpkShrZZgFr+rK0bYP1/ixQa0ikEdpUrueu\nHvllS12BAoGBAP14jyoJNshVB6kuCRvwAaRL3qEbLf4G/shpA90iqbOXw5MAgb7k\nigAhDSMX4ZespBYGjAS8AL6s8nNOs9OILjN3QxJrsYBVxICeNQeHTEdlMavI+3FM\nGMWJazMiSg1UukpqNnSkTD5HJW84wSYajptnyK/sbVZfQHUEMOx7Ih2FAoGBAMbp\no/4O72+PSGnilhCFXBL39mxZEUqkgNQZdFIOMpBWRTGNVEc/eykfhFc+BOP2Trsr\n96BpaPj5vkx5bOo9r+BUoex8RTjDr4z3XReWAEB0QPm7aFKmJJeXg3xX8w54SVHl\nWz8ezQ9G3auLUMyhZ/INmpprjq0hUQtDBwNt64mZAoGADVfdYX8erSkcwCE2RYw6\n6eU8kQqXPzorC23L0EZU3KlumDx8mAn74cnboS9Opudls+sgT9d9yovcL4nDGa2f\nkQIEO+IDdBgPwh2R+RV8RH3lQX/RDMPOwgdb51M0xsLhE63HtBg6E0U3iUVZlaHs\nQ+4QuIIft15ITGCuGqTYxOkCgYEAsYYv4DyAIPal0Cpzd8ctx5gaC9TqA84RVDpr\ngBg/tGXqVzElOHlFeAwy1pH5V2KqHY498KJjF2H9Hs94Dw6C+xlNcnvuY5zx/kN+\nh+BN1ThsDPXfQ3QYUFre9Iih2hYsibTC3PCmXq4GhGVP9XFQDc1qX8sCiS2k4QIv\nLjZZ8nECgYBuDqt6QZJ1hIA0mZ0ioZGDTd5YrLK3I+xVySfTsf/CmMhqt8Odr7Rl\nPs4EbGGggop/7Mj5GvZ0lvKjsDUGCoDj37KJMboOmXrRD4AlQuTXWl1Ml1p53EJW\nwNfqKOB5SssFd78P+rwc8A8A1qIuCLptcjymRwxtCAKluyULJEbQTQ==\n-----END RSA PRIVATE KEY-----",
+            "eydr_public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABLXPZg2VayTRtF9 root@ip-10-0-2-66.ec2.internal"
+          },
+          {
+            "key": "metadata",
+            "clusters": []
+          }
+        ],
+        "instances": [
+          {
+            "id": "i-00809dc7a95ef208c",
+            "name": null,
+            "reporting_url": "https://cloud.engineyard.com/reporting/834a2f1a81e0ddf85afe8249a4524b5a",
+            "role": "solo",
+            "enabled": false,
+            "public_hostname": "ec2-18-213-220-47.compute-1.amazonaws.com",
+            "private_hostname": "ip-10-0-1-80.ec2.internal",
+            "awsm_token": "834a2f1a81e0ddf85afe8249a4524b5a",
+            "stonith_config": {
+              "endpoint_uri": "https://cloud.engineyard.com/stonith",
+              "endpoint_token": "834a2f1a81e0ddf85afe8249a4524b5a",
+              "endpoint_id": "i-00809dc7a95ef208c",
+              "monitor_host": "ip-10-0-1-80.ec2.internal"
+            },
+            "instance_api_config": {
+              "base_url": "https://cloud.engineyard.com/instance_api",
+              "instance_id": 621298,
+              "token": "834a2f1a81e0ddf85afe8249a4524b5a",
+              "core_url": "https://api.engineyard.com/"
+            },
+            "components": [
+              {
+                "key": "ssmtp"
+              },
+              {
+                "tags": [
+                  "product=cloud",
+                  "ey.domain=api.engineyard.com",
+                  "ey.server.id=621298",
+                  "ey.environment.id=127595",
+                  "sso_id=a3b6417e-48f2-45a3-97a8-72101a62fc43"
+                ],
+                "key": "appfirst"
+              },
+              {
+                "instance_id": 621298,
+                "domain": "api.engineyard.com",
+                "key": "appfirst_tags"
+              }
+            ]
+          }
+        ],
+        "apps": [
+          {
+            "deploy_key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAzwl1rtWp0P0xD17dYQv/3fv0ICSObfl7E3Bkq2gR7LeVQ33f\neh+rYG8ixLF6EQzq40QgDRIQEcMQHWF6DCKa5dz5pE1Ei6KLAFqnkvaBMSyGNb+Q\nQRK/BewHoF5LWYUAHIqbzRolhTl8B0emm/itYyLp/r2Xe9JM/BGeNkkchnCZ4aGJ\n4XAZ3b0XwJkOtR4GeiqJZba9C0Jwf/N6zRx+UGljcH9Nl6ZUztlOupTyrMYFlIlI\nYOy22fdRQSahW8zJrt3MNzGjWvhcaqzMZOYmXABo3gGLVuaAGQw0uc3Cnu/4tmmy\nRPAIz1ingY6lXnWAEu3BMSyU1jhs7AzadeLdcQf4Rc98v8W5ZZi/5wuhAKq2wMX2\nw76FIPECgYEA9ZsaNKMp959LpgQD2O+kbxHNf1clpCViLET8ks+7d7QjChBswrMm\nRzU63j6q+KqeVPCknhO/zTAj+2CLGYdnqo/5/L8qutQDcfX163c1b2fiugt1wQnN\n9hN3QrQUB84pwA7E90oEvOWKQMUYvL0XkkUstBm/0eDsK7a32FAoF3UCgYEA18yA\nSSoP9ZLuFliZOS3+eX6g4/h0sRvELvN5xWtgfm10mzkTlFCDLDnF/KFIUYzV+Hk8\npuDwqaP01z0VmJfWR+zbM9piggLAJ7Dadghm7U76gkD/yzKHiP2u16xNdJST7d0S\nrVnuF/4y/ugFN97XCaMTJeU2dmYF3oTSrT/MJqsCgYAK4Rb1E/Es9dJtBSqCdoML\nJHe810hkj/9cRKYHfsooEEOpE3ct3K+qYdI8u/voze37hzlTgz5wwVwmq20d8WCH\nLp99MZ6b7f5FEwcUqhAk4i4p3Y4Wwe9sogobW0yz188DoePZrF6vW1+XZOOmoJ2l\nrgi/5ZAYpOTxPsPAAjT0bQKBgQCsDQy+yH1e4p1WTZ8kGoqIHTBzcZS/3A5nDJGq\nl7igM+5DD5ePqT1b1lgG2iPJeQrjhu2Xc0INTn4X2UjNl0ktoScHSXc+hqjjPDqA\n3qQJUe2iSeZnAEtVKkTrCSHb79WdUKPieA+/K1lHKH94kv9JXK4YiY4Jib/mMGmz\n3WiL7wKBgFcu1Bty6z33Qq4QnGbPhtLTltwImnLBmt6w8/GjZrmUjM12tQ07c/W5\npzJuHxAUIHMW29C5LY1p4FG8xfErD0348IEDVIMDVpJFpST6eB8/Qd1C1iZiRcH1\nyOIVQMHC2MYQV4jNKJSupPXfIxSEHs7Wh67yPWOfQiPWwp4BAeMd\n-----END RSA PRIVATE KEY-----\n",
+            "repository_name": "git://github.com/engineyard/todo.git",
+            "type": "rack",
+            "branch": "HEAD",
+            "deploy_action": "deploy",
+            "migration_command": "rake db:migrate --trace",
+            "revision": "",
+            "run_deploy": false,
+            "run_migrations": true,
+            "name": "jf_todo",
+            "bundled": null,
+            "newrelic": false,
+            "database_name": "jf_todo",
+            "database_username": "deploy",
+            "database_password": "asdfasdf123",
+            "components": [
+              {
+                "collection": [],
+                "key": "addons"
+              },
+              {
+                "key": "app_metadata",
+                "dh_key": "-----BEGIN DH PARAMETERS-----\nMIIBCAKCAQEAlcSh1GQEJmNapZk4hzX+cu6yN3vdA2ET3Gi/V4db9KkXeu4usv2K\nqW8FZk96ewsyVXxN1/PpxvFBLZ0Lj3c20wIBAg==\n-----END DH PARAMETERS-----\n"
+              }
+            ],
+            "gems": [],
+            "ebuilds": [],
+            "vhosts": [
+              {
+                "domain_name": "_",
+                "ssl_cert": null
+              }
+            ]
+          }
+        ],
+        "crons": []
+      },
+      "this": "i-00809dc7a95ef208c"
+    },
+    "instance_role": "solo",
+    "reporting_url": "https://cloud.engineyard.com/reporting/834a2f1a81e0ddf85afe8249a4524b5a"
+  }
+}

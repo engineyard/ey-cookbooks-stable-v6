@@ -1,0 +1,22 @@
+GEM
+  remote: https://nextgem.engineyard.com/
+  specs:
+    dnapi (1.9.27)
+      extlib
+      jexp (>= 0.1.1)
+      json
+      sexp_processor
+    extlib (0.9.16)
+    jexp (0.1.1)
+      json
+    json (1.8.6)
+    sexp_processor (4.13.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  dnapi (= 1.9.27)
+
+BUNDLED WITH
+   1.16.0
