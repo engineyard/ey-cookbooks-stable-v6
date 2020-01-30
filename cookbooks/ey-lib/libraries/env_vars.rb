@@ -3,7 +3,7 @@ require 'base64'
 module EnvVars
   module Helper
     def fetch_environment_variables(app_data)
-      metadata = app_data['components'].find {|component| component['key'] == 'app_metadata'}
+      metadata = app_data['components'].find {|component| component['key'].to_s == 'app_metadata'}
       return [] unless metadata && metadata['environment_variables']
 
       variables = metadata['environment_variables'].map do |var_hash|
