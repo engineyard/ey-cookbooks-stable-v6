@@ -5,6 +5,7 @@
 
 default['sidekiq'].tap do |sidekiq|
 
+  is_sidekiq_enabled = !!(fetch_env_var(node, 'EY_SIDEKIQ_ENABLED', 'false') =~ /^TRUE$/i)
   # Sidekiq will be installed on to application/solo instances,
   # unless a utility name is set, in which case, Sidekiq will
   # only be installed on to a utility instance that matches
@@ -21,13 +22,13 @@ default['sidekiq'].tap do |sidekiq|
     name_pattern = Regexp.new(name_pattern)
     does_name_match = ! name_pattern.match(node['dna']['name']).nil?
   end
-  sidekiq['is_sidekiq_instance'] = (does_role_match && does_name_match)
+  sidekiq['is_sidekiq_instance'] = (is_sidekiq_enabled && does_role_match && does_name_match)
 
   # We create an on-instance `after_restart` hook only 
   # when the recipe was enabled via environment variables.
   # Otherwise the behaviour for custom-cookbooks would change
   # which is undesirable.
-  sidekiq['create_restart_hook'] = (fetch_env_var(node, 'EY_SIDEKIQ_ENABLED', 'false') =~ /^TRUE$/i)
+  sidekiq['create_restart_hook'] = is_sidekiq_enabled
 
   # Number of workers (not threads)
   sidekiq['workers'] = fetch_env_var(node, 'EY_SIDEKIQ_NUM_WORKERS', 1).to_i
