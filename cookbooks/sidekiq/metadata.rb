@@ -7,3 +7,5 @@ maintainer_email 'support@engineyard.com'
 
 issues_url 'https://github.com/engineyard/ey-cookbooks-stable-v6/issue'
 source_url 'https://github.com/engineyard/ey-cookbooks-stable-v6'
+
+depends 'ey-lib'
