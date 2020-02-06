@@ -2,17 +2,6 @@ require 'dnapi'
 require 'base64'
 
 class DNASpec
-  def self.set_dna(node, dna_name)
-    dna_file = File.expand_path("../dna_files/#{dna_name}.json", __FILE__)
-    set_dna_from_file(node, dna_file)
-  end
-
-  def self.set_dna_from_file(node, dna_file)
-    dna = JSON.parse(IO.read(dna_file))
-    yield dna if block_given?
-    node.default['dna'] = dna
-  end
-
   def self.build_instance(environment, role, extra_opts = {})
     id = environment.instances.length + 1
     environment.build_instance({
