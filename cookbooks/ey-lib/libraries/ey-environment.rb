@@ -47,7 +47,7 @@ class Chef
       end
 
       def method_missing(method, *args)
-        respond_to?(method) ? (@hash[method] || @hash[method.to_s] || component?(mthd.to_s) || super) : super
+        respond_to?(method) ? (@hash[method] || @hash[method.to_s] || component?(method.to_s) || super) : super
       end
 
       def metadata(key=nil,default=nil)
