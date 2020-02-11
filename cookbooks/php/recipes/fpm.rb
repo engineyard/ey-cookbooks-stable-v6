@@ -84,7 +84,7 @@ end
 app_fpm_count = (get_fpm_count / node['dna']['applications'].size)
 app_fpm_count = 1 unless app_fpm_count >= 1
 
-ssh_username = node.engineyard.environment.ssh_username
+ssh_username = node['dna']['engineyard']['environment']['ssh_username']
 # generate an fpm pool for each php app
 app_names.each do |app_name|
   mc_hostnames = node.engineyard.environment.instances.map{|i| i['private_hostname'] if i['role'][/^app|solo/]}.compact.map {|i| "#{i}:11211"}
@@ -113,8 +113,8 @@ template "/etc/systemd/system/php#{version}-fpm.service" do
   source "php-fpm.service.erb"
   variables({
     version: version,
-    user: node.engineyard.environment.ssh_username,
-    group: node.engineyard.environment.ssh_username
+    user: ssh_username,
+    group: ssh_username
   })
   notifies :run, "execute[reload-systemd]", :immediately
 end
