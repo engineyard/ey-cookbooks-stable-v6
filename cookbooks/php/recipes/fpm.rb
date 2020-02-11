@@ -2,13 +2,16 @@ class Chef::Recipe
   include PhpHelpers
 end
 
+version = node["php"]["minor_version"]
+php_ini = get_php_ini_cbfilename
+
 # Report to Cloud dashboard
-ey_cloud_report "processing php#{node["php"]["minor_version"]}" do
-  message "processing php - php-fpm #{node["php"]["minor_version"]}"
+ey_cloud_report "processing php#{version}" do
+  message "processing php - php-fpm #{version}"
 end
 
 # Overwrite default php config
-directory "/etc/php/#{node["php"]["minor_version"]}/fpm" do
+directory "/etc/php/#{version}/fpm" do
   owner "root"
   group "root"
   recursive true
@@ -16,8 +19,8 @@ directory "/etc/php/#{node["php"]["minor_version"]}/fpm" do
   action :create
 end
 
-cookbook_file "/etc/php/#{node["php"]["minor_version"]}/fpm/php.ini" do
-  source "php.ini"
+cookbook_file "/etc/php/#{version}/fpm/php.ini" do
+  source php_ini
   owner "root"
   group "root"
   mode "0755"
@@ -53,7 +56,7 @@ end
 =begin
 bash 'eselect php and restart via monit' do
   code <<-EOH
-    eselect php set fpm php#{node["php"]["minor_version"]}
+    eselect php set fpm php#{version}
     EOH
   not_if "php-fpm -v | grep PHP | grep #{node['php']['version']}"
   notifies :run, 'execute[monit_restart_fpm]'
@@ -106,10 +109,10 @@ app_names.each do |app_name|
   end
 end
 
-template "/etc/systemd/system/php#{node["php"]["minor_version"]}-fpm.service" do
+template "/etc/systemd/system/php#{version}-fpm.service" do
   source "php-fpm.service.erb"
   variables({
-    version: node["php"]["minor_version"],
+    version: version,
     user: node.engineyard.environment.ssh_username,
     group: node.engineyard.environment.ssh_username
   })
@@ -124,9 +127,9 @@ other_versions.each do |version|
     only_if { File.exist?("/etc/systemd/system/php#{version}-fpm.service") }
   end
 end
-package "php#{node["php"]["minor_version"]}-fpm"
+package "php#{version}-fpm"
 
-service "php#{node["php"]["minor_version"]}-fpm" do
+service "php#{version}-fpm" do
   action :start
 end
 
@@ -142,7 +145,7 @@ app_names.each do |app|
     group   ssh_username
     mode    0755
     variables({
-      version: node["php"]["minor_version"]
+      version: version
     })
   end
 

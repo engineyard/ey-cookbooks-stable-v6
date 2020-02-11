@@ -51,4 +51,13 @@ module PhpHelpers
       end
     end
   end
+
+  def get_php_ini_cbfilename
+    case node["php"]["minor_version"]
+    when '7.4'
+      'php7.4.ini'
+    else
+      'php.ini'
+    end
+  end
 end
