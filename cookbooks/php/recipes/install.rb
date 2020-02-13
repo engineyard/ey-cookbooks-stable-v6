@@ -31,7 +31,7 @@ end
 extra_extensions = (fetch_env_var(node, "EY_PHP_EXTRA_EXTENSIONS") || '')
   .split(',').map(&:strip).select { |x| !x.empty? }
 if extra_extensions.length > 0
-  package "PHP #{version} extensions" do
+  package "extra PHP #{version} extensions" do
     action :upgrade
     package_name extra_extensions.map { |x| "php#{version}-#{x}" }
   end
