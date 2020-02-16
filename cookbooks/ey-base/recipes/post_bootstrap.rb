@@ -1,5 +1,6 @@
 include_recipe "monit"
 include_recipe "collectd"
+include_recipe "php"
 include_recipe "nodejs::common"
 include_recipe "nodejs::yarn"
 include_recipe "reboot"
