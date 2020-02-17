@@ -1,0 +1,6 @@
+source 'http://rubygems.org/'
+source 'https://nextgem.engineyard.com/'
+
+group :test do
+  gem 'dnapi', '1.9.27', :source => 'https://nextgem.engineyard.com/'
+end
