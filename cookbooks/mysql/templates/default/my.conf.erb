@@ -183,8 +183,10 @@ innodb_flush_log_at_trx_commit	= 2
 innodb_flush_method		= O_DIRECT
 innodb_lock_wait_timeout	= 50
 
+<% if @mysql_version <= @mysql_5_7 %>
 query_cache_size		= 16M
 query_cache_type		= 1
+<% end %>
 
 [mysqldump]
 quick

@@ -1,8 +1,15 @@
+short_version = node['mysql']['short_version']
+if short_version == '8.0'
+  config_postfix = '80'
+else
+  config_postfix = ''
+end
+
 template "/tmp/root_perms.sql" do
   owner 'root'
   group 'root'
   mode 0644
-  source "default_perms.sql.erb"
+  source "default_perms#{config_postfix}.sql.erb"
   variables({
     :dbpass => node.engineyard.environment['db_admin_password'],
   })

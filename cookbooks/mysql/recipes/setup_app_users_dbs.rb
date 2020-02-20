@@ -2,11 +2,18 @@ node.engineyard.apps.each do |app|
 
   dbhost = (node['dna']['db_hostF'] == 'localhost' ? 'localhost' : '%')
 
+  short_version = node['mysql']['short_version']
+  if short_version == '8.0'
+    config_postfix = '80'
+  else
+    config_postfix = ''
+  end
+
   template "/tmp/create.#{app.database_name}.sql" do
     owner 'root'
     group 'root'
     mode 0644
-    source "create.sql.erb"
+    source "create#{config_postfix}.sql.erb"
     variables({
       :dbuser => app.database_username,
       :dbpass => app.database_password,
