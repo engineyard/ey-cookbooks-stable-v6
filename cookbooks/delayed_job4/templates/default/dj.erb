@@ -158,7 +158,7 @@ if [ -d $RAILS_ROOT ]; then
 
       if [ $RESULT -eq 0 ]; then
         logger -t "monit-dj:$WORKER[$$]" "issuing command $COMMAND in $PWD for $USER"
-        start-stop-daemon --start -b -m -u $USER -d $RAILS_ROOT -p $PID_FILE --exec /bin/bash -- -c "$COMMAND"
+        start-stop-daemon --start -b -m -c $USER -d $RAILS_ROOT -p $PID_FILE --exec /bin/bash -- -c "$COMMAND"
         RESULT=$?
         logger -t "monit-dj:$WORKER[$$]" "$WORKER started as  `cat $PID_FILE` : $RESULT"
       fi
