@@ -60,7 +60,7 @@ end
 
 handle_mysql_d
 
-managed_template "/etc/mysql/my.cnf" do
+managed_template "/etc/mysql/percona-server.cnf" do
   owner 'mysql'
   group 'mysql'
   mode 0644
@@ -84,12 +84,10 @@ managed_template "/etc/mysql/my.cnf" do
   })
 end
 
-if node['mysql']['short_version'] == '8.0'
-  bash "copy my.cnf to mysql.cnf" do
-    code <<-EOS
-    cp -aL /etc/mysql/my.cnf /etc/mysql/mysql.cnf
-    EOS
-  end
+bash "Set my.cnf alternatives" do
+  code <<-EOS
+  update-alternatives --install /etc/mysql/my.cnf my.cnf /etc/mysql/percona-server.cnf 1000
+  EOS
 end
 
 logrotate 'mysql_slow' do
