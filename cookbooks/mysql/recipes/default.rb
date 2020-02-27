@@ -71,7 +71,6 @@ managed_template "/etc/mysql/percona-server.cnf" do
       :datadir => node['mysql']['datadir'],
       :ssldir => node['mysql']['ssldir'],
       :mysql_version => Gem::Version.new(node['mysql']['short_version']),
-      :mysql_5_5 => Gem::Version.new('5.5'),
       :mysql_5_6 => Gem::Version.new('5.6'),
       :mysql_5_7 => Gem::Version.new('5.7'),
       :mysql_full_version => %x{[ -f "/db/.lock_db_version" ] && grep -E -o '^[0-9]+\.[0-9]+\.[0-9]+' /db/.lock_db_version || echo #{node['mysql']['latest_version']} }.chomp,

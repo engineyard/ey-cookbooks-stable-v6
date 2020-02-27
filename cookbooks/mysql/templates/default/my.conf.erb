@@ -53,12 +53,8 @@ max_connections			= 300
 innodb_file_per_table		= 1
 secure_file_priv = ''
 
-<% if @mysql_version < @mysql_5_6 %>
-log-slow-queries		= <%= @logbase %>slow_query.log
-<% else %>
 slow_query_log
 slow_query_log_file = <%= @logbase %>slow_query.log
-<% end %>
 
 long_query_time			=  2.000000
 log_slow_admin_statements
@@ -96,22 +92,12 @@ log-error			= <%= @logbase %>mysqld.err
 basedir				= /usr
 datadir				= <%= @datadir %>
 
-<% if @mysql_version < @mysql_5_6 %>
-key_buffer			= 32M
-thread_cache			= 512
-table_cache			= 1024
-language			= /usr/share/mysql/english
-<% else %>
 key_buffer_size = 32M
 thread_cache_size			= 512
-<% if @mysql_version == @mysql_5_5 %>
-table_open_cache			= 2000
-<% end %>
 lc-messages-dir = /usr/share/mysql
 lc-messages                    = en_US
 explicit_defaults_for_timestamp
 performance_schema = 0
-<% end %>
 
 max_allowed_packet		= 32M
 
@@ -145,15 +131,6 @@ tmpdir				= /mnt/mysql/tmp
 # don't eat too much memory, we're trying to be safe on 64Mb boxes
 # you might want to bump this up a bit on boxes with more RAM
 innodb_buffer_pool_size		= <%= @innodb_buff %>
-<% if @mysql_version < @mysql_5_6 %>
-# this is the default, increase it if you have lots of tables
-innodb_additional_mem_pool_size = 16M
-<% end %>
-<% if @mysql_version == @mysql_5_5 %>
-# -- Stable-v6 uses MySQL Community not Percona
-#innodb_adaptive_flushing = 1
-#innodb_adaptive_flushing_method = 1
-<% end %>
 
 #
 # i'd like to use /var/lib/mysql/innodb, but that is seen as a database :-(
