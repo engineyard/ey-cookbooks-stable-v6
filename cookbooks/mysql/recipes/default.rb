@@ -86,6 +86,7 @@ end
 bash "Set my.cnf alternatives" do
   code <<-EOS
   update-alternatives --install /etc/mysql/my.cnf my.cnf /etc/mysql/percona-server.cnf 1000
+  update-alternatives --set my.cnf /etc/mysql/percona-server.cnf
   EOS
 end
 
