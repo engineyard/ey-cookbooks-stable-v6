@@ -35,3 +35,9 @@ Chef::Provider::Template.provides :managed_template
 #
 # This allows for a user of a managed system to say "Hey I've made changes to this
 # config file, DO NOT CLOBBER IT! KTHXBYE" by just prepending any file they want to manage by hand with 'keep.'
+
+if defined?(ChefSpec)
+  def create_managed_template(path)
+    ChefSpec::Matchers::ResourceMatcher.new(:managed_template, :create, path)
+  end
+end
