@@ -10,18 +10,14 @@ case db_stack
 when 'mysql5_6', 'aurora5_6', 'mariadb10_0'
   major_version = '5.6'
   default['mysql']['latest_version'] = node['latest_version_56']
-  default['mysql']['virtual'] = major_version
   
 when 'mysql5_7', 'aurora5_7', 'mariadb10_1'
   major_version = '5.7'
   default['mysql']['latest_version'] = node['latest_version_57']
-  default['mysql']['virtual'] = major_version
 
 when 'mysql8_0'
   major_version = '8.0'
   default['mysql']['latest_version'] = node['latest_version_80']
-  default['mysql']['virtual'] = major_version
-
 end
 
 default['mysql']['short_version'] = major_version
