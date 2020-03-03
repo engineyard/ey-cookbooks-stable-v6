@@ -30,7 +30,6 @@ default['sidekiq'].tap do |sidekiq|
   is_db_instance = !!(node['dna']['instance_role'] =~ /^db_/)
   # If an instance pattern is active, deactivate DB filter
   db_instance_gate = (instance_filter_active || !is_db_instance)
-  # TODO: implement is_db_instance properly
   sidekiq['is_sidekiq_instance'] = (is_sidekiq_enabled && does_role_match && does_name_match && db_instance_gate)
 
   # We create an on-instance `after_restart` hook only 
