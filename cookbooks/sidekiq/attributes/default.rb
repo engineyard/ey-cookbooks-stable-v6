@@ -22,7 +22,11 @@ default['sidekiq'].tap do |sidekiq|
     name_pattern = Regexp.new(name_pattern)
     does_name_match = ! name_pattern.match(node['dna']['name']).nil?
   end
-  sidekiq['is_sidekiq_instance'] = (is_sidekiq_enabled && does_role_match && does_name_match)
+  # Sidekiq workers can't be run on DB instances (no code gets deployed there).
+  # Therefore we explicitly filter out DB instances
+  is_db_instance = !!(node['dna']['instance_role'] =~ /^db_/)
+  # TODO: implement is_db_instance properly
+  sidekiq['is_sidekiq_instance'] = (is_sidekiq_enabled && does_role_match && does_name_match && !is_db_instance)
 
   # We create an on-instance `after_restart` hook only 
   # when the recipe was enabled via environment variables.
