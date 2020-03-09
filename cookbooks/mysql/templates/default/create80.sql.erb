@@ -1,0 +1,10 @@
+create database IF NOT EXISTS <%= @dbname %>
+<%= case @dbencoding
+when /UTF-8/i then
+"CHARACTER SET utf8 COLLATE utf8_general_ci"
+end %>
+;
+
+CREATE USER IF NOT EXISTS '<%= @dbuser %>'@'<%= @dbhost %>' IDENTIFIED BY '<%= @dbpass %>';
+GRANT ALL PRIVILEGES
+ON <%= @dbname %>.* TO '<%= @dbuser %>'@'<%= @dbhost %>';

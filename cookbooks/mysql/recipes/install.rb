@@ -4,6 +4,8 @@ lock_version_file = '/db/.lock_db_version'
 db_running = %x{mysql -N -e "select 1;" 2> /dev/null}.strip == '1'
 
 known_versions = {
+  # mysql 8.0
+  '8.0.18' => 'https://www.percona.com/downloads/Percona-Server-8.0/Percona-Server-8.0.18-9/binary/debian/bionic/x86_64/Percona-Server-8.0.18-9-r53e606f-bionic-x86_64-bundle.tar',
   # mysql 5.7
   '5.7.26' => 'https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.26-29/binary/debian/bionic/x86_64/Percona-Server-5.7.26-29-r11ad961-bionic-x86_64-bundle.tar',
   '5.7.25' => 'https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.25-28/binary/debian/bionic/x86_64/Percona-Server-5.7.25-28-rc335905-bionic-x86_64-bundle.tar',
@@ -23,7 +25,7 @@ known_versions = {
 # create or delete /db/.lock_db_version
 if node['dna']['instance_role'][/^(db|solo)/]
   execute "dropping lock version file" do
-    command "echo $(mysql --version | grep -E -o 'Distrib [0-9]+\.[0-9]+\.[0-9]+' | awk '{print $NF}') > #{lock_version_file}"
+    command "echo $(mysql --version | grep -E -o '(Distrib|Ver) [0-9]+\.[0-9]+\.[0-9]+' | awk '{print $NF}') > #{lock_version_file}"
     action :run
     only_if { lock_db_version and not File.exists?(lock_version_file) and db_running }
   end
@@ -51,6 +53,8 @@ when '5.6'
   packages = %w[percona-server-common libperconaserverclient18.1_ percona-server-client]
 when '5.7'
   packages = %w[percona-server-common percona-server-client]
+when '8.0'
+  packages = %w[percona-server-common libperconaserverclient21_ percona-server-client]
 end
 
 if node['dna']['instance_role'][/db|solo/]
@@ -100,13 +104,13 @@ ruby_block "install mysql using version on lock file if present" do
     }
     %x{ #{download_command} }
 
-    # install the packages using dpkg -i
+    # install the packages using apt install ...deb
     packages.each do |package|
       install_command = %Q{
         installed=$(apt-cache policy #{package}-#{node['mysql']['short_version']} | grep "Installed: #{install_version}-" > /dev/null)
         if [ $? -ne 0 ]; then
           echo 'Installing #{package} for #{node['mysql']['short_version']}'
-          DEBIAN_FRONTEND=noninteractive dpkg -i /tmp/src/Percona-Server-#{install_version}/#{package}*.deb
+          DEBIAN_FRONTEND=noninteractive apt install --yes --force-yes --allow-downgrades -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" /tmp/src/Percona-Server-#{install_version}/#{package}*.deb
         else
           echo '#{package} for #{node['mysql']['short_version']} is already installed'
         fi

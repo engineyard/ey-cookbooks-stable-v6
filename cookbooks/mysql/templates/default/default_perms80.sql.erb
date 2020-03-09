@@ -1,0 +1,9 @@
+CREATE USER IF NOT EXISTS root@'%' IDENTIFIED BY '<%= @dbpass %>';
+GRANT ALL PRIVILEGES
+ON *.*
+TO root@'%';
+
+CREATE USER IF NOT EXISTS 'replication'@'%' IDENTIFIED BY '<%= @dbpass %>';
+GRANT REPLICATION SLAVE
+ON *.*
+TO 'replication'@'%';
