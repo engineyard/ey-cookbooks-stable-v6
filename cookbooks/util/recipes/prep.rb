@@ -2,9 +2,9 @@ include_recipe "deploy-keys"
 include_recipe "ey-cron"
 
 case node.engineyard.environment['db_stack_name']
-when /postgres/
+when /^postgres\d+/, /^aurora-postgresql\d+/
   include_recipe "postgresql::default"
-when /mysql/, /aurora/, /mariadb/
+when /^mysql\d+/, /^aurora\d+/, /^mariadb\d+/
   include_recipe "mysql::client"
   include_recipe "mysql::user_my.cnf"
 when "no_db"
