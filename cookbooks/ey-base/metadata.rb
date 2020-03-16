@@ -29,3 +29,4 @@ depends 'efs'
 # custom recipes
 depends 'redis'
 depends 'memcached'
+depends 'sidekiq'

@@ -1,0 +1,10 @@
+#!/bin/bash
+# This hook script is invoked during the `after_restart` phase of a deployment.
+# If this instance has Sidekiq workers, it restarts them.
+
+<% if @is_sidekiq_instance == true %>
+sudo monit -g <%= @sidekiq_group %> restart all
+<% else %>
+# This instance doesn't have Sidekiq workers set up. Performing a NoOp.
+exit 0
+<% end %>
