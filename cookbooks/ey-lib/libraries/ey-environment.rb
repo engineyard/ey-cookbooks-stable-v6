@@ -47,7 +47,7 @@ class Chef
       end
 
       def method_missing(method, *args)
-        respond_to?(method) ? (@hash[method] || @hash[method.to_s] || component?(mthd.to_s) || super) : super
+        respond_to?(method) ? (@hash[method] || @hash[method.to_s] || component?(method.to_s) || super) : super
       end
 
       def metadata(key=nil,default=nil)
@@ -137,7 +137,8 @@ class Chef
           :ruby_230   => "2.3.8",
           :ruby_240   => "2.4.9",
           :ruby_250   => "2.5.7",
-          :ruby_260   => "2.6.5"
+          :ruby_260   => "2.6.5",
+          :ruby_270   => "2.7.0"
         }
         if versions.has_key?(ruby_archtype.to_sym)
           version = versions[ruby_archtype.to_sym]

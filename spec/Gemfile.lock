@@ -1,7 +1,8 @@
 GEM
+  remote: http://rubygems.org/
   remote: https://nextgem.engineyard.com/
   specs:
-    dnapi (1.9.27)
+    dnapi (1.9.29)
       extlib
       jexp (>= 0.1.1)
       json
@@ -16,7 +17,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  dnapi (= 1.9.27)
+  dnapi (= 1.9.29)!
 
 BUNDLED WITH
    1.16.0

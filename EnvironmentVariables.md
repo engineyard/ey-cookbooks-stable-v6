@@ -20,6 +20,7 @@ If you are missing a setting, please request it by [opening a GitHub issue](http
 | `EY_REDIS_VERSION`              | N/A           | Sets a custom version for Redis. [More details here](./cookbooks/redis/README.md#environment-variables)                                                                                                     |
 | `EY_MEMCACHED_ENABLED`          | `false`       | Sets up Memcached. [More details here](./cookbooks/memcached/README.md#environment-variables)                                                                                                               |
 | `EY_SIDEKIQ_*`                  | N/A           | Sets up Sidekiq. [More details here](./cookbooks/sidekiq/readme.md#environment-variables)                                                                                                                   |
+| `EY_PHP_EXTRA_EXTENSIONS`       | N/A           | Lists (as comma-separated values) additional PHP extensions that should be installed.                                                                                                                       |
 
 ## Contribution Guidelines
 

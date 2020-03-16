@@ -10,6 +10,7 @@ bash "make-swap-xvdc" do
       echo "Waiting for 1 second"
       sleep 1
     done
+    sleep 1
     mkswap /dev/xvdc1
     echo "> $?"
     swapon /dev/xvdc1
