@@ -24,28 +24,18 @@ if PAPERTRAIL_CONFIG['is_papertrail_instance']
     action :create
   end
 
-  dpkg_package "sremote_syslog2" do
+  dpkg_package "remote_syslog2" do
     source "/tmp/remote_syslog2.deb"
   end
 
-  template '/etc/init.d/remote_syslog' do
-    source 'remote_syslog.initd.erb'
-    mode '0755'
-  end
-  
   template '/etc/log_files.yml' do
     source 'log_files.yml.erb'
     mode '0644'
     variables(PAPERTRAIL_CONFIG)
   end
 
- # execute 'remote-syslog2-install' do
- #   command "echo n | dpkg -i /tmp/remote_syslog2.deb"
- # end
- 
   execute 'start or restart remote_syslog' do
     command %{/etc/init.d/remote_syslog restart}
   end
-
 
 end
