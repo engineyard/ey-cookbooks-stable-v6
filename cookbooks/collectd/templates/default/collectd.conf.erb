@@ -29,7 +29,7 @@ LoadPlugin load
 LoadPlugin memcached
 <% end %>
 LoadPlugin memory
-<% if @has_db && @db_type[/mysql/] %>
+<% if @has_db && @is_mysql_db %>
 #LoadPlugin mysql
 <% end %>
 LoadPlugin rrdtool
@@ -63,7 +63,7 @@ LoadPlugin threshold
 <% if @has_db %>
     # The role of this machine implies a db should be running,
     # so let's monitor it
-  <% if @db_type[/mysql/] %>
+  <% if @is_mysql_db %>
     <Plugin mysql>
     <% @databases.each do |db| %>
       <%= "<Database \"#{db}\">" %>
@@ -85,7 +85,7 @@ LoadPlugin threshold
     Process mysqld
     </Plugin>
   <% end %>
-  <% if @db_type[/postgres/] %>
+  <% if @is_postgres_db %>
     <Plugin processes>
     Process postgres
     </Plugin>
@@ -122,9 +122,9 @@ LoadPlugin threshold
 # This script get's fired off for Thresholds
 # It's written dynamically by chef
 <% if @has_db %>
-  <% if @db_type[/mysql|postgres9/] %>
+  <% if @is_postgres_db or @is_mysql_db %>
     <Plugin exec>
-    <% if @db_type[/postgres9/] %>
+    <% if @is_postgres_db %>
       Exec "postgres" "/engineyard/bin/check_postgres_wrapper.sh" "connection"
       Exec "postgres" "/engineyard/bin/check_postgres_wrapper.sh" "backends"
       Exec "postgres" "/engineyard/bin/check_postgres_wrapper.sh" "checkpoint" "--warn=20m" "--crit=30m" "--datadir /db/postgresql/<%= @short_version %>/data"
@@ -133,7 +133,7 @@ LoadPlugin threshold
         Exec "postgres" "/engineyard/bin/check_postgres_wrapper.sh" "autovac_freeze"
       <% end %>
     <% end %>
-    <% if @db_type[/mysql/] %>
+    <% if @is_mysql_db %>
       Exec "mysql" "/engineyard/bin/check_mysql.sh" "connections"
       <% if @role == 'db_slave' %>
         Exec "mysql" "/engineyard/bin/check_mysql.sh" "replication" "8000" "40000"
@@ -174,7 +174,7 @@ LoadPlugin threshold
   </Plugin>
 
   <% if @has_db %>
-    <% if @db_type[/mysql/]  %>
+    <% if @is_mysql_db  %>
   # let's monitor to make sure it's running.
   # This is kind of a hack, let's see if it works well.
   <Plugin "processes-mysqld">
@@ -187,7 +187,7 @@ LoadPlugin threshold
 <% end %>
 <% end %>
 <% if @has_db %>
-  <% if @db_type[/postgres9/] %>
+  <% if @is_postgres_db %>
     <Plugin "process-postgres">
       <Type "ps_count">
         FailureMin 1.00
