@@ -321,7 +321,7 @@ node.engineyard.apps.each_with_index do |app, index|
     end
 
     # Add Cipher chain
-    template "/data/nginx/ssl/#{app.name}/default.ssl_cipher" do
+    template "/data/nginx/servers/#{app.name}/default.ssl_cipher" do
       owner node['owner_name']
       group node['owner_name']
       mode 0644
@@ -337,7 +337,7 @@ node.engineyard.apps.each_with_index do |app, index|
     # Chain files are create if missing and do not reload Nginx
 
     # Add Cipher chain
-    template "/data/nginx/ssl/#{app.name}/customer.ssl_cipher" do
+    template "/data/nginx/servers/#{app.name}/customer.ssl_cipher" do
       owner node['owner_name']
       group node['owner_name']
       mode 0644
@@ -349,7 +349,7 @@ node.engineyard.apps.each_with_index do |app, index|
     end
 
     # Add Cipher chain
-    template "/data/nginx/ssl/#{app.name}/ssl_cipher" do
+    template "/data/nginx/servers/#{app.name}/ssl_cipher" do
       owner node['owner_name']
       group node['owner_name']
       mode 0644

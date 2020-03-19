@@ -49,6 +49,7 @@ server {
   server_name _;
 <% end %>
 
+  <% if @ssl %>
   #
   # SSL certificates
   #
@@ -58,10 +59,10 @@ server {
   # start up the Nginx server the password will need to be typed in every time.
   # This precludes automatic/automated web server restarts on boot or otherwise.
   #
-  <% if @ssl %>
   ssl on;
   ssl_certificate /etc/nginx/ssl/<%= @vhost.app.name %>/<%= @vhost.app.name %>.crt;
   ssl_certificate_key /etc/nginx/ssl/<%= @vhost.app.name %>/<%= @vhost.app.name %>.key;
+  include /etc/nginx/servers/<%= @vhost.app.name %>/ssl_cipher;
   <% end %>
 
   #
