@@ -1,5 +1,7 @@
 #!/bin/bash
 
+umask 022
+
 # make tmp dir
 status_dir="/tmp/check_readonly_status"
 mkdir -p "${status_dir}"
