@@ -10,5 +10,5 @@
   ssl_prefer_server_ciphers on;
 
   <% if @dhparam_available %>
-  ssl_dhparam /etc/nginx/ssl/dhparam.<%= @app_name %>.pem;
+  ssl_dhparam /etc/nginx/ssl/<%= @app_name %>/dhparam.<%= @app_name %>.pem;
   <% end %>
