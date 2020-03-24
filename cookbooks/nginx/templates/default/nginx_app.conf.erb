@@ -100,7 +100,11 @@ server {
   #
   # set Expire header on assets: see http://developer.yahoo.com/performance/rules.html#expires
   location ~ ^/(images|assets|javascripts|stylesheets)/ {
+  <% if @ssl %>
+  try_files  $uri $uri/index.html /last_assets/$uri /last_assets/$uri.html @app_<%=@vhost.app.name%>ssl;
+  <% else %>
   try_files  $uri $uri/index.html /last_assets/$uri /last_assets/$uri.html @app_<%=@vhost.app.name%>;
+  <% end %>
   expires 10y;
   }
 
