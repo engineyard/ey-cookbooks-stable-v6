@@ -1,31 +1,24 @@
 #!/bin/bash
 
-mkdir -p /tmp/src/postgresql
+get_full_pkg_version() {
+  postgres_package="$1"
+  package_version="$2"
+  echo "$(apt-cache show ${postgres_package}=${package_version}* | grep 'Version:' | awk '{print $2}' 2>/dev/null)"
+}
+
 <% packages = ["postgresql-client-#{@postgres_version}", "postgresql-#{@postgres_version}", "postgresql-server-dev-#{@postgres_version}"] %>
 <% packages.each do |package| %>
-installed=$(apt-cache policy <%= package %> | grep -E "Installed.*<%= @package_version %>-" > /dev/null)
-if [ $? -ne 0 ]; then
-  echo "Installing <%= package %>"
-  cd /tmp/src/postgresql
-  available=$(curl -s -I https://apt.postgresql.org/pub/repos/apt/pool/main/p/postgresql-<%= @postgres_version %>/<%= package %>_<%= @package_version %>-1.pgdg18.04+1_amd64.deb | head -n 1 | grep 200)
-  if [ $? -eq 0 ]; then
-    curl -s -O https://apt.postgresql.org/pub/repos/apt/pool/main/p/postgresql-<%= @postgres_version %>/<%= package %>_<%= @package_version %>-1.pgdg18.04+1_amd64.deb
-  fi
-
-  available=$(curl -s -I https://atalia.postgresql.org/morgue/p/postgresql-<%= @postgres_version %>/<%= package %>_<%= @package_version %>-1.pgdg18.04+1_amd64.deb | head -n 1 | grep 200)
-  if [ $? -eq 0 ]; then
-    curl -s -O https://atalia.postgresql.org/morgue/p/postgresql-<%= @postgres_version %>/<%= package %>_<%= @package_version %>-1.pgdg18.04+1_amd64.deb
-  fi
-
-  DEBIAN_FRONTEND=noninteractive apt install -y --allow-downgrades /tmp/src/postgresql/<%= package %>_<%= @package_version %>-1.pgdg18.04+1_amd64.deb
-  <% if package=="postgresql-#{@postgres_version}" %>
-  if [[ ! -n $(systemctl status postgresql | grep "Loaded.*/etc/systemd/system/postgresql.service") ]]; then
-    systemctl stop postgresql && rm -f /lib/systemd/system/postgresql.service
-  fi
-  <% end %>
-
-else
-  echo '<%= package %> <%= @package_version %> is already installed'
+# Get the full version for the package <%= package %>
+PKG_VER="$(get_full_pkg_version "<%= package %>" "<%= @package_version %>")"
+if [[ -z "$PKG_VER" ]]; then
+  echo "Version <%= @package_version %> of <%= package %> not found"
+  exit 1
 fi
-
+echo "Installing <%= package %>"
+DEBIAN_FRONTEND=noninteractive apt install -y --allow-downgrades <%= package %>="$PKG_VER"
+<% if package == "postgresql-#{@postgres_version}" %>
+if [[ ! -n $(systemctl status postgresql | grep "Loaded.*/etc/systemd/system/postgresql.service") ]]; then
+  systemctl stop postgresql && rm -f /lib/systemd/system/postgresql.service
+fi
+<% end %>
 <% end %>
