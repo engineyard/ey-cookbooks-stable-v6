@@ -39,9 +39,7 @@ node.engineyard.apps.each do |app|
     to "/engineyard/bin/app_#{app.name}"
   end
 
-  depreciated_memory_limit = metadata_app_get_with_default(app.name, :app_memory_limit, "255.0")
-  # See https://support.cloud.engineyard.com/entries/23852283-Worker-Allocation-on-Engine-Yard-Cloud for more details
-  worker_memory_size = metadata_app_get_with_default(app.name, :worker_memory_size, depreciated_memory_limit)
+  worker_memory_size = app_server_get_worker_memory_size(app)
   worker_termination_conditions = metadata_app_get_with_default(app.name, :worker_termination_conditions, {'quit' => [{}], 'term' => [{'cycles' => 8}]})
   base_cycles = (worker_termination_conditions.fetch('quit',[]).detect {|h| h.key?('cycles')} || {}).fetch('cycles',2).to_i
 
@@ -49,7 +47,7 @@ node.engineyard.apps.each do |app|
   %w(quit abrt term kill).each do |sig|
     worker_termination_conditions.fetch(sig,[]).each do |condition|
       overrun_cycles = condition.fetch('cycles',base_cycles).to_i
-      mem = condition.fetch('memory',worker_memory_size).to_f
+      mem = condition.fetch('memory', worker_memory_size).to_f
       worker_mem_cycle_checks << [mem, overrun_cycles, sig]
     end
   end

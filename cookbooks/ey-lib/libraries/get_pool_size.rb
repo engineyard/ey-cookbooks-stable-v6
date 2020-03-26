@@ -23,6 +23,8 @@
 # https://gist.github.com/d236dd5b24738ed32b21
 #
 
+require_relative 'metadata'
+
 class Engineyard
   module PoolSize
     class Settings
@@ -319,9 +321,8 @@ class Engineyard
   end
 end
 
-class Chef
-  class Recipe
-
+module PoolSizeCalculator
+  module Helper
     def get_pool_size
       @pool_size ||= begin
         pool_size = Engineyard::PoolSize::Calculator.new(self).calculate(node.ec2_instance_size)
@@ -329,6 +330,11 @@ class Chef
         pool_size
       end
     end
+  end
+end
 
+class Chef
+  class Recipe
+    include PoolSizeCalculator::Helper
   end
 end
