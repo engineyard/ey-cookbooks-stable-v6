@@ -31,6 +31,31 @@ module AppServerConfigs
       grace_time = fetch_env_var_for_app(app, 'EY_PASSENGER_GRACE_TIME', grace_time)
       grace_time
     end
+
+    def app_server_get_worker_termination_conditions(app)
+      # 1. Default conditions
+      conditions = '{"quit": [], "term": [{"cycles": 8}]}'
+      # 2. Try to get conditions from metadata (this should be removed eventually!)
+      conditions = metadata_app_get_with_default(app.name, :worker_termination_conditions, conditions)
+      # 3. Try to conditions from the EY environment variable (recommended way)
+      conditions = fetch_env_var_for_app(app, 'EY_WORKER_TERMINATION_CONDITIONS', conditions)
+      conditions = JSON.parse conditions
+      base_cycles = (conditions.fetch('quit', []).detect {|h| h.key?('cycles')} || {}).fetch('cycles', 2).to_i
+      worker_memory_size = app_server_get_worker_memory_size(app)
+      worker_mem_cycle_checks = []
+      %w(quit abrt term kill).each do |sig|
+        conditions.fetch(sig, []).each do |condition|
+          overrun_cycles = condition.fetch('cycles', base_cycles).to_i
+          mem = condition.fetch('memory', worker_memory_size).to_f
+          worker_mem_cycle_checks << [mem, overrun_cycles, sig]
+        end
+      end
+      return {
+        :base_cycles         => base_cycles,
+        :memory_cycle_checks => worker_mem_cycle_checks,
+        :memory_size         => worker_memory_size
+      }
+    end
   end
 end
 

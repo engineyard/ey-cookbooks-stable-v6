@@ -39,19 +39,6 @@ node.engineyard.apps.each do |app|
     to "/engineyard/bin/app_#{app.name}"
   end
 
-  worker_memory_size = app_server_get_worker_memory_size(app)
-  worker_termination_conditions = metadata_app_get_with_default(app.name, :worker_termination_conditions, {'quit' => [{}], 'term' => [{'cycles' => 8}]})
-  base_cycles = (worker_termination_conditions.fetch('quit',[]).detect {|h| h.key?('cycles')} || {}).fetch('cycles',2).to_i
-
-  worker_mem_cycle_checks = []
-  %w(quit abrt term kill).each do |sig|
-    worker_termination_conditions.fetch(sig,[]).each do |condition|
-      overrun_cycles = condition.fetch('cycles',base_cycles).to_i
-      mem = condition.fetch('memory', worker_memory_size).to_f
-      worker_mem_cycle_checks << [mem, overrun_cycles, sig]
-    end
-  end
-
   template "/data/#{app.name}/shared/config/unicorn.rb" do
     owner node.engineyard.environment.ssh_username
     group node.engineyard.environment.ssh_username
@@ -69,6 +56,8 @@ node.engineyard.apps.each do |app|
     source "unicorn.rb.erb"
   end
 
+  term_conds = app_server_get_worker_termination_conditions(app)
+
   managed_template "/etc/monit.d/unicorn_#{app.name}.monitrc" do
     owner node.engineyard.environment.ssh_username
     group node.engineyard.environment.ssh_username
@@ -82,9 +71,9 @@ node.engineyard.apps.each do |app|
           :app_type => app.app_type,
           :unicorn_worker_count => [recipe.get_pool_size / node['dna']['applications'].size, 1].max,
           :environment => node['dna']['environment']['framework_env'],
-          :master_memory_size => worker_memory_size,
-          :master_cycle_count => base_cycles,
-          :worker_mem_cycle_checks => worker_mem_cycle_checks
+          :master_memory_size => term_conds[:memory_size],
+          :master_cycle_count => term_conds[:base_cycles],
+          :worker_mem_cycle_checks => term_conds[:memory_cycle_checks]
         }
       }
     )
