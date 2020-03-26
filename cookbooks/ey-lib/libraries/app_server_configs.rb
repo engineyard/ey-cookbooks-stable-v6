@@ -21,6 +21,16 @@ module AppServerConfigs
       mem_size = fetch_env_var_for_app(app, 'EY_WORKER_MEMORY_SIZE', mem_size)
       mem_size
     end
+
+    def app_server_get_passenger_grace_time(app)
+      # 1. Default value is 60
+      grace_time = '60'
+      # 2. Try to get a value from metadata (this should be removed eventually!)
+      grace_time = metadata_app_get_with_default(app.name, :passenger_grace_time, grace_time)
+      # 3. Try to get a value from the EY environment variable (recommended way)
+      grace_time = fetch_env_var_for_app(app, 'EY_PASSENGER_GRACE_TIME', grace_time)
+      grace_time
+    end
   end
 end
 

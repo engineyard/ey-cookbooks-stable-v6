@@ -30,7 +30,7 @@ if ['app_master', 'app', 'solo'].include?(node['dna']['instance_role'])
     # Here we are overriding EngineYard's default passenger_monitor cron entry so we can
     # increase the memory limit.  Otherwise, the web processes get killed off very quickly,
     # leading to performance problems.
-    grace_time = metadata_app_get_with_default(app.name, :passenger_grace_time, 60)
+    grace_time = app_server_get_passenger_grace_time(app)
     cron "passenger_monitor_#{app.name}" do
       minute '*'
       hour '*'
