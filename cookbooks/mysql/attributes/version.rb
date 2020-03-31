@@ -1,8 +1,8 @@
 lock_major_version = %x{[ -f "/db/.lock_db_version" ] && grep -E -o '^[0-9]+\.[0-9]+' /db/.lock_db_version }
 db_stack = lock_major_version == '' ? attribute['dna']['engineyard']['environment']['db_stack_name'] :  "mysql#{lock_major_version.gsub(/\./, '_').strip}"
 
-default['latest_version_56'] = '5.6.44'
-default['latest_version_57'] = '5.7.26'
+default['latest_version_56'] = '5.6.47'
+default['latest_version_57'] = '5.7.29'
 default['latest_version_80'] = '8.0.18'
 major_version=''
 
