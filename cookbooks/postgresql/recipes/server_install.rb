@@ -1,10 +1,10 @@
 postgres_version = node['postgresql']['short_version']
 install_version = node['postgresql']['latest_version']
 known_versions = %w[
-  9.5.17 9.5.18
-  9.6.13 9.6.14
-  10.7 10.8 10.9
-  11.3 11.4
+  9.5.17 9.5.18 9.5.21
+  9.6.13 9.6.14 9.6.17
+  10.7 10.8 10.9 10.12
+  11.3 11.4 11.7
 ]
 package_version = known_versions.detect {|v| v =~ /^#{install_version}/}
 

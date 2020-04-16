@@ -60,12 +60,12 @@ end
 has_db = ['solo','db_master','db_slave'].include?(node['dna']['instance_role'])
 
 case node.engineyard.environment['db_stack_name']
-when /mysql/
-  short_version=node['mysql']['short_version']
-when /postgres/
-  short_version=node['postgresql']['short_version']
+when /^mysql\d+/
+  short_version = node['mysql']['short_version']
+when /^postgres\d+/
+  short_version = node['postgresql']['short_version']
 when "no_db"
-  has_db=false
+  has_db = false
 end
 
 include_recipe "collectd::perl"
@@ -106,6 +106,9 @@ existing_rrd_datadirs.each do |dir|
 end
 
 memcached = node['memcached'] && node['memcached']['perform_install']
+db_type = node.engineyard.environment['db_stack_name']
+is_postgres_db = db_type.match(/^(postgres\d+)/)
+is_mysql_db = db_type.match(/^(mysql\d+)/)
 managed_template "/etc/engineyard/collectd.conf" do
   owner 'root'
   group 'root'
@@ -114,18 +117,20 @@ managed_template "/etc/engineyard/collectd.conf" do
   variables(
     lazy {
       {
-        :db_type => node.engineyard.environment['db_stack_name'],
-        :databases => has_db ? node.engineyard.environment['apps'].map {|a| a['database_name']} : [],
-        :has_db => has_db,
-        :db_slaves => node.dna['db_slaves'],
-        :role => node.dna['instance_role'],
-        :memcached => memcached,
-        :user => node["owner_name"],
-        :alert_script => "/engineyard/bin/ey-alert.rb",
-        :load_warning => node['collectd']['load']['warning'],
-        :load_failure => node['collectd']['load']['failure'],
+        :db_type         => db_type,
+        :has_db          => has_db,
+        :is_postgres_db  => is_postgres_db,
+        :is_mysql_db     => is_mysql_db,
+        :databases       => has_db ? node.engineyard.environment['apps'].map {|a| a['database_name']} : [],
+        :db_slaves       => node.dna['db_slaves'],
+        :role            => node.dna['instance_role'],
+        :memcached       => memcached,
+        :user            => node["owner_name"],
+        :alert_script    => "/engineyard/bin/ey-alert.rb",
+        :load_warning    => node['collectd']['load']['warning'],
+        :load_failure    => node['collectd']['load']['failure'],
         :swap_thresholds => SwapThresholds.new,
-        :short_version => short_version,
+        :short_version   => short_version,
         :disk_thresholds => DiskThresholds.new
       }
     }
