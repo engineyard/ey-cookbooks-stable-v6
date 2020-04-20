@@ -27,7 +27,6 @@ require_relative 'metadata'
 require_relative 'env_vars'
 
 def pool_size_settings_key_to_env_var(key)
-  # TODO (jf): documentation!
   "EY_#{key.to_s.upcase}"
 end
 
@@ -285,7 +284,6 @@ class Engineyard
       end
 
       def custom_pool_size
-        # TODO (jf): documentation!
         pool_size = self.recipe.metadata_any_get(:pool_size)
         pool_size = self.recipe.fetch_env_var(
           self.recipe.node, pool_size_settings_key_to_env_var(:pool_size), pool_size)
