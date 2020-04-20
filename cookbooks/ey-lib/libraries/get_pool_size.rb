@@ -17,13 +17,14 @@
 #    | m2.4xlarge      |   70000 MB |   30725 MB |      26 |         24 |         52 |
 #    | hi1.4xlarge     |   62000 MB |   30725 MB |      35 |         70 |         70 |
 #
-# Note: m1.medium will return 7 (not 4) if no metadata is set, as a way to prevent
+# Note: m1.medium will return 7 (not 4) if no metadata or environment variable is set, as a way to prevent
 # too much of a surprise.
 #
 # https://gist.github.com/d236dd5b24738ed32b21
 #
 
 require_relative 'metadata'
+require_relative 'env_vars'
 
 class Engineyard
   module PoolSize
@@ -65,7 +66,7 @@ class Engineyard
       # pool size settings
       def settings
         @settings ||= begin
-          settings = metadata_settings
+          settings = build_settings_from_config
           settings[:overridden] = !settings.empty?
           set_defaults(settings)
         end
@@ -81,11 +82,18 @@ class Engineyard
 
       protected
 
-      def metadata_settings
+      def build_settings_from_config
         KEYS.inject({}) do |memo, key|
-          metadata = self.recipe.metadata_any_get(key)
-          metadata ? memo.merge(key => metadata) : memo
+          conf_val = self.recipe.metadata_any_get(key)
+          conf_val = self.recipe.fetch_env_var(
+            self.recipe.node, settings_key_to_env_var(key), conf_val)
+          conf_val ? memo.merge(key => conf_val) : memo
         end
+      end
+
+      def settings_key_to_env_var(key)
+        # TODO (jf): documentation!
+        "EY_#{key.to_s.upcase}"
       end
 
       def set_defaults(hash)
@@ -277,7 +285,11 @@ class Engineyard
       end
 
       def custom_pool_size
-        self.recipe.metadata_any_get(:pool_size).to_i
+        # TODO (jf): documentation!
+        pool_size = self.recipe.metadata_any_get(:pool_size)
+        pool_size = self.recipe.fetch_env_var(
+          self.recipe.node, settings_key_to_env_var(:pool_size), pool_size)
+        pool_size.to_i
       end
 
       def max_by_memory
