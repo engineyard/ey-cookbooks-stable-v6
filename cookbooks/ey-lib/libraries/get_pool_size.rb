@@ -26,6 +26,11 @@
 require_relative 'metadata'
 require_relative 'env_vars'
 
+def pool_size_settings_key_to_env_var(key)
+  # TODO (jf): documentation!
+  "EY_#{key.to_s.upcase}"
+end
+
 class Engineyard
   module PoolSize
     class Settings
@@ -86,14 +91,9 @@ class Engineyard
         KEYS.inject({}) do |memo, key|
           conf_val = self.recipe.metadata_any_get(key)
           conf_val = self.recipe.fetch_env_var(
-            self.recipe.node, settings_key_to_env_var(key), conf_val)
+            self.recipe.node, pool_size_settings_key_to_env_var(key), conf_val)
           conf_val ? memo.merge(key => conf_val) : memo
         end
-      end
-
-      def settings_key_to_env_var(key)
-        # TODO (jf): documentation!
-        "EY_#{key.to_s.upcase}"
       end
 
       def set_defaults(hash)
@@ -288,7 +288,7 @@ class Engineyard
         # TODO (jf): documentation!
         pool_size = self.recipe.metadata_any_get(:pool_size)
         pool_size = self.recipe.fetch_env_var(
-          self.recipe.node, settings_key_to_env_var(:pool_size), pool_size)
+          self.recipe.node, pool_size_settings_key_to_env_var(:pool_size), pool_size)
         pool_size.to_i
       end
 
