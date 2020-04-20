@@ -39,7 +39,7 @@ If you are missing a setting, please request it by [opening a GitHub issue](http
 | `EY_WORKER_MEMORY_SIZE`            | 250 MB        | Sets the max memory size in MB for application servers.                           |
 | `EY_SWAP_USAGE_PERCENT`            | 25%           | Percentage of available swap to account for in worker pool size calculation.      |
 | `EY_WORKER_TERMINATION_CONDITIONS` | N/A           | Additional termination conditions for the monit unit monitoring unicorn workers.  |
-| `EY_PASSENGER_GRACE_TIME`          | N/A           | How long to wait in seconds until the passanger monitor kills workers.            |
+| `EY_PASSENGER_GRACE_TIME`          | 60 seconds    | How long to wait in seconds until the passanger monitor kills workers.            |
 
 ## Contribution Guidelines
 
