@@ -1,3 +1,4 @@
+include_recipe "php::system_ruby"
 include_recipe "php::install"
 include_recipe "php::configure"
 include_recipe "php::composer"
