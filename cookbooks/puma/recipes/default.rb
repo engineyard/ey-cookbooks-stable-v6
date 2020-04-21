@@ -93,11 +93,6 @@ node.engineyard.apps.each_with_index do |app,index|
     copy_then_truncate
   end
 
-  # :app_memory_limit is no longer used but is checked here and overridden when :worker_memory_size is available
-  depreciated_memory_limit = metadata_app_get_with_default(app.name, :app_memory_limit, "255.0")
-  # See https://support.cloud.engineyard.com/entries/23852283-Worker-Allocation-on-Engine-Yard-Cloud for more details
-  memory_limit = metadata_app_get_with_default(app.name, :worker_memory_size, depreciated_memory_limit)
-
   managed_template "/etc/monit.d/puma_#{app.name}.monitrc" do
     source "puma.monitrc.erb"
     owner "root"
@@ -106,7 +101,7 @@ node.engineyard.apps.each_with_index do |app,index|
     backup 0
     cookbook  'puma'
     variables(:app => app.name,
-              :app_memory_limit => memory_limit,
+              :app_memory_limit => app_server_get_worker_memory_size(app),
               :username => ssh_username,
               :ports => ports)
     notifies :run, "execute[reload-monit]"

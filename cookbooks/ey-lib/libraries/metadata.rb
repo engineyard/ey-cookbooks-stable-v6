@@ -1,5 +1,5 @@
-class Chef
-  class Recipe
+module EnvMetadata
+  module Helper
     # Add's helpers for Metadata.  You can now use commands like
     #
     # :http_bind_port => metadata_env_get_with_default(:haproxy_http_port, "80"),
@@ -64,5 +64,11 @@ class Chef
       node.engineyard.apps.collect.each {|a| p "AppName: " + a.name ; p a.metadata }
       Chef::Log.info("Metadata - End")
     end
+  end
+end
+
+class Chef
+  class Recipe
+    include EnvMetadata::Helper
   end
 end

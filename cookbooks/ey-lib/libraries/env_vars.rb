@@ -11,6 +11,15 @@ module EnvVars
       end
     end
 
+    def fetch_env_var_for_app(app, var_name, default = nil)
+      vars = fetch_environment_variables(app.ey_app).select { |v| v[:name] == var_name }
+      if vars.empty?
+        default
+      else
+        vars.first[:value]
+      end
+    end
+
     def fetch_env_var(node, name, default = nil)
       apps = node['dna']['engineyard']['environment']['apps']
       arr = []

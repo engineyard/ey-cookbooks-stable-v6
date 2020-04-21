@@ -3,6 +3,7 @@
 # Recipe:: install
 #
 
+recipe = self
 
 # Notify dashboard
 ey_cloud_report "passenger5" do
@@ -47,16 +48,6 @@ node.engineyard.apps.each_with_index do |app,index|
   app_base_port = base_port + ( stepping * index )
   log_file      = "#{app_path}/shared/log/passenger.#{app_base_port}.log"
 
-
-  # Get nginx http and https ports, memory limits and worker counts.  Uses metadata if it exists.
-
-  # :app_memory_limit is no longer used but is checked here and overridden when :worker_memory_size is available
-  depreciated_memory_limit = metadata_app_get_with_default(app.name, :app_memory_limit, "255.0")
-  # See https://support.cloud.engineyard.com/entries/23852283-Worker-Allocation-on-Engine-Yard-Cloud for more details
-  memory_limit = metadata_app_get_with_default(app.name, :worker_memory_size, depreciated_memory_limit)
-  memory_option = memory_limit ? "-l #{memory_limit}" : ""
-  worker_count = get_pool_size
-
   # Render app control script, this script calls the passenger enterprise binaries using the full path
   template "/engineyard/bin/app_#{app.name}" do
     source  'app_control.erb'
@@ -64,12 +55,18 @@ node.engineyard.apps.each_with_index do |app,index|
     group   ssh_username
     mode    0755
     backup  0
-    variables(:user => ssh_username,
-              :app_name => app.name,
-              :version  => version,
-              :port     => app_base_port,
-              :worker_count  => worker_count,
-              :rails_env     => framework_env)
+    variables(
+      lazy {
+        {
+          :user         => ssh_username,
+          :app_name     => app.name,
+          :version      => version,
+          :port         => app_base_port,
+          :worker_count => recipe.get_pool_size,
+          :rails_env    => framework_env
+        }
+      }
+    )
   end
 
   # Setup log rotate for passenger.log
@@ -85,11 +82,11 @@ node.engineyard.apps.each_with_index do |app,index|
     group "root"
     mode 0666
     backup 0
-    variables(:app => app.name,
-              :app_memory_limit => memory_limit,
-              :username => ssh_username,
-              :port => app_base_port,
-              :version => version)
+    variables(:app              => app.name,
+              :app_memory_limit => app_server_get_worker_memory_size(app),
+              :username         => ssh_username,
+              :port             => app_base_port,
+              :version          => version)
     notifies :run, "execute[reload-monit]", :delayed
   end
 end
