@@ -78,6 +78,7 @@ managed_template "/etc/mysql/percona-server.cnf" do
       :innodb_buff => innodb_buff,
       :replication_master => node['dna']['instance_role'] == 'db_master',
       :replication_slave  => node['dna']['instance_role'] == 'db_slave',
+      :solo_environment  => node['dna']['instance_role'] == 'solo',
       :server_id    => server_id,
     }
   })

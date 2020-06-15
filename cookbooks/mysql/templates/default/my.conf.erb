@@ -79,6 +79,9 @@ log-slave-updates = 1
 binlog-format  = MIXED
 <% end %>
 sync_binlog = 0
+<% if @solo_environment %>
+skip-log-bin
+<% end %>
 
 # END master/slave configuration
 
