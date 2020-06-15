@@ -55,18 +55,12 @@ node.engineyard.apps.each_with_index do |app,index|
     group   ssh_username
     mode    0755
     backup  0
-    variables(
-      lazy {
-        {
-          :user         => ssh_username,
-          :app_name     => app.name,
-          :version      => version,
-          :port         => app_base_port,
-          :worker_count => recipe.get_pool_size,
-          :rails_env    => framework_env
-        }
-      }
-    )
+    variables(:user         => ssh_username,
+              :app_name     => app.name,
+              :version      => version,
+              :port         => app_base_port,
+              :worker_count => recipe.get_pool_size,
+              :rails_env    => framework_env)
   end
 
   # Setup log rotate for passenger.log
