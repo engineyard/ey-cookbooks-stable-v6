@@ -18,6 +18,9 @@ nginx_haproxy_http_port = 8091
 nginx_haproxy_https_port = 8092
 nginx_xlb_http_port = 8081
 nginx_xlb_https_port = 8082
+letsencrypt = fetch_env_var(node, 'EY_LETSENCRYPT_ENABLED') || false
+
+Chef::Log.info "LetsEncrypt Enabled: #{letsencrypt}"
 
 base_port = node['passenger5']['port'].to_i
 stepping = 200
@@ -27,6 +30,7 @@ behind_proxy = true
 is_passenger = false
 is_unicorn = false
 is_puma = false
+is_app_master = ['app_master'].include?(node['dna']['instance_role']) || false
 
 
 if stack.match(/nginx_passenger5/)
@@ -135,6 +139,7 @@ node.engineyard.apps.each_with_index do |app, index|
         :vhost => app.vhosts.first,
         :haproxy_nginx_port => nginx_haproxy_http_port,
         :xlb_nginx_port => nginx_xlb_http_port,
+        :app_instance => is_app_master,
         :upstream_port => app_base_port,
         :http2 => false
       })
@@ -151,6 +156,7 @@ node.engineyard.apps.each_with_index do |app, index|
         :webroot => php_webroot,
         :vhost => app.vhosts.first,
         :env_name => node.engineyard.environment[:name],
+        :app_instance => is_app_master,
         :haproxy_nginx_port => nginx_haproxy_http_port,
         :xlb_nginx_port => nginx_xlb_http_port,
         :http2 => false,
@@ -295,6 +301,10 @@ node.engineyard.apps.each_with_index do |app, index|
       end
     end
 
+  if (!letsencrypt || !File.exists?("/data/nginx/ssl/#{app.name}/#{app.name}.key")) 
+
+
+
     template "/data/nginx/ssl/#{app.name}/#{app.name}.key" do
       owner node['owner_name']
       group node['owner_name']
@@ -319,7 +329,7 @@ node.engineyard.apps.each_with_index do |app, index|
       )
       notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
     end
-
+  end
     # Add Cipher chain
     template "/data/nginx/servers/#{app.name}/default.ssl_cipher" do
       owner node['owner_name']
