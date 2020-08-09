@@ -18,7 +18,7 @@ if Dir.exist?("/data/#{app}/current") && ['solo', 'app_master'].include?(node['d
 if !wc
 
   execute "issue certificate" do
-    command "certbot certonly --noninteractive --agree-tos --register-unsafely-without-email -d #{domain} --webroot -w /data/#{app}/current/public/ --dry-run"
+    command "certbot certonly --noninteractive --agree-tos --register-unsafely-without-email -d #{domain} --webroot -w /data/#{app}/current/public/"
     not_if { ::Dir.exist? ("/etc/letsencrypt/live/#{md}/") }
   end
 end 
