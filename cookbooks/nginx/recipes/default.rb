@@ -30,7 +30,7 @@ behind_proxy = true
 is_passenger = false
 is_unicorn = false
 is_puma = false
-is_app_master = ['app_master'].include?(node['dna']['instance_role']) || false
+is_app_master = ['app_master','solo'].include?(node['dna']['instance_role']) || false
 
 
 if stack.match(/nginx_passenger5/)
