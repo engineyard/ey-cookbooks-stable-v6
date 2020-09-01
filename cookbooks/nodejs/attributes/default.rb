@@ -23,4 +23,4 @@ fallback_nodejs_version = case version
                             '10.17.0'
                           end
 
-default['nodejs']['version'] = node.engineyard.environment.metadata('nodejs_version', fallback_nodejs_version)
+default['nodejs']['version'] = fetch_env_var(node, 'EY_NODEJS_VERSION') || node.engineyard.environment.metadata('nodejs_version', fallback_nodejs_version)
