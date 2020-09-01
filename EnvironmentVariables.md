@@ -21,6 +21,8 @@ If you are missing a setting, please request it by [opening a GitHub issue](http
 | `EY_MEMCACHED_ENABLED`              | `false`       | Sets up Memcached. [More details here](./cookbooks/memcached/README.md#environment-variables)                                                                                                               |
 | `EY_SIDEKIQ_*`                      | N/A           | Sets up Sidekiq. [More details here](./cookbooks/sidekiq/readme.md#environment-variables)                                                                                                                   |
 | `EY_PHP_EXTRA_EXTENSIONS`           | N/A           | Lists (as comma-separated values) additional PHP extensions that should be installed.                                                                                                                       |
+| `EY_NODEJS_VERSION`                   | N/A           | Sets the exact version of NodeJS (e.g. "12.18.3")                                                                                                                                                     |
+
 | [Worker settings](#worker-settings) | N/A           | [See below](#worker-settings)                                                                                                                                                                               |
 
 
