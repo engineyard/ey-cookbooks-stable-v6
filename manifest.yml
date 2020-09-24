@@ -1,4 +1,4 @@
 ---
 mnml_version: '1.0.3'
-chef_version: '16.4.41'
+chef_version: '16.4.38'
 enzyme_version: '2.0.6'
