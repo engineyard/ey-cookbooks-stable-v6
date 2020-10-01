@@ -118,7 +118,7 @@ start() {
       nohup puma ${threads:+"-t $threads"} \
         --environment ${framework_env} \
         --state ${pid_directory}/puma.$PORT.state \
-        --control unix://${pid_directory}/pumactl.$PORT.sock \
+        --control-url unix://${pid_directory}/pumactl.$PORT.sock \
         --pidfile ${pid_directory}/puma.$PORT.pid \
         --port $PORT \
         $puma_options \
