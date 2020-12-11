@@ -13,8 +13,8 @@ module AppServerConfigs
 
     def app_server_get_worker_memory_size(app)
       # See https://support.cloud.engineyard.com/entries/23852283-Worker-Allocation-on-Engine-Yard-Cloud for more details
-      # 1. Default value is 255.0
-      mem_size = '255.0'
+      # 1. Default value is 250
+      mem_size = '250'
       # 2. Try to get a value from metadata (this should be removed eventually!)
       mem_size = metadata_app_get_with_default(app.name, :worker_memory_size, mem_size)
       # 3. Try to get a value from the EY environment variable (recommended way)
