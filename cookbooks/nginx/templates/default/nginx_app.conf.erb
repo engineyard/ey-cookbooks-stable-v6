@@ -3,8 +3,13 @@ upstream <%= @vhost.app.name %>ssl_upstream {
 <% else %>
 upstream <%= @vhost.app.name %>_upstream {
 <% end %>
-    <% if @passenger or @puma %>
+    <% if @passenger  %>
     server 127.0.0.1:<%= @upstream_port %>;
+    <% end %>
+    <% if @puma %>
+      <% @upstream_port.each do |port| %>
+        server 127.0.0.1:<%= port %>;
+      <% end %>
     <% end %>
     <% if @unicorn %>
     server unix:/var/run/engineyard/unicorn_<%= @vhost.app.name %>.sock fail_timeout=0;

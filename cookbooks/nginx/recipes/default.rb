@@ -113,6 +113,7 @@ end
 node.engineyard.apps.each_with_index do |app, index|
 
   app_base_port = base_port + ( stepping * index )
+
   dhparam_available = app.metadata('dh_key',nil)
 
   directory "/data/nginx/servers/#{app.name}" do
@@ -120,6 +121,15 @@ node.engineyard.apps.each_with_index do |app, index|
     group node['owner_name']
     mode 0775
   end
+
+if stack.match(/puma/)
+puma_port     = 8000
+workers = [(1.0*node['cpu']['total']/node['dna']['applications'].size).round,1].max
+app_base_port = []
+app_base_port = (puma_port...(puma_port+workers)).to_a
+end
+
+
 
   if node.engineyard.environment.ruby?
     template "/data/nginx/servers/#{app.name}.conf" do
