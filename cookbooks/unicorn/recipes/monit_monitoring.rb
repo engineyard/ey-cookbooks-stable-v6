@@ -43,15 +43,12 @@ node.engineyard.apps.each do |app|
     owner node.engineyard.environment.ssh_username
     group node.engineyard.environment.ssh_username
     mode 0644
+    action :create
     variables(
-      lazy {
-        {
           :unicorn_instance_count => [recipe.get_pool_size / node['dna']['applications'].size, 1].max,
           :app => app.name,
           :type => app.app_type,
           :user => node.engineyard.environment.ssh_username
-        }
-      }
     )
     source "unicorn.rb.erb"
   end
@@ -93,3 +90,4 @@ node.engineyard.apps.each do |app|
     }
   end
 end
+
