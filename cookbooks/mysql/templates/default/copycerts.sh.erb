@@ -1,0 +1,35 @@
+instances='<%= @app %>'
+name='<%= @user %>'
+ssh_options="ssh -i /home/${name}/.ssh/internal -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10"
+
+
+function push_cert {
+  local target=${1}
+#Pushes LE certs
+    rsync -rt -e "${ssh_options}" deploy@${target}:/home/${name}/.mysql /home/${name}
+
+#Make owner is correctly set
+
+chown ${name}:${name} /home/${name}/.mysql -R
+
+}
+
+    
+
+function is_up() {
+  eval ${ssh_options} $1 'date'
+  [[ $? -eq 0 ]]
+}
+
+cd ${keypath}
+# copy keys to other instances
+for instance in ${instances}
+do
+  if is_up ${instance}
+  then
+    push_cert ${instance}
+  else
+    echo "Instance ${instance} is not available. Skipping."
+  fi
+done
+

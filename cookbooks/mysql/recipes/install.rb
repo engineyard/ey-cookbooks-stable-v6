@@ -50,6 +50,25 @@ end
 
 package "libmysqlclient-dev"
 
+if !node['dna']['instance_role'][/^(solo)/]
+
+  managed_template "/engineyard/bin/mysqlcopycerts.sh" do
+    owner 'root'
+    group 'root'
+    mode 0700
+    source "copycerts.sh.erb"
+    variables(
+      :user => node.engineyard.environment.ssh_username,
+      :app => (node.app_master).join(' ')
+    )
+  end
+
+  execute "push certificate" do
+    command "/bin/bash -c '/engineyard/bin/mysqlcopycerts.sh'"
+     not_if { ::Dir.exist? ("/home#{node.engineyard.environment.ssh_username}/.mysql") }
+  end
+end
+
 case node['mysql']['short_version']
 when '5.6'
   packages = %w[percona-server-common libperconaserverclient18.1_ percona-server-client]
@@ -121,3 +140,4 @@ ruby_block "install mysql using version on lock file if present" do
     end
   end
 end
+
