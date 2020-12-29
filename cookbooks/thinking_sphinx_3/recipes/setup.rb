@@ -42,3 +42,28 @@ if node['sphinx']['is_thinking_sphinx_instance']
       end
     end
   end
+
+  # added after sidekiq analysis
+
+if node['sphinx']['create_restart_hook']
+  # loop through applications
+  node['dna']['applications'].each do |app_name, _|
+    directory "/data/#{app_name}/shared/hooks/sphinx" do
+      owner node["owner_name"]
+      group node["owner_name"]
+      mode 0755
+      recursive true
+    end
+
+    # after_restart hook
+    template "/data/#{app_name}/shared/hooks/sphinx/after_restart" do
+      mode 0755
+      source "after_restart.erb"
+      backup false
+      variables({
+        :thinking_sphinx_group       => "#{app_name}_sphinx",
+        :is_thinking_sphinx_instance => node['sphinx']['is_thinking_sphinx_instance']
+      })
+    end
+  end
+end

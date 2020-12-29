@@ -10,7 +10,7 @@ if node['sphinx']['is_thinking_sphinx_instance']
     end
   
     # install package
-    package "ruby-thinking-sphinx" do
+    package "sphinxsearch" do
       version node['sphinx']['version']
       action :install
     end
