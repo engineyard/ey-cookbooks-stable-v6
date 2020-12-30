@@ -91,7 +91,7 @@ default['sphinx']['applications'] = ['todo']
 
 ```ruby
 # this is the default
-default['sphinx']['version'] = '2.1.9'
+default['sphinx']['version'] = '2.2.11-2'
 
 # specify a new version
 # run apt-cache policy sphinx on the instance to get possible values
