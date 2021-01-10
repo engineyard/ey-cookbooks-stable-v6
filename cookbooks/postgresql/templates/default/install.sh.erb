@@ -6,7 +6,14 @@ get_full_pkg_version() {
   echo "$(apt-cache show ${postgres_package}=${package_version}* | grep 'Version:' | awk '{print $2}' 2>/dev/null)"
 }
 
-<% packages = ["postgresql-client-#{@postgres_version}", "postgresql-#{@postgres_version}", "postgresql-server-dev-#{@postgres_version}"] %>
+<%
+if @postgres_version=="9.5" || @postgres_version=="9.6"
+  packages = ["postgresql-client-#{@postgres_version}", "postgresql-#{@postgres_version}", "postgresql-server-dev-#{@postgres_version}", "postgresql-contrib-#{@postgres_version}"] 
+else
+  packages = ["postgresql-client-#{@postgres_version}", "postgresql-#{@postgres_version}", "postgresql-server-dev-#{@postgres_version}"]
+end
+%>
+
 <% packages.each do |package| %>
 # Get the full version for the package <%= package %>
 PKG_VER="$(get_full_pkg_version "<%= package %>" "<%= @package_version %>")"
