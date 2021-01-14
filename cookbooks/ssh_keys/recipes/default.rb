@@ -33,7 +33,7 @@ end
     block do
       keys = [node['dna'][:user_ssh_key]].flatten
       keys << node['dna'][:admin_ssh_key].to_s
-      keys << %|from="#{`curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/$(ifconfig |grep ether |awk {'print $2'} |grep -v "02:42")/vpc-ipv4-cidr-block`}" #{node['dna'][:internal_ssh_public_key]}|.to_s
+      keys << %|from="#{`curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/$(ifconfig |grep '1000\s\+(Ethernet)' |awk {'print $2'} |grep -v "02:42")/vpc-ipv4-cidr-block`}" #{node['dna'][:internal_ssh_public_key]}|.to_s
 
       File.open("#{ssh_dir}/authorized_keys.tmp", 'w') do |temp_key_file|
         keys.each do |key|
