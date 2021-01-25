@@ -50,7 +50,7 @@ end
 
 package "libmysqlclient-dev"
 
-if !node['dna']['instance_role'][/^(solo)/]
+if !node['dna']['instance_role'][/^(solo)/] and !db_host_is_rds?
 
   managed_template "/engineyard/bin/mysqlcopycerts.sh" do
     owner 'root'
