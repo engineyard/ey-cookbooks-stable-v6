@@ -1,0 +1,6 @@
+<% if @is_thinking_sphinx_instance == true %>
+sudo monit -g <%= @thinking_sphinx_group %> restart all
+<% else %>
+# This instance doesn't have Thinking Sphinx workers set up. Performing a NoOp.
+exit 0
+<% end %>
