@@ -15,19 +15,19 @@ end
 cron_header = ""
 if node.engineyard.environment.ruby?
   cron_header = <<-CRON
-# begin-ey-cron-header This is a delimiter. DO NOT DELETE
+  # begin-ey-cron-header This is a delimiter. DO NOT DELETE
 
-PATH=/opt/rubies/#{node[:ruby][:name]}-#{node[:ruby][:version]}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-RAILS_ENV="#{node.engineyard.environment['framework_env']}"
-RACK_ENV="#{node.engineyard.environment['framework_env']}"
-# end-ey-cron-header This is a delimiter. DO NOT DELETE
+  PATH=/opt/rubies/#{node[:ruby][:name]}-#{node[:ruby][:version]}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  RAILS_ENV="#{node.engineyard.environment['framework_env']}"
+  RACK_ENV="#{node.engineyard.environment['framework_env']}"
+  # end-ey-cron-header This is a delimiter. DO NOT DELETE
   CRON
 elsif node.engineyard.environment['stack_name'].match /nginx_fpm/
   cron_header = <<-CRON
-# begin-ey-cron-header This is a delimiter. DO NOT DELETE
-
-PHP_ENV="#{node.engineyard.environment['framework_env']}"
-# end-ey-cron-header This is a delimiter. DO NOT DELETE
+  # begin-ey-cron-header This is a delimiter. DO NOT DELETE
+  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+  PHP_ENV="#{node.engineyard.environment['framework_env']}"
+  # end-ey-cron-header This is a delimiter. DO NOT DELETE
   CRON
 end
 
@@ -81,8 +81,8 @@ directory "/etc/systemd/system/cron.service.d" do
 end
 
 file "/var/spool/cron/crontabs/#{node['owner_name']}" do
-    owner "#{node['owner_name']}"
-    group "crontab"
+  owner "#{node['owner_name']}"
+  group "crontab"
 end
 
 cookbook_file "/etc/systemd/system/cron.service.d/override.conf" do
