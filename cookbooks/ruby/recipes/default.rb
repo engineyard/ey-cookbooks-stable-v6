@@ -14,13 +14,13 @@ remote_file "/tmp/src/chruby-0.3.9.tar.gz" do
 end
 
 execute "extract-ruby-install" do
-  command "tar xzf /tmp/src/ruby-install-0.7.0.1.tar.gz && cd ruby-install-0.7.0.1 && make install"
+  command "tar xzf /tmp/src/ruby-install-0.8.1.1.tar.gz && cd ruby-install-0.8.1.1 && make install"
   cwd "/tmp/src"
   action :nothing
 end
 
-remote_file "/tmp/src/ruby-install-0.7.0.1.tar.gz" do
-  source "https://github.com/engineyard/ruby-install/archive/v0.7.0.1.tar.gz"
+remote_file "/tmp/src/ruby-install-0.8.1.1.tar.gz" do
+  source "https://github.com/engineyard/ruby-install/archive/v0.8.1.1.tar.gz"
   owner "root"
   group "root"
   mode '0755'
