@@ -8,7 +8,7 @@ known_versions = {
   '8.0.18' => 'https://downloads.percona.com/downloads/Percona-Server-8.0/Percona-Server-8.0.18-9/binary/debian/bionic/x86_64/Percona-Server-8.0.18-9-r53e606f-bionic-x86_64-bundle.tar',
   # mysql 5.7
   '5.7.29' => 'https://downloads.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.29-32/binary/debian/bionic/x86_64/Percona-Server-5.7.29-32-r56bce88-bionic-x86_64-bundle.tar',
-  '5.7.26' => 'https://downloads.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.26-29/binary/debian/bionic/x86_64/Percona-Server-5.7.26-29-r11ad961-bionic-x86_64-bundle.tar"',
+  '5.7.26' => 'https://downloads.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.26-29/binary/debian/bionic/x86_64/Percona-Server-5.7.26-29-r11ad961-bionic-x86_64-bundle.tar',
   '5.7.25' => 'https://downloads.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.25-28/binary/debian/bionic/x86_64/Percona-Server-5.7.25-28-rc335905-bionic-x86_64-bundle.tar',
   '5.7.24' => 'https://downloads.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.24-27/binary/debian/bionic/x86_64/Percona-Server-5.7.24-27-rbd42700-bionic-x86_64-bundle.tar',
   '5.7.23' => 'https://downloads.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.23-25/binary/debian/bionic/x86_64/Percona-Server-5.7.23-25-r7e2732e-bionic-x86_64-bundle.tar',
