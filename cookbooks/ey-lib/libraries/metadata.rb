@@ -26,7 +26,7 @@ module EnvMetadata
     end
 
     def metadata_get_apps_count
-      apps_count = node.dna.applications.size
+      apps_count = node['dna']['applications'].size
     end
 
     def metadata_app_get(appname, name)

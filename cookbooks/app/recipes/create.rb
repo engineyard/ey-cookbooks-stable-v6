@@ -55,7 +55,7 @@ end
         :dbhost => node['dna']['db_host'],
         :dbtype => dbtype,
         :slaves => node.engineyard.environment.instances.select{|i| i["role"] =="db_slave"},
-        :pool => node.engineyard.environment.jruby? ? node.dna['jruby_pool_size'] : nil,
+        :pool => node.engineyard.environment.jruby? ? node['dna']['jruby_pool_size'] : nil,
         :ssl_owner => node.engineyard.environment.ssh_username,
         :include_ssl => !!node.engineyard.environment['db_stack_name'][/^mysql/] && !db_host_is_rds?
       })

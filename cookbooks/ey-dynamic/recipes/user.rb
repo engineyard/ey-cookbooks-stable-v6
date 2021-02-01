@@ -22,7 +22,7 @@ execute "remove ubuntu group" do
   only_if "getent group ubuntu"
 end
 
-## EY role account should come first in the node.dna[:users] array
+## EY role account should come first in the node['dna']['users'] array
 node['dna']['users'].each do |user_obj|
   execute "create-group" do
     command "groupadd -g #{user_obj[:gid]} #{user_obj[:username]}"
