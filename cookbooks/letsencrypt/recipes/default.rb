@@ -4,8 +4,8 @@ package "certbot" do
   action :install
 end
 
-md = fetch_env_var(node, 'EY_LE_MAIN_DOMAIN')
-domain = fetch_env_var(node, 'EY_LE_DOMAINS').nil? || (fetch_env_var(node, 'EY_LE_DOMAINS').gsub(" "," -d "))
+md = fetch_env_var(node, 'EY_LE_MAIN_DOMAIN').downcase
+domain = fetch_env_var(node, 'EY_LE_DOMAINS').nil? || (fetch_env_var(node, 'EY_LE_DOMAINS').gsub(" "," -d ")).downcase
 app = fetch_env_var(node, 'EY_LE_MAIN_APP_NAME') || node['dna']['applications'].keys.first
 wc = fetch_env_var(node, 'EY_LE_USE_WILDCARD') || false
 
