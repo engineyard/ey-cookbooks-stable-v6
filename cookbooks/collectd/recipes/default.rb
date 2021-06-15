@@ -59,7 +59,7 @@ end
 
 has_db = ['solo','db_master','db_slave'].include?(node['dna']['instance_role'])
 
-case node.engineyard.environment['db_stack_name']
+case node['engineyard']['environment']['db_stack_name']
 when /^mysql\d+/
   short_version = node['mysql']['short_version']
 when /^postgres\d+/
@@ -74,7 +74,7 @@ include_recipe "collectd::perl"
 # 1. If the instance RRD data directory does not exist, but some others,
 #    copy the directory with the latest mtime to the instance RRD data directory
 # 2. Remove all other RRD data directories
-instance = node.dna.engineyard.environment.instances.detect { |i| i['id'] == node.dna.engineyard['this'] }
+instance = node['dna']['engineyard']['environment']['instances'].detect { |i| i['id'] == node['dna']['engineyard']['this'] }
 private_hostname=instance["private_hostname"]
 rrd_basedir = File.expand_path('/var/lib/collectd/rrd')
 rrd_datadir = File.expand_path(File.join(rrd_basedir, private_hostname))
@@ -106,7 +106,7 @@ existing_rrd_datadirs.each do |dir|
 end
 
 memcached = node['memcached'] && node['memcached']['perform_install']
-db_type = node.engineyard.environment['db_stack_name']
+db_type = node['engineyard']['environment']['db_stack_name']
 is_postgres_db = db_type.match(/^(postgres\d+)/)
 is_mysql_db = db_type.match(/^(mysql\d+)/)
 managed_template "/etc/engineyard/collectd.conf" do
@@ -121,9 +121,9 @@ managed_template "/etc/engineyard/collectd.conf" do
         :has_db          => has_db,
         :is_postgres_db  => is_postgres_db,
         :is_mysql_db     => is_mysql_db,
-        :databases       => has_db ? node.engineyard.environment['apps'].map {|a| a['database_name']} : [],
-        :db_slaves       => node.dna['db_slaves'],
-        :role            => node.dna['instance_role'],
+        :databases       => has_db ? node['engineyard']['environment']['apps'].map {|a| a['database_name']} : [],
+        :db_slaves       => node['dna']['db_slaves'],
+        :role            => node['dna']['instance_role'],
         :memcached       => memcached,
         :user            => node["owner_name"],
         :alert_script    => "/engineyard/bin/ey-alert.rb",

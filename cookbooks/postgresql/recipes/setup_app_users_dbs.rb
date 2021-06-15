@@ -2,7 +2,7 @@
 admin_username = node.engineyard.environment['db_admin_username']
 admin_password = node.engineyard.environment['db_admin_password']
 
-if ['solo', 'db_master', 'eylocal'].include?(node.dna[:instance_role])
+if ['solo', 'db_master', 'eylocal'].include?(node['dna']['instance_role'])
   db_hostname = "localhost"
 else
   db_hostname = node.dna['db_host']
