@@ -132,7 +132,7 @@ end
 
 
   if node.engineyard.environment.ruby?
-    template "/data/nginx/servers/#{app.name}.conf" do
+    managed_template "/data/nginx/servers/#{app.name}.conf" do
       owner node['owner_name']
       group node['owner_name']
       mode 0644
@@ -248,7 +248,7 @@ end
     end
 
     if node.engineyard.environment.ruby?
-      template "/data/nginx/servers/#{app.name}.ssl.conf" do
+      managed_template "/data/nginx/servers/#{app.name}.ssl.conf" do
         owner node['owner_name']
         group node['owner_name']
         mode 0644
@@ -305,7 +305,7 @@ end
       end
     end
 
-    template "/data/nginx/ssl/#{app.name}/#{app.name}.key" do
+    managed_template "/data/nginx/ssl/#{app.name}/#{app.name}.key" do
       owner node['owner_name']
       group node['owner_name']
       mode 0644
@@ -317,7 +317,7 @@ end
       notifies node['nginx'][:action], resources(:service => "nginx"), :delayed
     end
 
-    template "/data/nginx/ssl/#{app.name}/#{app.name}.crt" do
+    managed_template "/data/nginx/ssl/#{app.name}/#{app.name}.crt" do
       owner node['owner_name']
       group node['owner_name']
       mode 0644
@@ -331,7 +331,7 @@ end
     end
 
     # Add Cipher chain
-    template "/data/nginx/servers/#{app.name}/default.ssl_cipher" do
+    managed_template "/data/nginx/servers/#{app.name}/default.ssl_cipher" do
       owner node['owner_name']
       group node['owner_name']
       mode 0644
@@ -347,7 +347,7 @@ end
     # Chain files are create if missing and do not reload Nginx
 
     # Add Cipher chain
-    template "/data/nginx/servers/#{app.name}/customer.ssl_cipher" do
+    managed_template "/data/nginx/servers/#{app.name}/customer.ssl_cipher" do
       owner node['owner_name']
       group node['owner_name']
       mode 0644
@@ -359,7 +359,7 @@ end
     end
 
     # Add Cipher chain
-    template "/data/nginx/servers/#{app.name}/ssl_cipher" do
+    managed_template "/data/nginx/servers/#{app.name}/ssl_cipher" do
       owner node['owner_name']
       group node['owner_name']
       mode 0644
@@ -370,7 +370,7 @@ end
       )
     end
 
-    template "/data/nginx/ssl/#{app.name}/#{app.name}.pem" do
+    managed_template "/data/nginx/ssl/#{app.name}/#{app.name}.pem" do
       owner node['owner_name']
       group node['owner_name']
       mode 0644
