@@ -94,7 +94,7 @@ if ['solo','app_master','app','util'].include?(node['dna']['instance_role'])
       backup 0
       variables(:yaml_file => {
         node['dna']['environment']['framework_env'] => {
-          :hosts => elasticsearch_hosts
+          "hosts" => elasticsearch_hosts
         }
       })
     end
