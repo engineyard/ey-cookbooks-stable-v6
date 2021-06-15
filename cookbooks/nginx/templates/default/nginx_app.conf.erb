@@ -161,6 +161,12 @@ server {
   # 5. Failing any caching or system maintenance, pass the request to the
   #    application.
   #
+  
+  <% if !@app_instance %>
+  location /.well-known {
+    proxy_pass http://ey-app-master:8081;
+  }
+  <% end %>
   location / {
     if (-f $document_root/system/maintenance.html) { return 503; }
   <% if @ssl %>

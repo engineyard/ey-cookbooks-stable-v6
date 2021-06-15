@@ -1,0 +1,43 @@
+#!/bin/bash
+instances='<%= @instances %>'
+appname='<%= @app_name %>'
+md='<%= @md %>'
+ssh_options='ssh -i /root/.ssh/internal -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10'
+
+
+if [[ $(find "/etc/letsencrypt/live/${md}/fullchain.pem" -mtime +30 -print)  ]]; then
+
+certbot --debug renew > /var/log/engineyard/le-renew.log
+
+fi
+
+
+function push_cert {
+  local target=${1}
+#Pushes LE certs
+
+    rsync --copy-links -e "${ssh_options}" /etc/letsencrypt/live/${md}/fullchain.pem ${target}:/etc/nginx/ssl/${appname}/${appname}.crt
+
+    rsync --copy-links -e "${ssh_options}" /etc/letsencrypt/live/${md}/privkey.pem ${target}:/etc/nginx/ssl/${appname}/${appname}.key
+    ${ssh_options} ${target} '/etc/init.d/nginx reload'
+
+}
+
+    
+
+function is_up() {
+  eval ${ssh_options} $1 'date'
+  [[ $? -eq 0 ]]
+}
+
+cd ${keypath}
+# copy keys to other instances
+for instance in ${instances}
+do
+  if is_up ${instance}
+  then
+    push_cert ${instance}
+  else
+    echo "Instance ${instance} is not available. Skipping."
+  fi
+done
