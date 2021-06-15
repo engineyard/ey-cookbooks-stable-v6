@@ -60,6 +60,7 @@ module EphemeralHelpers
       fstype "ext4"
       device device
       action [:mount, :enable]
+      options "defaults nofail"
     end
   end
 end
