@@ -414,4 +414,5 @@ service "start nginx" do
   provider Chef::Provider::Service::Systemd
   supports :status => true, :restart => true, :reload => true
   action [:start, :enable]
+  only_if { ['solo','app', 'app_master'].include?(node['dna']['instance_role']) }
 end
