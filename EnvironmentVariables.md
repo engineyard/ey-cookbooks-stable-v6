@@ -13,7 +13,7 @@ If you are missing a setting, please request it by [opening a GitHub issue](http
 
 | Environment Variable                | Default Value | Description                                                                                                                                                                                                 |
 | ----------------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `EY_RUBY_VERSION`                   | N/A           | Sets the exact version of Ruby. (e.g. "2.7.0-preview1") *important*: besides an 'Apply', app workers need to be restarted via `/engineyard/bin/app_<app_name> restart` for the new version to be used     |
+| `EY_RUBY_VERSION`                   | N/A           | Sets the exact version of Ruby. (e.g. "2.7.0-preview1") *important*: besides an 'Apply', app workers need to be restarted via `/engineyard/bin/app_<app_name> restart` for the new version to be used       |
 | `EY_RUBY_JEMALLOC`                  | `false`       | Activates Ruby with jemalloc as allocator. Check this [article](https://support.cloud.engineyard.com/hc/en-us/articles/360026434894-Engine-Yard-Cloud-Support-for-Ruby-with-jemalloc) for more information. |
 | `EY_ENABLE_UNATTENDED_UPGRADES`     | `false`       | Enables periodic security upgrades via Ubuntu's unattended-upgrades.                                                                                                                                        |
 | `EY_REDIS_ENABLED`                  | `false`       | Sets up Redis. [More details here](./cookbooks/redis/README.md#environment-variables)                                                                                                                       |
@@ -21,9 +21,9 @@ If you are missing a setting, please request it by [opening a GitHub issue](http
 | `EY_MEMCACHED_ENABLED`              | `false`       | Sets up Memcached. [More details here](./cookbooks/memcached/README.md#environment-variables)                                                                                                               |
 | `EY_SIDEKIQ_*`                      | N/A           | Sets up Sidekiq. [More details here](./cookbooks/sidekiq/readme.md#environment-variables)                                                                                                                   |
 | `EY_PHP_EXTRA_EXTENSIONS`           | N/A           | Lists (as comma-separated values) additional PHP extensions that should be installed.                                                                                                                       |
-| `EY_NODEJS_VERSION`                   | N/A           | Sets the exact version of NodeJS (e.g. "12.18.3")                                                                                                                                                     |
-
+| `EY_NODEJS_VERSION`                 | N/A           | Sets the exact version of NodeJS (e.g. "12.18.3")                                                                                                                                                           |
 | [Worker settings](#worker-settings) | N/A           | [See below](#worker-settings)                                                                                                                                                                               |
+| [LetsEncrypt settings]              | N/A           | [LetsEncrypt Documentation](./cookbooks/letsencrypt/README.md)                                                                                                                                              |
 
 
 ## Worker Settings
