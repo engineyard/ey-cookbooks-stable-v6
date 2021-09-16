@@ -40,8 +40,15 @@ if Dir.exist?("/data/#{app}/current") && ['solo', 'app_master'].include?(node['d
       )
     end
 
+    case type
+    when /route53/
+      dns_type = ""
+    else
+      dns_type = "--dns-#{type}-credentials /opt/.letsencrypt-secrets"
+    end
+
     execute "Issue certiciate initially" do
-      command "certbot certonly --dns-#{type} --dns-#{type}-credentials /opt/.letsencrypt-secrets -d #{domain} --non-interactive --agree-tos --register-unsafely-without-email --dry-run"
+      command ". /data/#{app}/shared/config/env.cloud && certbot certonly --dns-#{type} #{dns_type} -d #{domain} --non-interactive --agree-tos --register-unsafely-without-email --dry-run"
       not_if { File.exist?("/etc/letsencrypt/live/#{md}/privkey.pem") }
     end
 

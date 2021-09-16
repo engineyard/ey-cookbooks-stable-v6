@@ -11,6 +11,7 @@ This installs and sets up the optional LetsEncrypt recipe on the engineyard stac
 
 * Have a [certificate](https://support.cloud.engineyard.com/hc/en-us/articles/205407488-Obtain-and-Install-SSL-Certificates-for-Applications#topic8) applied to the [environment](https://support.cloud.engineyard.com/hc/en-us/articles/205407488-Obtain-and-Install-SSL-Certificates-for-Applications#topic12) 
 
+* Have the application deployed successfully
 
 **Environment Variables**
 
@@ -42,6 +43,8 @@ To automatically create a wildcard certificate
 * If you're using a multi-application environment setup set the variable `EY_LE_MAIN_APP_NAME` to the application you wish to use LetsEncrypt with
 
 * `www` is not included so you may wish to use `www.example.com` and `example.com` if you're using a SAN certificate
+
+* Route53 provider (AWS). Requires the custom variable `AWS_CONFIG_FILE` to be set as `/opt/.letsencrypt-secrets`
 
 
 **Supported DNS Providers**
