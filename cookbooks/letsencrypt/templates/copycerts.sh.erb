@@ -4,6 +4,7 @@ appname='<%= @app_name %>'
 md='<%= @md %>'
 ssh_options='ssh -i /root/.ssh/internal -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10'
 
+source /data/${appname}/shared/config/env.coud
 
 if [[ $(find "/etc/letsencrypt/live/${md}/fullchain.pem" -mtime +30 -print)  ]]; then
 
