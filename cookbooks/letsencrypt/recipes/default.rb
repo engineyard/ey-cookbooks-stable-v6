@@ -48,7 +48,7 @@ if Dir.exist?("/data/#{app}/current") && ['solo', 'app_master'].include?(node['d
     end
 
     execute "Issue certiciate initially" do
-      command ". /data/#{app}/shared/config/env.cloud && certbot certonly --dns-#{type} #{dns_type} -d #{domain} --non-interactive --agree-tos --register-unsafely-without-email --dry-run"
+      command ". /data/#{app}/shared/config/env.cloud && certbot certonly --dns-#{type} #{dns_type} -d #{domain} --non-interactive --agree-tos --register-unsafely-without-email"
       not_if { File.exist?("/etc/letsencrypt/live/#{md}/privkey.pem") }
     end
 
