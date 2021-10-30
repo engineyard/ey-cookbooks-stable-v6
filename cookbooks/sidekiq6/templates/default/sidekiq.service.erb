@@ -1,0 +1,20 @@
+[Unit]
+Description=Sidekiq Worker <%= @count %>
+
+
+[Service]
+Type=notify
+WorkingDirectory=/data/<%= @app_name %>/current
+ExecStart=/bin/bash -l -c "bundle exec sidekiq -e <%= @rails_env %> -C /data/<%= @app_name %>/current/config/sidekiq_<%= @count %>.yml"
+
+User=root
+Group=root
+RestartSec=30
+Restart=on-failure
+
+StandardOutput=file:/data/<%= @app_name %>/current/log/sidekiq_<%= @count %>.log
+StandardError=file:/data/<%= @app_name %>/current/log/sidekiq_<%= @count %>.stderr.log
+MemoryMax=<%= @memory_limit %>M
+EnvironmentFile=/data/<%= @app_name %>/shared/config/env.sidekiq.cloud
+
+

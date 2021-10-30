@@ -1,3 +1,3 @@
 name 'custom-sidekiq'
 
-depends 'sidekiq'
+depends 'sidekiq6'
