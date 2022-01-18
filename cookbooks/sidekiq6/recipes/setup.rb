@@ -12,8 +12,8 @@ if node['sidekiq']['is_sidekiq_instance']
   # loop through applications
   node['dna']['applications'].each do |app_name, _|
     node['sidekiq']['workers'].times do |count|
-      execute "restart-sidekiq-for-#{app_name}" do
-        command "systemctl daemon-reload"#&& systemctl restart sidekiq_#{app_name}_#{count}"
+      execute "restart-sidekiq-for-#{app_name}-#{count}" do
+        command "systemctl daemon-reload && systemctl restart sidekiq_#{app_name}_#{count}"
         action :nothing
       end
 
