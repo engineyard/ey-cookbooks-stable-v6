@@ -28,7 +28,7 @@ if node['sidekiq']['is_sidekiq_instance']
           :rails_env => node['dna']['environment']['framework_env'],
           :memory_limit => node['sidekiq']['worker_memory']
         })
-        notifies :run, "execute[restart-sidekiq-for-#{app_name}]"
+        notifies :run, "execute[restart-sidekiq-for-#{app_name}-#{count}]"
     end
 end
     execute "set-up-variables-for-sidekiq" do
