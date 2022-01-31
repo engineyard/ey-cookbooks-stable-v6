@@ -12,8 +12,10 @@ Group=root
 RestartSec=30
 Restart=on-failure
 
-StandardOutput=file:/data/<%= @app_name %>/current/log/sidekiq_<%= @count %>.log
-StandardError=file:/data/<%= @app_name %>/current/log/sidekiq_<%= @count %>.stderr.log
+# Runs on ubuntu 18, so systemd < 240, so 'file' output is broken:
+# it rewrites the file from the beginning, appending is not available
+#StandardOutput=file:/data/<%= @app_name %>/current/log/sidekiq_<%= @count %>.log
+#StandardError=file:/data/<%= @app_name %>/current/log/sidekiq_<%= @count %>.stderr.log
 MemoryMax=<%= @memory_limit %>M
 EnvironmentFile=/data/<%= @app_name %>/shared/config/env.sidekiq.cloud
 
