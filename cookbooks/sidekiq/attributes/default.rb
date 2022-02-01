@@ -54,6 +54,9 @@ default['sidekiq'].tap do |sidekiq|
     queue_priority = queue_var[:value].to_i
     sidekiq['queues'][queue_name] = queue_priority
   end
+  
+  # Max Retries
+  sidekiq['max_retries'] = fetch_env_var(node, 'EY_SIDEKIQ_MAX_RETRIES', 0).to_i
 
   # Memory limit
   sidekiq['worker_memory'] = fetch_env_var(node, 'EY_SIDEKIQ_WORKER_MEMORY_MB', 400).to_i # MB
