@@ -23,6 +23,7 @@ We accept contributions for changes that can be used by all customers.
 | `EY_SIDEKIQ_ORPHAN_MONITORING_ENABLED`   | `false`        | Activate a cronjob which monitors for orphan sidekiq processes. |
 | `EY_SIDEKIQ_ORPHAN_MONITORING_SCHEDULE`  | `*/5 * * * *`  | Cron schedule for the orphan monitor.                           |
 | `EY_SIDEKIQ_QUEUE_PRIORITY_<queue_name>` | `default => 1` | Set additional queue priorities.**                              |
+| `EY_SIDEKIQ_MAX_RETRIES`                 | 0              | Set max retries.                         |
 
 *: These environment variables match instances by their role and name.
    Every matching instance is set up to run sidekiq workers.
