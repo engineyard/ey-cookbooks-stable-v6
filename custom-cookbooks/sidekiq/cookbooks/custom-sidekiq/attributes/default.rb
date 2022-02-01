@@ -12,3 +12,6 @@
 
 # Default memory limit
 # default['sidekiq']['worker_memory'] = 400
+
+# Default max retries
+# default['sidekiq']['max_retries'] = 0
