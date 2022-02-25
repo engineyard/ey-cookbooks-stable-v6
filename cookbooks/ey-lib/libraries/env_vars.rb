@@ -7,7 +7,7 @@ module EnvVars
       return [] unless metadata && metadata['environment_variables']
 
       variables = metadata['environment_variables'].map do |var_hash|
-        { :name => var_hash['name'], :value => ::Base64.strict_decode64(var_hash['value'].squish) }
+        { :name => var_hash['name'], :value => ::Base64.strict_decode64(var_hash['value'].split.join(' ')) }
       end
     end
 
