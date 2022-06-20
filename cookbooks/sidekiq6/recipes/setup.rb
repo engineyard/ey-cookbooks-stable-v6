@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: sidekiq
+# Cookbook Name:: sidekiq6
 # Recipe:: setup
 #
 
@@ -15,6 +15,7 @@ if node['sidekiq']['is_sidekiq_instance']
       execute "restart-sidekiq-for-#{app_name}-#{count}" do
         command "systemctl daemon-reload && systemctl restart sidekiq_#{app_name}_#{count}"
         action :nothing
+        only_if "test -f '/lib/systemd/system/sidekiq_#{app_name}_#{count}.service'"
       end
 
     # set up systemd
@@ -29,8 +30,9 @@ if node['sidekiq']['is_sidekiq_instance']
           :memory_limit => node['sidekiq']['worker_memory']
         })
         notifies :run, "execute[restart-sidekiq-for-#{app_name}-#{count}]"
+      end
     end
-end
+
     execute "set-up-variables-for-sidekiq" do
       command "cat /data/#{app_name}/shared/config/env.cloud |tr -d '\"' |awk '{gsub(\"export \", \"\");print}' > /data/#{app_name}/shared/config/env.sidekiq.cloud"
     end
@@ -40,7 +42,9 @@ end
       command "sed -ibak --follow-symlinks 's/reconnect/pool:      #{node['sidekiq']['concurrency']}\\\n  reconnect/g' #{db_yaml_file}"
       action :run
       only_if "test -f #{db_yaml_file} && ! grep 'pool: *#{node['sidekiq']['concurrency']}' #{db_yaml_file}"
-      notifies :run, "execute[restart-sidekiq-for-#{app_name}]"
+      node['sidekiq']['workers'].times do |count|
+        notifies :run, "execute[restart-sidekiq-for-#{app_name}-#{count}]"
+      end
     end
 
     # yml files
@@ -52,7 +56,7 @@ end
         source "sidekiq.yml.erb"
         backup false
         variables(node['sidekiq'])
-        notifies :run, "execute[restart-sidekiq-for-#{app_name}]"
+        notifies :run, "execute[restart-sidekiq-for-#{app_name}-#{count}]"
       end
       link "/data/#{app_name}/current/config/sidekiq_#{count}.yml" do
         to "/data/#{app_name}/shared/config/sidekiq_#{count}.yml"

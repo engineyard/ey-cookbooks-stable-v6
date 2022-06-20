@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: sidekiq
+# Cookbook Name:: sidekiq6
 # Attrbutes:: default
 #
 
