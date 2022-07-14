@@ -48,6 +48,7 @@ end
 
 # FBZ 10372
 healthcheck_domain_override = fetch_env_var(node, 'EY_HEALTHCHECK_DOMAIN_OVERRIDE') || false
+Chef::Log.info "healthcheck_domain_override: #{healthcheck_domain_override}"
 if healthcheck_domain_override
 	haproxy_httpchk_host = healthcheck_domain_override
 end
