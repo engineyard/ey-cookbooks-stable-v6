@@ -6,7 +6,7 @@ describe 'sidekiq::setup' do
     environment.stack = DNApi::Stack::NginxUnicorn
     app = environment.build_app(name: 'testapp')
     DNASpec::set_app_environment_variables(app, [
-      { :name => 'EY_SIDEKIQ_ENABLED', :value => 'true' }
+      { :name => 'EY_SIDEKIQ6_ENABLED', :value => 'true' }
     ])
   end
   def get_this_instance(environment)
@@ -52,9 +52,9 @@ describe 'sidekiq::setup' do
       environment.stack = DNApi::Stack::NginxUnicorn
       app = environment.build_app(name: 'testapp')
       DNASpec::set_app_environment_variables(app, [
-        { :name => 'EY_SIDEKIQ_ENABLED', :value => 'true' },
-        { :name => 'EY_SIDEKIQ_INSTANCES_ROLE', :value => 'util' },
-        { :name => 'EY_SIDEKIQ_INSTANCES_NAME', :value => '^sidekiq(\d+)$' },
+        { :name => 'EY_SIDEKIQ6_ENABLED', :value => 'true' },
+        { :name => 'EY_SIDEKIQ6_INSTANCES_ROLE', :value => 'util' },
+        { :name => 'EY_SIDEKIQ6_INSTANCES_NAME', :value => '^sidekiq(\d+)$' },
       ])
     end
 
@@ -90,7 +90,7 @@ describe 'sidekiq::setup' do
       environment.stack = DNApi::Stack::NginxUnicorn
       app = environment.build_app(name: 'testapp')
       DNASpec::set_app_environment_variables(app, [
-        { :name => 'EY_SIDEKIQ_ENABLED', :value => 'false' }
+        { :name => 'EY_SIDEKIQ6_ENABLED', :value => 'false' }
       ])
     end
 

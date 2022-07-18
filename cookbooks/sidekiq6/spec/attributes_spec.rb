@@ -45,9 +45,9 @@ describe 'attributes' do
       environment.stack = DNApi::Stack::NginxUnicorn
       app = environment.build_app
       DNASpec::set_app_environment_variables(app, [
-        { :name => 'EY_SIDEKIQ_ENABLED', :value => 'true' },
-        { :name => 'EY_SIDEKIQ_INSTANCES_ROLE', :value => 'util' },
-        { :name => 'EY_SIDEKIQ_INSTANCES_NAME', :value => '^sidekiq(\d+)$' },
+        { :name => 'EY_SIDEKIQ6_ENABLED', :value => 'true' },
+        { :name => 'EY_SIDEKIQ6_INSTANCES_ROLE', :value => 'util' },
+        { :name => 'EY_SIDEKIQ6_INSTANCES_NAME', :value => '^sidekiq(\d+)$' },
       ])
     end
 
@@ -98,8 +98,8 @@ describe 'attributes' do
       environment.stack = DNApi::Stack::NginxUnicorn
       app = environment.build_app
       DNASpec::set_app_environment_variables(app, [
-        { :name => 'EY_SIDEKIQ_ENABLED', :value => 'true' },
-        { :name => 'EY_SIDEKIQ_INSTANCES_ROLE', :value => '^db_' }
+        { :name => 'EY_SIDEKIQ6_ENABLED', :value => 'true' },
+        { :name => 'EY_SIDEKIQ6_INSTANCES_ROLE', :value => '^db_' }
       ])
     end
 
@@ -150,7 +150,7 @@ describe 'attributes' do
       environment.stack = DNApi::Stack::NginxUnicorn
       app = environment.build_app
       DNASpec::set_app_environment_variables(app, [
-        { :name => 'EY_SIDEKIQ_ENABLED', :value => 'true' }
+        { :name => 'EY_SIDEKIQ6_ENABLED', :value => 'true' }
       ])
     end
 
@@ -206,8 +206,8 @@ describe 'attributes' do
       environment.stack = DNApi::Stack::NginxUnicorn
       app = environment.build_app
       DNASpec::set_app_environment_variables(app, [
-        { :name => 'EY_SIDEKIQ_QUEUE_PRIORITY_default', :value => '2' },
-        { :name => 'EY_SIDEKIQ_QUEUE_PRIORITY_urgent', :value => '101' }
+        { :name => 'EY_SIDEKIQ6_QUEUE_PRIORITY_default', :value => '2' },
+        { :name => 'EY_SIDEKIQ6_QUEUE_PRIORITY_urgent', :value => '101' }
       ])
     end
 
