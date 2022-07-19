@@ -1,0 +1,22 @@
+[Unit]
+Description=Sidekiq Worker <%= @count %>
+
+
+[Service]
+Type=notify
+WorkingDirectory=/data/<%= @app_name %>/current
+ExecStart=/bin/bash -lc "exec bundle exec sidekiq -e <%= @rails_env %> -C /data/<%= @app_name %>/current/config/sidekiq_<%= @count %>.yml >>/data/<%= @app_name %>/current/log/sidekiq_<%= @count %>.log 2>>/data/<%= @app_name %>/current/log/sidekiq_<%= @count %>.stderr.log"
+
+User=root
+Group=root
+RestartSec=30
+Restart=on-failure
+
+# Runs on ubuntu 18, so systemd < 240, so 'file' output is broken:
+# it rewrites the file from the beginning, appending is not available
+#StandardOutput=file:/data/<%= @app_name %>/current/log/sidekiq_<%= @count %>.log
+#StandardError=file:/data/<%= @app_name %>/current/log/sidekiq_<%= @count %>.stderr.log
+MemoryMax=<%= @memory_limit %>M
+EnvironmentFile=/data/<%= @app_name %>/shared/config/env.sidekiq.cloud
+
+
