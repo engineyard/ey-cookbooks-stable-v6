@@ -58,9 +58,6 @@ if node['sidekiq']['is_sidekiq_instance']
         variables(node['sidekiq'])
         notifies :run, "execute[restart-sidekiq-for-#{app_name}-#{count}]"
       end
-      link "/data/#{app_name}/current/config/sidekiq_#{count}.yml" do
-        to "/data/#{app_name}/shared/config/sidekiq_#{count}.yml"
-      end
     end
 
     # chown log files
