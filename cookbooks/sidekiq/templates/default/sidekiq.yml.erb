@@ -1,6 +1,7 @@
 # sidekiq settings
 # see: https://github.com/mperham/sidekiq/blob/master/examples/config.yml
 ---
+:max_retries: <%= @max_retries %>
 :verbose: <%= @verbose %>
 :concurrency: <%= @concurrency %>
 :queues:
