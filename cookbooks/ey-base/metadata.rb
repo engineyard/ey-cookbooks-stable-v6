@@ -28,6 +28,7 @@ depends 'efs'
 
 # custom recipes
 depends 'redis'
+depends 'elasticache-redis'
 depends 'memcached'
 depends 'sidekiq'
 depends 'letsencrypt'
