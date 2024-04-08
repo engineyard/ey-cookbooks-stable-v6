@@ -3,6 +3,7 @@ class Chef::Recipe
 end
 
 version = node["php"]["minor_version"]
+version_without_dot = version.delete(".")
 php_ini = get_php_ini_cbfilename
 
 # Report to Cloud dashboard
@@ -11,7 +12,7 @@ ey_cloud_report "processing php#{version}" do
 end
 
 # Overwrite default php config
-directory "/etc/php/#{version}/fpm" do
+directory "/etc/php#{version_without_dot}/fpm" do
   owner "root"
   group "root"
   recursive true
@@ -19,7 +20,7 @@ directory "/etc/php/#{version}/fpm" do
   action :create
 end
 
-cookbook_file "/etc/php/#{version}/fpm/php.ini" do
+cookbook_file "/etc/php#{version_without_dot}/fpm/php.ini" do
   source php_ini
   owner "root"
   group "root"
@@ -75,9 +76,9 @@ template "/etc/php-fpm.conf" do
   mode "0644"
   source "fpm-global.conf.erb"
   variables({
-    :apps => app_names
-  })
-#  notifies :restart, resources(:service => "php-fpm"), :delayed
+              :apps => app_names
+            })
+  #  notifies :restart, resources(:service => "php-fpm"), :delayed
 end
 
 # Can't access get_fpm_coount inside block
@@ -95,16 +96,16 @@ app_names.each do |app_name|
     mode 0644
     source "fpm-pool.conf.erb"
     variables({
-      :app_name => app_name,
-      :php_env => node['dna']['environment']['framework_env'],
-      :user => node["owner_name"],
-      :dbuser => node.engineyard.environment.apps.detect {|app| app[:name] == app_name}.database_username,
-      :dbpass => node.engineyard.environment.apps.detect {|app| app[:name] == app_name}.database_password,
-      :dbhost => node['dna']['db_host'],
-      :dbreplicas => node['dna']['db_slaves'].join(':'),
-      :max_children => app_fpm_count,
-      :memcache_hostnames => mc_hostnames.join(',')
-    })
+                :app_name => app_name,
+                :php_env => node['dna']['environment']['framework_env'],
+                :user => node["owner_name"],
+                :dbuser => node.engineyard.environment.apps.detect {|app| app[:name] == app_name}.database_username,
+                :dbpass => node.engineyard.environment.apps.detect {|app| app[:name] == app_name}.database_password,
+                :dbhost => node['dna']['db_host'],
+                :dbreplicas => node['dna']['db_slaves'].join(':'),
+                :max_children => app_fpm_count,
+                :memcache_hostnames => mc_hostnames.join(',')
+              })
 
   end
 end
@@ -112,10 +113,10 @@ end
 template "/etc/systemd/system/php#{version}-fpm.service" do
   source "php-fpm.service.erb"
   variables({
-    version: version,
-    user: ssh_username,
-    group: ssh_username
-  })
+              version: version,
+              user: ssh_username,
+              group: ssh_username
+            })
   notifies :run, "execute[reload-systemd]", :immediately
 end
 
@@ -145,8 +146,8 @@ app_names.each do |app|
     group   ssh_username
     mode    0755
     variables({
-      version: version
-    })
+                version: version
+              })
   end
 
   # Change ownership of app slowlog if set to root
