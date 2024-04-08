@@ -3,9 +3,10 @@ class Chef::Recipe
 end
 
 version = node["php"]["minor_version"]
+version_without_dot = version.delete(".")
 php_ini = get_php_ini_cbfilename
 
-cookbook_file "/etc/php/#{version}/cli/php.ini" do
+cookbook_file "/etc/php#{version_without_dot}/cli/php.ini" do
   source php_ini
   owner "root"
   group "root"
