@@ -110,15 +110,15 @@ app_names.each do |app_name|
   end
 end
 
-template "/etc/systemd/system/php#{version}-fpm.service" do
-  source "php-fpm.service.erb"
-  variables({
-              version: version,
-              user: ssh_username,
-              group: ssh_username
-            })
-  notifies :run, "execute[reload-systemd]", :immediately
-end
+# template "/etc/systemd/system/php#{version}-fpm.service" do
+#   source "php-fpm.service.erb"
+#   variables({
+#               version: version,
+#               user: ssh_username,
+#               group: ssh_username
+#             })
+#   notifies :run, "execute[reload-systemd]", :immediately
+# end
 
 other_versions = node['php']['known_versions'].reject{ |version| version == node['php']['minor_version'] }
 other_versions.each do |version|
