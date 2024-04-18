@@ -139,7 +139,10 @@ class Chef
           :ruby_250   => "2.5.9",
           :ruby_260   => "2.6.7",
           :ruby_270   => "2.7.3",
-	  :ruby_300   => "3.0.1"
+          # AI-GEN START - cursor
+	        :ruby_300   => "3.0.1",
+          :ruby_310   => "3.1.1"
+          #AI-GEN END
         }
         if versions.has_key?(ruby_archtype.to_sym)
           version = versions[ruby_archtype.to_sym]
