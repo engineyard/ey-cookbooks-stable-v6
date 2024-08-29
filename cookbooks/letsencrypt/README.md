@@ -20,7 +20,7 @@ There are several environmental variables needed to be used with the LetsEncrypt
 
 **SAN Certificate Setup**
 
-To automatically create a certificate or SAN certiciate:
+To automatically create a certificate or SAN certificate:
 
 * Make sure a certificate is applied to the environment using the documentation above. This certificate will be for configuration reasons only and not seen by visitors, so can be a self-signed one, with a name that highlights letsencrypts use, e.g. `using-letsencrypt`
 * Set the environment variable `EY_LE_DOMAINS` with any additional domains seperated with a space. The main domain **must** come first e.g. `Engineyard.com www.Engineyard.com Example.com`
